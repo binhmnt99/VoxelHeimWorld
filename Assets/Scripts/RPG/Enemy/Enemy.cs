@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Pathfinding;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,11 @@ namespace Voxel
         public Gradient gradient;
         public Image fill;
 
+        private bool _isStopped = false;
+        public float _distanceToPlayer;
+
+        //[SerializeField] private Rigidbody rigid;
+        [SerializeField] private AIPath aiPath;
         [SerializeField] float health = 3;
         [SerializeField] float damage = 2;
         //[SerializeField] GameObject hitVFX;
@@ -57,6 +63,8 @@ namespace Voxel
                 return;
             }
 
+            DisableOnDistance();
+
             if (Physics.BoxCast(transform.position + offset, transform.lossyScale / 2, transform.forward, out hit,
                 transform.rotation, maxDistance, layerMask))
             {
@@ -90,6 +98,18 @@ namespace Voxel
             if (transform.localPosition.y <= -100)
             {
                 Die();
+            }
+        }
+
+        private void DisableOnDistance()
+        {
+            float distance = Vector3.Distance(player.transform.position, transform.position);
+            bool needToStop = distance > 100f;
+            _distanceToPlayer = distance;
+            if (needToStop != _isStopped)
+            {
+                _isStopped = needToStop;
+                aiPath.enabled = !_isStopped;
             }
         }
 
