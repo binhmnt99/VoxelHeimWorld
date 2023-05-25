@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noiseZoom: 0.01
   octaves: 5
-  offest: {x: 26, y: 3405}
+  offest: {x: 300, y: 4200}
   worldOffset: {x: 0, y: 0}
   persistance: 0.5
   redistributionModifier: 1.2
-  exponent: 4
+  exponent: 8

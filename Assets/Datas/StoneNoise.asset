@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ba39383b427a043bcc5c20880f045a, type: 3}
   m_Name: StoneNoise
   m_EditorClassIdentifier: 
-  noiseZoom: 0.01
-  octaves: 1
-  offest: {x: -936, y: -944}
+  noiseZoom: 0
+  octaves: 0
+  offest: {x: 0, y: 0}
   worldOffset: {x: 0, y: 0}
-  persistance: 0.39
-  redistributionModifier: 0.71
-  exponent: 4
+  persistance: 0
+  redistributionModifier: 0
+  exponent: 0

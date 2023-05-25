@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: DomainX
   m_EditorClassIdentifier: 
   noiseZoom: 0.01
-  octaves: 3
-  offest: {x: 600, y: 350}
+  octaves: 8
+  offest: {x: -550, y: -890}
   worldOffset: {x: 0, y: 0}
-  persistance: 0.33
-  redistributionModifier: 0.6
-  exponent: 5
+  persistance: 0.5
+  redistributionModifier: 0.2
+  exponent: 8

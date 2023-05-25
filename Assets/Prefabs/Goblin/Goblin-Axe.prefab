@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &619467398129707853
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6725991327521594703}
+  m_Layer: 0
+  m_Name: HightBlockChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6725991327521594703
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619467398129707853}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7961136646699993804}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4530754957747310153
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,6 +42,7 @@ GameObject:
   - component: {fileID: 7961136646699993804}
   - component: {fileID: 6636073588224000391}
   - component: {fileID: -7546537099448153569}
+  - component: {fileID: -4606370798823411533}
   - component: {fileID: -7802156186193101951}
   - component: {fileID: -3710777471823236046}
   - component: {fileID: 8459039649207692880}
@@ -35,6 +67,8 @@ Transform:
   m_Children:
   - {fileID: 2659040160934454514}
   - {fileID: 9141299747504177020}
+  - {fileID: 6725991327521594703}
+  - {fileID: 8292032251223051473}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -82,17 +116,26 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   fill: {fileID: 4516199573017328932}
+  _distanceToPlayer: 0
   aiPath: {fileID: -3710777471823236046}
-  health: 3
+  aiDestinationSetter: {fileID: 0}
+  hightBlockTransform: {fileID: 6725991327521594703}
+  lowBlockTransform: {fileID: 8292032251223051473}
+  hightBlockType: 0
+  lowBlockType: 0
+  jumpForce: 6
+  maxHealth: 8
+  health: 0
   damage: 2
-  attackCD: 3
-  attackRange: 1
-  aggroRange: 4
-  offset: {x: 0, y: 0.5, z: 0}
+  movementSpeed: 4
+  attackSpeed: 0.625
+  attackRange: 1.25
+  inAttackRange: 0
+  aggroRange: 10
+  inAggroRange: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 64
-  maxDistance: 0
 --- !u!136 &-7546537099448153569
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -113,9 +156,36 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2.115824
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 1.0552815, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &-4606370798823411533
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4530754957747310153}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 112
+  m_CollisionDetection: 1
 --- !u!114 &-7802156186193101951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,31 +227,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 5
-  radius: 0.5
+  radius: 1
   height: 2
   canMove: 1
-  maxSpeed: 3
+  maxSpeed: 4
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
   centerOffsetCompatibility: NaN
-  repathRateCompatibility: NaN
-  canSearchCompability: 0
+  repathRateCompatibility: 0
+  canSearchCompability: 1
   orientation: 0
   enableRotation: 1
   autoRepath:
     mode: 2
-    period: 0.5
+    period: 0
     sensitivity: 10
-    maximumPeriod: 2
+    maximumPeriod: 1
     visualizeSensitivity: 0
   targetCompatibility: {fileID: 0}
   maxAcceleration: -2.5
   rotationSpeed: 360
   slowdownDistance: 0.6
   pickNextWaypointDist: 2
-  endReachedDistance: 0.2
+  endReachedDistance: 0.1
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
@@ -249,6 +319,37 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 256
+--- !u!1 &8565531944255349830
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8292032251223051473}
+  m_Layer: 0
+  m_Name: LowBlockChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8292032251223051473
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8565531944255349830}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7961136646699993804}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1174205516013388168
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -260,6 +361,10 @@ PrefabInstance:
     - target: {fileID: 452296735690557939, guid: 41046bac67e91d1418583c580e04336b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1501020921590334434, guid: 41046bac67e91d1418583c580e04336b, type: 3}
+      propertyPath: m_VertexColorAlwaysGammaSpace
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7969108554509647604, guid: 41046bac67e91d1418583c580e04336b, type: 3}
       propertyPath: m_Pivot.x
@@ -1515,7 +1620,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 25fa1a86301960a488fb1fac6c2e588c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
