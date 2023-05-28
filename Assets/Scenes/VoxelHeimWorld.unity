@@ -338,19 +338,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3749932230241149689, guid: 4740c8b7d68f011409fff3045296dff7, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 0.2612987
+      value: 1.496053
       objectReference: {fileID: 0}
     - target: {fileID: 3749932230241149689, guid: 4740c8b7d68f011409fff3045296dff7, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -6.625013
+      value: -6.15341
       objectReference: {fileID: 0}
     - target: {fileID: 4100111584607019534, guid: 4740c8b7d68f011409fff3045296dff7, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 0.2612987
+      value: 1.496053
       objectReference: {fileID: 0}
     - target: {fileID: 4100111584607019534, guid: 4740c8b7d68f011409fff3045296dff7, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -6.625013
+      value: -6.15341
       objectReference: {fileID: 0}
     - target: {fileID: 5144023959192000461, guid: 4740c8b7d68f011409fff3045296dff7, type: 3}
       propertyPath: m_RootOrder
@@ -400,13 +400,21 @@ PrefabInstance:
       propertyPath: m_CollideAgainst.m_Bits
       value: 64
       objectReference: {fileID: 0}
+    - target: {fileID: 7981262981873840640, guid: 4740c8b7d68f011409fff3045296dff7, type: 3}
+      propertyPath: m_Orbits.Array.data[1].m_Height
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7981262981873840640, guid: 4740c8b7d68f011409fff3045296dff7, type: 3}
+      propertyPath: m_Orbits.Array.data[2].m_Height
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9119290858764163991, guid: 4740c8b7d68f011409fff3045296dff7, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 0.2612987
+      value: 1.496053
       objectReference: {fileID: 0}
     - target: {fileID: 9119290858764163991, guid: 4740c8b7d68f011409fff3045296dff7, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -6.625013
+      value: -6.15341
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -805,8 +813,8 @@ MonoBehaviour:
   task: {fileID: 1939172733}
   enemyPrefab: {fileID: 4530754957747310153, guid: e0c8f4c7a99e75048abaee2a2efb0d25, type: 3}
   spawnDelay: 5
-  maxEnemies: 1
-  spawnRange: 10
+  maxEnemies: 6
+  spawnRange: 15
 --- !u!1 &965944160
 GameObject:
   m_ObjectHideFlags: 0
@@ -1474,7 +1482,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   data:
-    dataString: UEsDBBQAAAgIAAA4IeyYSN74sgIAAN4FAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGFVNtum0AQ/RVrn9vKUDuJ+tbiXFo1iRVa5aHOwxgGWHnZRXuJ7UT+98wuYIjzUMkyMNdzzszuKxOwR50oJy37Nok+TViNusS0AfkAskQyTr/MyZxVoCGzqG+Ql1UfzKVpMLNKX2ue36rcxzP/zsbOG9xBqWTKX7CPeeS5rXwQhJgHsFz1NY2q0WqefZelCADI6CQvlK4v8xITZawhcwHCILm0sj5bkul1wnZdwr57vvjn5OAZoCT4/4tyMhNQN5h7tENwNO3D6S0ESmLSxXQKKSG46YAwu28C0bSpUKNnmnMgXgFBTJ9Vr2M8zr0vCoO9uhr2C65JnrYo+6FazWowmxbaMwjn28QBUlvy9oP3bBbchVb1ML1AyFY82zzAPgNjR5KOzYsBdhT02YLYwFrgY4XyTl1r2p2cnFY7n+oMxotRqSOzpMJsM8S1WE+Mrvk4nmgYzyFw3yWC1+uj7GRIhQpiR/4bNQ3mJwEOS2G6SmT1IP4a/APleHs6xxXXxpKrayg9urVy2oeyK3rxumfOJkpLDNYOcoMShN0vqYodz2/60TfqeuK5An9Mut6dr9/+k5RgHuKn0xPXUm2HWRn85epmqbi0KYLOqlE9U6ntLZrq3lnBJQ6MvOOONEyUlO3umfdOn5U6XUA2yrK4s07jAiyE/SdItCP5uCGpGDKkE8KvYyDha/8jEv731N4z1FYEM7tTMhydd88nvwal4/n7JWcA8/kZzGE2R5xBnH0+X0/xIjq/iGbFLI7xKwungEuSHMSy1aybFO2PHLhI2nhf8be/GzGf+AuN/qAJpy/XsL3mL7UaycJlodJMI8r7ttKRNGpqRtdEfplzopuitVyGDWSvKyZUtsF8dSy0CgJf7qyG1VBlxRr+rKy3rFgSrrEV8+bj4VpqfOa49c37Ygd2eANQSwMEFAAACAgAADgh7HLpZTVyAAAAfQAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw0TPSM7TQUVBKL0osyCgGihiCOKWZKSB2tFJioqmpWaJpoolpaqpJolGyrnmSQaqFobmFoUmaiZFRqrFSLFB9SWVBql9ibipET0BiSUZaZl5KZl66nk9iZWqRe1FmijvIfKXYWgBQSwECLQAUAAAICAAAOCHsmEje+LICAADeBQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAAOCHscullNXIAAAB9AAAACQAkAAAAAAAAAAAAAAD/AgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAALwDAAAAAA==
+    dataString: UEsDBBQAAAgIAAA4IexxjU6rsAIAAN4FAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGFVNty2jAQ/RVGz20HktJA31rIpZ0mYeJ28lDysEhrW4MseXQJkAz/3pVssEMeOsNg++zt7NmVXpmCHdqZCdqzr4PRhwGr0BaY1aAfQBdI4PDTmGBeggXu0d6gLMqDs9SuRu6NvbZS3BoR/Vl8Z33jDW6hMDqTL3jweZTCl9EJks8DeGkOOZ2p0FvJv+lCJQIEBi1zY6tLUeDMOO8IzkE5JJM1PkZrgl4HbNsG7NrnS3wO9rED1ET/f15BcwVVjSKy7ZxHw4M7vSVHTZ20Pq1CRinpWiLM7+rUaFaXaDF2KiRQX4nBGX2WfR2Psfd57vCAWtjNpSV5mqTsu2k0q8CtG2rPoAIeuTcpb99Zv3xO5tyaqpteasiXkq8fYMfB+Z6kfXje0R4lfTag1rBS+FiivjPXlnZHkNHbEEODw7N5L9Wxs1mJfN35NVxPwFC/H8+oG88+9b6dKVmtjrITkCmTxJ7GGLQ0mB9EOC2FazMRGkn8cfgbiv72tIYraZ0nU1tQR3YrE2x0ZVf0EnXnwc+M1ZjQlnKNGpTfLSiL789v+N7Wq3piuYJ4TNrare2w/SchCe78h8MT08Jsulk5/BmqemGk9hmC5WUvnyvN5hZdeR+8khq7jqLhjjScGa2b3XNvjTEqCzYH3ovyuPXB4hw8pP0nSrQjol+QVEwROigV1zE1EXP/pSbi76m5Z6isSjC7MzodnTfPp7gGRZDi7ZIzPhqfTc6n49UUxRRX5x8F4MX4nE8mOM4nFzmwdAqkJslBLRrN2knR/uiuF00bHzP+incjikG80OgP6nT6hIXNtXypTE8WqXOTcYuo75tMx6bRUjG6JsSlkNRuht5LnTaQvS6ZMnyNYnlMtEwCX269hWWXZclq+Wx8RJZslq6xJYvw8XAtLD5L3MTih2R7tv8HUEsDBBQAAAgIAAA4IezC7b2PcgAAAH0AAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jO00FFQSi9KLMgoBooYgjilmSkgdrRSsqGpkYWxpWmSZWqKZWqSsW5KYqq5qXGyhUWqaZqFeVqiUixQfUllQapfYm4qRE9AYklGWmZeSmZeup5PYmVqkXtRZoo7yHyl2FoAUEsBAi0AFAAACAgAADgh7HGNTquwAgAA3gUAAAsAJAAAAAAAAAAAAAAAAAAAAGdyYXBoMC5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsBAi0AFAAACAgAADgh7MLtvY9yAAAAfQAAAAkAJAAAAAAAAAAAAAAA/QIAAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLBQYAAAAAAgACALgAAAC6AwAAAAA=
     upgradeData: 
     file_cachedStartup: {fileID: 0}
     data_cachedStartup: 
@@ -1487,7 +1495,7 @@ MonoBehaviour:
   manualDebugFloorRoof: 0
   showSearchTree: 0
   unwalkableNodeDebugSize: 0.3
-  logPathResults: 1
+  logPathResults: 0
   maxNearestNodeDistance: 50
   scanOnStartup: 1
   fullGetNearestSearch: 1
@@ -1941,11 +1949,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 808804931080687496, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 2.952565
+      value: 2.201325
       objectReference: {fileID: 0}
     - target: {fileID: 808804931080687496, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -3.065242
+      value: -4.912878
       objectReference: {fileID: 0}
     - target: {fileID: 1025399503134731011, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -1957,15 +1965,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2481821133855314380, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 2.952565
+      value: 2.201325
       objectReference: {fileID: 0}
     - target: {fileID: 2481821133855314380, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -3.065242
+      value: -4.912878
       objectReference: {fileID: 0}
     - target: {fileID: 2615723407861058634, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_Lens.FieldOfView
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4509643805612143170, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
+      propertyPath: m_Orbits.Array.data[1].m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4509643805612143170, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
+      propertyPath: m_Orbits.Array.data[2].m_Height
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5351276536354231793, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_RootOrder
@@ -2017,11 +2033,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5702492208646427905, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 2.952565
+      value: 2.201325
       objectReference: {fileID: 0}
     - target: {fileID: 5702492208646427905, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -3.065242
+      value: -4.912878
       objectReference: {fileID: 0}
     - target: {fileID: 5719444506932209485, guid: 3366cc7a2fb4ec648bb40ab69fc44ce6, type: 3}
       propertyPath: m_Name

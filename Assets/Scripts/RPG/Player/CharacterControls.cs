@@ -24,8 +24,6 @@ namespace Voxel
         private float airMinSpeed;
         [SerializeField]
         private float speedIncreaseMultiplier;
-        [SerializeField]
-        private float slopeIncreaseMultiplier;
 
         [Header("Jumping")]
         [SerializeField]
@@ -40,21 +38,10 @@ namespace Voxel
 
         [Header("Ground Check")]
         [SerializeField]
-        private Vector3 rayOffset = new Vector3(0, 1.25f, 0);
-        [SerializeField]
-        private float rayHeight = 2.5f;
-        [SerializeField]
-        private LayerMask groundLayer;
-        [SerializeField]
         private bool grounded;
-
-        [Header("Slope Handling")]
-        [SerializeField]
-        private float maxSlopeAngle;
-        [SerializeField]
-        private RaycastHit slopeHit;
-        [SerializeField]
-        private bool exitingSlope;
+        private CharacterFootDetected characterFootDetected;
+        private bool detectWall;
+        private CharacterWallDetected characterWallDetected;
 
         public Transform orientation;
 
@@ -66,7 +53,6 @@ namespace Voxel
         public CharacterInputControl characterInput { get; private set; }
 
         private bool freeze;
-        private bool wallrunning;
         private bool walking = true;
         private bool combat = false;
 
@@ -75,7 +61,6 @@ namespace Voxel
         public enum MovementState
         {
             freeze,
-            wallrunning,
             walking,
             air
         }
@@ -89,6 +74,8 @@ namespace Voxel
             rb = GetComponent<Rigidbody>();
             rb.freezeRotation = true;
             readyToJump = true;
+            characterFootDetected = GetComponentInChildren<CharacterFootDetected>();
+            characterWallDetected = GetComponentInChildren<CharacterWallDetected>();
             characterInput.Player.Enable();
             MoveInput();
             JumpInput();
@@ -151,11 +138,6 @@ namespace Voxel
 
         }
 
-        private void GroundCheck()
-        {
-            grounded = Physics.Raycast(transform.position + rayOffset, -transform.up, rayHeight, groundLayer);
-        }
-
         private void MoveInput()
         {
             characterInput.Player.Move.started += Move;
@@ -167,36 +149,23 @@ namespace Voxel
         {
             if (context.started)
             {
-                animator.SetFloat("speed", context.ReadValue<Vector2>().magnitude);
+                walking = true;
             }
             if (context.performed)
             {
-                if (walking)
+                character2DInput = context.ReadValue<Vector2>();
+                if (grounded)
                 {
-                    character2DInput = context.ReadValue<Vector2>();
+                    animator.SetFloat("speed", character2DInput.magnitude);
                 }
+
             }
             if (context.canceled)
             {
                 character2DInput = Vector2.zero;
                 animator.SetFloat("speed", 0);
+                walking = false;
             }
-        }
-
-        public bool OnSlope()
-        {
-            if (Physics.Raycast(transform.position + rayOffset, -transform.up, rayHeight))
-            {
-                float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                return angle < maxSlopeAngle && angle != 0;
-            }
-
-            return false;
-        }
-
-        public Vector3 GetSlopeMoveDirection(Vector3 direction)
-        {
-            return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
         }
 
         private IEnumerator SmoothlyLerpMoveSpeed()
@@ -209,16 +178,7 @@ namespace Voxel
             while (time < difference)
             {
                 movementSpeed = Mathf.Lerp(startValue, desiredMovementSpeed, time / difference);
-
-                if (OnSlope())
-                {
-                    float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                    float slopeAngleIncrease = 1 + (slopeAngle / 90f);
-
-                    time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
-                }
-                else
-                    time += Time.deltaTime * speedIncreaseMultiplier;
+                time += Time.deltaTime * speedIncreaseMultiplier;
 
                 yield return null;
             }
@@ -245,7 +205,6 @@ namespace Voxel
             else
             {
                 state = MovementState.air;
-
                 if (movementSpeed < airMinSpeed)
                     desiredMovementSpeed = airMinSpeed;
             }
@@ -274,47 +233,34 @@ namespace Voxel
         private void MovePlayer()
         {
             characterDirection = orientation.forward * character2DInput.y + orientation.right * character2DInput.x;
-            if (OnSlope() && !exitingSlope)
+            if (grounded)
             {
-                rb.AddForce(GetSlopeMoveDirection(characterDirection) * movementSpeed * 20f, ForceMode.Force);
-
-                if (rb.velocity.y > 0)
-                    rb.AddForce(Vector3.down * 80f, ForceMode.Force);
-            }
-
-            // on ground
-            else if (grounded)
                 rb.AddForce(characterDirection.normalized * movementSpeed * 10f, ForceMode.Force);
-
+            }
             // in air
             else if (!grounded)
-                rb.AddForce(characterDirection.normalized * movementSpeed * 10f * airMultiplier, ForceMode.Force);
+            {
+                rb.AddForce(characterDirection.normalized + (-transform.up * 0.1f) * movementSpeed * 10f * airMultiplier, ForceMode.Force);
+            }
 
-            // turn gravity off while on slope
-            if (!wallrunning) rb.useGravity = !OnSlope();
+            if (characterWallDetected.isWall && walking)
+            {
+                //rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+                rb.AddForce(transform.up * 1.2f, ForceMode.Impulse);
+            }
 
         }
 
         private void SpeedControl()
         {
-            // limiting speed on slope
-            if (OnSlope() && !exitingSlope)
-            {
-                if (rb.velocity.magnitude > movementSpeed)
-                    rb.velocity = rb.velocity.normalized * movementSpeed;
-            }
+            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-            // limiting speed on ground or in air
-            else
+            // limit velocity if needed
+            if (flatVel.magnitude > movementSpeed)
             {
-                Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-                // limit velocity if needed
-                if (flatVel.magnitude > movementSpeed)
-                {
-                    Vector3 limitedVel = flatVel.normalized * movementSpeed;
-                    rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
-                }
+                Vector3 limitedVel = flatVel.normalized * movementSpeed;
+                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
             }
         }
 
@@ -331,6 +277,7 @@ namespace Voxel
             if (context.started)
             {
                 isJumpKeyPress = true;
+
                 animator.SetTrigger("jump");
             }
             if (context.performed)
@@ -357,14 +304,10 @@ namespace Voxel
         private void ResetJump()
         {
             readyToJump = true;
-
-            exitingSlope = false;
         }
 
         private void Jumping()
         {
-            exitingSlope = true;
-
             // reset y velocity
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
@@ -436,15 +379,8 @@ namespace Voxel
         private void Update()
         {
 
-            // if (weapon.GetComponentInChildren<WeaponDamageDealer>().IsDealDamage())
-            // {
-            //     walking = false;
-            // }
-            // else
-            // {
-            //     walking = true;
-            // }
-            GroundCheck();
+            grounded = characterFootDetected.isGrounded;
+
             JumpCheck();
             SpeedControl();
             StateHandler();
@@ -457,8 +393,7 @@ namespace Voxel
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position + rayOffset, transform.position + rayOffset - transform.up * rayHeight);
+
         }
     }
 

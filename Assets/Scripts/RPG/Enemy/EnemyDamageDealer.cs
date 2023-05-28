@@ -38,7 +38,7 @@ namespace Voxel
         private void DealDamage()
         {
             RaycastHit hit;
-            Debug.DrawRay(transform.position, -transform.up * weaponLength, Color.red, 5f);
+            //Debug.DrawRay(transform.position, -transform.up * weaponLength, Color.red, 5f);
             if (Physics.Raycast(transform.position, -transform.up, out hit, weaponLength, layerMask))
             {
                 if (hit.transform.TryGetComponent(out Character _char) && !hasDealtDamage.Contains(hit.transform.gameObject))

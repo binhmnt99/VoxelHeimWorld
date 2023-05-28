@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Pathfinding;
+using Pathfinding.Examples;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,16 +21,18 @@ namespace Voxel
         public float _distanceToPlayer;
 
         [Header("AI Checker")]
-        //[SerializeField] private Rigidbody rigid;
         [SerializeField] private AIPath aiPath;
         [SerializeField] private AIDestinationSetter aiDestinationSetter;
-        [SerializeField] private Transform hightBlockTransform;
-        [SerializeField] private Transform lowBlockTransform;
         [SerializeField] private VoxelType hightBlockType;
+        [SerializeField] private int hightYOffset = 2;
+        [SerializeField] private VoxelType midBlockType;
+        [SerializeField] private int midYOffset = 1;
         [SerializeField] private VoxelType lowBlockType;
+        [SerializeField] private int lowYOffset = 0;
+        [SerializeField] private VoxelType entityBlockType;
+        [SerializeField] private Vector3Int entityOffset = new Vector3Int(1, 0, 1);
         //[SerializeField] GameObject hitVFX;
         //[SerializeField] GameObject ragdoll;
-        public float jumpForce = 6f;
 
         [Header("Combat")]
         [SerializeField] private float maxHealth = 8;
@@ -41,14 +44,18 @@ namespace Voxel
         [SerializeField] private bool inAttackRange = false;
         [SerializeField] private float aggroRange = 10f;
         [SerializeField] private bool inAggroRange = false;
-        [SerializeField] private LayerMask layerMask;
+
+        [Header("Ground Check")]
+        [SerializeField]
+        private bool grounded;
+        private EnemyWallCheck enemyWallCheck;
 
         public event Action onDead;
 
         GameObject player;
         Animator animator;
         float timePassed;
-        float newDestinationCD = 0.5f;
+        Vector3 nextPosLerp = Vector3.zero;
 
         public float GetDamage()
         {
@@ -71,6 +78,8 @@ namespace Voxel
             animator = GetComponentInChildren<Animator>();
             player = GameObject.FindGameObjectWithTag("Player");
             aiPath.maxSpeed = movementSpeed;
+
+            enemyWallCheck = GetComponentInChildren<EnemyWallCheck>();
         }
 
         private void Movement()
@@ -98,19 +107,17 @@ namespace Voxel
 
         private void Aggro()
         {
-            if (newDestinationCD <= 0 && Vector3.Distance(player.transform.position, transform.position) <= aggroRange)
+            if (Vector3.Distance(player.transform.position, transform.position) <= aggroRange)
             {
 
-                newDestinationCD = 0.5f;
                 aiDestinationSetter.target = player.transform;
                 inAggroRange = true;
             }
             else
             {
-                aiDestinationSetter.target = null;
+                aiDestinationSetter.target = transform;
                 inAggroRange = false;
             }
-            newDestinationCD -= Time.deltaTime;
         }
 
         private void CheckInRange()
@@ -127,23 +134,62 @@ namespace Voxel
 
         private void CheckFrontBlockNearEnemy()
         {
+            if (transform.position.y < 0)
+            {
+                return;
+            }
+
             World world = GameObject.Find("World").GetComponent<World>();
             Vector3Int pos = Chunk.ChunkPositionFromBlockCoords(world, (int)(transform.position.x), (int)(transform.position.y), (int)(transform.position.z));
 
             ChunkData containerChunk = null;
 
             world.worldData.chunkDataDictionary.TryGetValue(pos, out containerChunk);
-            Debug.Log(containerChunk.worldPosition);
+
             if (containerChunk == null)
             {
                 hightBlockType = VoxelType.NOTHING;
                 lowBlockType = VoxelType.NOTHING;
             }
 
-            Vector3Int hightBlockInCHunkCoordinates = Chunk.GetBlockInChunkCoordinates(containerChunk, new Vector3Int((int)(transform.position.x + hightBlockTransform.position.x), (int)(transform.position.y + hightBlockTransform.position.y), (int)(transform.position.z + hightBlockTransform.position.z)));
-            Vector3Int lowBlockInCHunkCoordinates = Chunk.GetBlockInChunkCoordinates(containerChunk, new Vector3Int((int)(transform.position.x + lowBlockTransform.position.x), (int)(transform.position.y + lowBlockTransform.position.y), (int)(transform.position.z + lowBlockTransform.position.z)));
+            Vector3Int blockPos = GetComponentInChildren<EnemyCheckBlock>().blockPos;
+
+            Vector3Int entityBlockInCHunkCoordinates = Chunk.GetBlockInChunkCoordinates(containerChunk, new Vector3Int((int)transform.position.x + entityOffset.x, (int)transform.position.y + entityOffset.y, (int)transform.position.z + entityOffset.z));
+
+            Vector3Int hightBlockInCHunkCoordinates = Chunk.GetBlockInChunkCoordinates(containerChunk, new Vector3Int(blockPos.x, (int)transform.position.y + hightYOffset, blockPos.z));
+
+            Vector3Int midBlockInCHunkCoordinates = Chunk.GetBlockInChunkCoordinates(containerChunk, new Vector3Int(blockPos.x, (int)transform.position.y + midYOffset, blockPos.z));
+
+            Vector3Int lowBlockInCHunkCoordinates = Chunk.GetBlockInChunkCoordinates(containerChunk, new Vector3Int(blockPos.x, (int)transform.position.y + lowYOffset, blockPos.z));
+
             hightBlockType = Chunk.GetBlockFromChunkCoordinates(containerChunk, hightBlockInCHunkCoordinates);
+            midBlockType = Chunk.GetBlockFromChunkCoordinates(containerChunk, midBlockInCHunkCoordinates);
             lowBlockType = Chunk.GetBlockFromChunkCoordinates(containerChunk, lowBlockInCHunkCoordinates);
+            entityBlockType = Chunk.GetBlockFromChunkCoordinates(containerChunk, entityBlockInCHunkCoordinates);
+        }
+
+
+        private void CheckBlockToChangeYPos()
+        {
+            if (inAggroRange && grounded)
+            {
+                if (hightBlockType == VoxelType.AIR && midBlockType != hightBlockType)
+                {
+
+                    aiPath.Move(transform.up.normalized);
+                }
+                if (lowBlockType == VoxelType.AIR)
+                {
+                    aiPath.Move(transform.forward.normalized*0.1f);
+                }
+            }
+        }
+
+
+
+        private void GroundCheck()
+        {
+            grounded = enemyWallCheck.isWall;
         }
 
         void Update()
@@ -152,6 +198,8 @@ namespace Voxel
             {
                 return;
             }
+
+            GroundCheck();
 
             DisableOnDistance();
 
@@ -165,10 +213,15 @@ namespace Voxel
 
             CheckFrontBlockNearEnemy();
 
-            if (transform.localPosition.y <= -100)
+            if (transform.localPosition.y <= -10)
             {
                 Die();
             }
+        }
+
+        private void FixedUpdate()
+        {
+            CheckBlockToChangeYPos();
         }
 
         private void DisableOnDistance()
@@ -183,18 +236,11 @@ namespace Voxel
             }
         }
 
+
         private void LateUpdate()
         {
             enemyCanvas.transform.LookAt(enemyCanvas.transform.position + Camera.main.transform.forward);
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                //print(true);
-                player = collision.gameObject;
-            }
+            Vector3 pos = Vector3.zero;
         }
 
         void Die()
