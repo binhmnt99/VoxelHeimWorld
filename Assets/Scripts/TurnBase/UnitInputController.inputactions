@@ -1,0 +1,34 @@
+{
+    "name": "UnitInputController",
+    "maps": [
+        {
+            "name": "Unit",
+            "id": "77cd4518-d835-4b4d-803a-6cdd652da53d",
+            "actions": [
+                {
+                    "name": "MoveClick",
+                    "type": "Button",
+                    "id": "527eb4b9-c552-4b8c-9fbe-a54b1323c1e5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e1b23793-f578-4cb5-9b4e-d9a35df2e549",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
