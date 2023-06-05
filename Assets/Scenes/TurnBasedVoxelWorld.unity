@@ -343,8 +343,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1836665931458967209, guid: be96f9444f210984990fe64a57e956c9, type: 3}
+      propertyPath: stopDistance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836665931458967209, guid: be96f9444f210984990fe64a57e956c9, type: 3}
       propertyPath: maxMoveDistance
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6145627115760800449, guid: be96f9444f210984990fe64a57e956c9, type: 3}
       propertyPath: m_Name
@@ -1101,7 +1105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2622cae1b1a694542b15c135eda65044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridVisualSquadPrefab: {fileID: 3412454594879582698, guid: caa93e8451e786846b42d06b9ab87cfa, type: 3}
+  gridVisualSquadPrefab: {fileID: 6935829888277824080, guid: caa93e8451e786846b42d06b9ab87cfa, type: 3}
 --- !u!4 &1791167780
 Transform:
   m_ObjectHideFlags: 0
@@ -1257,8 +1261,12 @@ PrefabInstance:
       value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 1836665931458967209, guid: be96f9444f210984990fe64a57e956c9, type: 3}
+      propertyPath: stopDistance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836665931458967209, guid: be96f9444f210984990fe64a57e956c9, type: 3}
       propertyPath: maxMoveDistance
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6145627115760800449, guid: be96f9444f210984990fe64a57e956c9, type: 3}
       propertyPath: m_Name

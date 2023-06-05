@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/VoxelHeimWorld.unity
-    guid: d9a09c16dc6f0dd49a1e6a6a6d04eeb0
+    path: Assets/Scenes/TurnBasedVoxelWorld.unity
+    guid: 6a2b3a68f539dfb428530d9edafe0a39
   m_configObjects: {}
