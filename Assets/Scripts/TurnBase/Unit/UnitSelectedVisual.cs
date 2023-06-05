@@ -7,13 +7,13 @@ namespace TurnBase
 {
     public class UnitSelectedVisual : MonoBehaviour
     {
-        [SerializeField] private Units units;
+        [SerializeField] private Unit units;
         private MeshRenderer meshRenderer;
 
         // Start is called before the first frame update
         void Awake()
         {
-            units = GetComponentInParent<Units>();
+            units = GetComponentInParent<Unit>();
             meshRenderer = GetComponent<MeshRenderer>();
         }
 

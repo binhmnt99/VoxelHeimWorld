@@ -8,13 +8,13 @@ namespace TurnBase
     {
         private GridSystem gridSystem;
         private GridPosition gridPosition;
-        private List<Units> unitList;
+        private List<Unit> unitList;
 
         public GridObject(GridSystem gridSystem, GridPosition gridPosition)
         {
             this.gridSystem = gridSystem;
             this.gridPosition = gridPosition;
-            unitList = new List<Units>();
+            unitList = new List<Unit>();
         }
 
         public override string ToString()
@@ -27,19 +27,24 @@ namespace TurnBase
             return gridPosition.ToString() + "\n" + unitString;
         }
 
-        public void AddUnit(Units units)
+        public void AddUnit(Unit unit)
         {
-            unitList.Add(units);
+            unitList.Add(unit);
         }
 
-        public void RemoveUnit(Units units)
+        public void RemoveUnit(Unit unit)
         {
-            unitList.Remove(units);
+            unitList.Remove(unit);
         }
 
-        public List<Units> GetUnitList()
+        public List<Unit> GetUnitList()
         {
             return unitList;
+        }
+
+        public bool HasAnyUnit()
+        {
+            return unitList.Count > 0;
         }
     }
 

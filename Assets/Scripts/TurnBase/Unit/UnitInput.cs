@@ -8,7 +8,7 @@ namespace TurnBase
 {
     public class UnitInput : MonoBehaviour
     {
-        public UnitInputController unitInput { get; private set; }
+        private UnitInputController unitInput;
 
         public bool isLeftClicked { get; private set; }
         // Start is called before the first frame update

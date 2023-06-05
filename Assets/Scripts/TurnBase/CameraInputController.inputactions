@@ -1,0 +1,179 @@
+{
+    "name": "CameraInputController",
+    "maps": [
+        {
+            "name": "Camera",
+            "id": "c5227102-2bb3-402c-a329-8f1af9edd79f",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "b87aae6f-3023-41fe-8f95-2b982ec5bcd8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "9629c46a-0e9e-4553-af1f-92d325eb939f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "d8493a8f-8fe2-4c52-93b9-9cccbe6895ba",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "2D Vector",
+                    "id": "5a384430-b283-4e3c-8438-739490362d1a",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "79b78e40-2b44-43ae-9740-7addf403e8bc",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "b429e7aa-69fe-4d22-94e3-ec7ab9d1c877",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "d7ab3059-bd6b-495d-9ab0-9c7c6eea55cb",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "dc8d33c7-2df5-4a51-a0e7-ba4a8c60d851",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "0f61d84a-2f39-4e26-bfc5-345166fef33d",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "76d67b12-d3c4-456f-8951-c460a6e96139",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "82b2a537-011a-45e2-bc8f-7fc9a982ed95",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "a42d1257-3390-420d-8d23-57203e472fc5",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "b568226e-e536-449f-becb-b3f6fefc258e",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "bcca6161-c7cc-49aa-af81-9476a9df5e68",
+                    "path": "<Mouse>/scroll/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "control scheme",
+            "bindingGroup": "control scheme",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

@@ -11,9 +11,9 @@ namespace TurnBase
 
         private Ray ray;
         private RaycastHit raycastHit;
-        public UnitInput unitInput { get; private set; }
+        private UnitInput unitInput;
         public event EventHandler OnSelectedUnitChanged;
-        [SerializeField] private Units selectedUnit;
+        [SerializeField] private Unit selectedUnit;
         [SerializeField] private LayerMask layerMask;
         // Start is called before the first frame update
         void Awake()
@@ -38,9 +38,13 @@ namespace TurnBase
                 {
                     return;
                 }
+                GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
                 if (selectedUnit)
                 {
-                    selectedUnit.Move(MouseWorld.GetPosition());
+                    if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
+                    {
+                        selectedUnit.GetMoveAction().Move(mouseGridPosition);
+                    }
                 }
             }
         }
@@ -50,9 +54,9 @@ namespace TurnBase
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out raycastHit, float.MaxValue, layerMask))
             {
-                if (raycastHit.transform.TryGetComponent<Units>(out Units units))
+                if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
                 {
-                    SetSelectedUnit(units);
+                    SetSelectedUnit(unit);
                     return true;
                 }
 
@@ -60,13 +64,13 @@ namespace TurnBase
             return false;
         }
 
-        private void SetSelectedUnit(Units units)
+        private void SetSelectedUnit(Unit unit)
         {
-            selectedUnit = units;
+            selectedUnit = unit;
             OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public Units GetSelectedUnit()
+        public Unit GetSelectedUnit()
         {
             return selectedUnit;
         }

@@ -24,28 +24,28 @@ namespace TurnBase
             gridSystem.CreateDebugObject(gridDebugObjectPrefab);
         }
 
-        public void AddUnitAtGridPosition(GridPosition gridPosition, Units units)
+        public void AddUnitAtGridPosition(GridPosition gridPosition, Unit unit)
         {
             GridObject gridObject = gridSystem.GetGridObject(gridPosition);
-            gridObject.AddUnit(units);
+            gridObject.AddUnit(unit);
         }
 
-        public List<Units> GetUnitListAtGridPosition(GridPosition gridPosition)
+        public List<Unit> GetUnitListAtGridPosition(GridPosition gridPosition)
         {
             GridObject gridObject = gridSystem.GetGridObject(gridPosition);
             return gridObject.GetUnitList();
         }
 
-        public void RemoveUnitAtGridPosition(GridPosition gridPosition, Units units)
+        public void RemoveUnitAtGridPosition(GridPosition gridPosition, Unit unit)
         {
             GridObject gridObject = gridSystem.GetGridObject(gridPosition);
-            gridObject.RemoveUnit(units);
+            gridObject.RemoveUnit(unit);
         }
 
-        public void UnitMoveGridPosition(Units units, GridPosition fromGridPosition, GridPosition toGridPosition)
+        public void UnitMoveGridPosition(Unit unit, GridPosition fromGridPosition, GridPosition toGridPosition)
         {
-            RemoveUnitAtGridPosition(fromGridPosition, units);
-            AddUnitAtGridPosition(toGridPosition, units);
+            RemoveUnitAtGridPosition(fromGridPosition, unit);
+            AddUnitAtGridPosition(toGridPosition, unit);
         }
 
         //public GridPosition GetGridPosition(Vector3 worldPosition) => gridSystem.GetGridPosition(worldPosition);
@@ -53,6 +53,32 @@ namespace TurnBase
         public GridPosition GetGridPosition(Vector3 worldPosition)
         {
             return gridSystem.GetGridPosition(worldPosition);
+        }
+
+        public Vector3 GetWorldPosition(GridPosition gridPosition)
+        {
+            return gridSystem.GetWorldPosition(gridPosition);
+        }
+
+        public int GetWidth()
+        {
+            return gridSystem.GetWidth();
+        }
+
+        public int GetHeight()
+        {
+            return gridSystem.GetHeight();
+        }
+
+        public bool IsValidGridPosition(GridPosition gridPosition)
+        {
+            return gridSystem.IsValidGridPosition(gridPosition);
+        }
+
+        public bool HasAnyUnitOnGridPosition(GridPosition gridPosition)
+        {
+            GridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            return gridObject.HasAnyUnit();
         }
     }
 
