@@ -10,27 +10,29 @@ namespace TurnBase
     {
         private UnitInputController unitInput;
 
-        public bool isLeftClicked { get; private set; }
-        // Start is called before the first frame update
+        public bool isMoveClicked { get; private set; }
+        public bool isSpinClicked { get; private set; }
+
         void Awake()
         {
             unitInput = new UnitInputController();
             unitInput.Unit.Enable();
-            GetLeftMouse();
+            GetMoveButton();
+            GetSpinButton();
         }
 
-        private void GetLeftMouse()
+        private void GetSpinButton()
         {
-            unitInput.Unit.MoveClick.started += LeftMouse;
-            unitInput.Unit.MoveClick.performed += LeftMouse;
-            unitInput.Unit.MoveClick.canceled += LeftMouse;
+            unitInput.Unit.SpinClick.started += RightMouseButton;
+            unitInput.Unit.SpinClick.performed += RightMouseButton;
+            unitInput.Unit.SpinClick.canceled += RightMouseButton;
         }
 
-        private void LeftMouse(InputAction.CallbackContext context)
+        private void RightMouseButton(InputAction.CallbackContext context)
         {
             if (context.started)
             {
-                isLeftClicked = true;
+                isSpinClicked = true;
 
             }
             if (context.performed)
@@ -39,7 +41,31 @@ namespace TurnBase
             }
             if (context.canceled)
             {
-                isLeftClicked = false;
+                isSpinClicked = false;
+            }
+        }
+
+        private void GetMoveButton()
+        {
+            unitInput.Unit.MoveClick.started += LeftMouseButton;
+            unitInput.Unit.MoveClick.performed += LeftMouseButton;
+            unitInput.Unit.MoveClick.canceled += LeftMouseButton;
+        }
+
+        private void LeftMouseButton(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                isMoveClicked = true;
+
+            }
+            if (context.performed)
+            {
+
+            }
+            if (context.canceled)
+            {
+                isMoveClicked = false;
             }
         }
     }

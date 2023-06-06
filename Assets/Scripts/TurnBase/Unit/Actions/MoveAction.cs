@@ -1,26 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace TurnBase
 {
-    public class MoveAction : MonoBehaviour
+    public class MoveAction : BaseAction
     {
         [SerializeField] private Vector3 targetPosition;
         [SerializeField] private int maxMoveDistance = 5;
         [SerializeField] private float moveSpeed = 4f;
-        [SerializeField] private float rotateSpeed = 10f;
+        [SerializeField] private float rotateSpeed = 50f;
         [SerializeField] private float stopDistance = .1f;
         private Vector3 moveDirection;
         private Animator animator;
-        private Unit unit;
 
         // Start is called before the first frame update
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             targetPosition = transform.position;
             animator = GetComponentInChildren<Animator>();
-            unit = GetComponent<Unit>();
         }
         // Update is called once per frame
         void Update()
@@ -30,25 +30,33 @@ namespace TurnBase
 
         private void MoveDirection()
         {
+            if (!isActive)
+            {
+                return;
+            }
+            moveDirection = (targetPosition - transform.position).normalized;
             if (Vector3.Distance(transform.position, targetPosition) > stopDistance)
             {
-                moveDirection = (targetPosition - transform.position).normalized;
                 transform.position += moveDirection * Time.deltaTime * moveSpeed;
-                transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
                 animator.SetBool("isWalking", true);
             }
             else
             {
                 animator.SetBool("isWalking", false);
+                isActive = false;
+                onActionComplete();
             }
+            transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
         }
 
-        public void Move(GridPosition gridPosition)
+        public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
+            this.onActionComplete = onActionComplete;
             this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+            isActive = true;
         }
 
-        public List<GridPosition> GetValidGridPositionsList()
+        public override List<GridPosition> GetValidActionGridPositionsList()
         {
             List<GridPosition> validGridPositionList = new List<GridPosition>();
             GridPosition unitGridPosition = unit.GetGridPosition();
@@ -77,10 +85,16 @@ namespace TurnBase
             return validGridPositionList;
         }
 
-        public bool IsValidActionGridPosition(GridPosition gridPosition)
+        public override bool IsValidActionGridPosition(GridPosition gridPosition)
         {
-            List<GridPosition> validGridPositionList = GetValidGridPositionsList();
+            List<GridPosition> validGridPositionList = GetValidActionGridPositionsList();
             return validGridPositionList.Contains(gridPosition);
         }
+
+        public override string GetActionName()
+        {
+            return "Move";
+        }
+
     }
 }

@@ -19,7 +19,7 @@ namespace TurnBase
             if (Input.GetKeyDown(KeyCode.T))
             {
                 GridSystemVisual.Instance.HideAllGridPosition();
-                GridSystemVisual.Instance.ShowGridPositionList(unit.GetMoveAction().GetValidGridPositionsList());
+                GridSystemVisual.Instance.ShowGridPositionList(unit.GetMoveAction().GetValidActionGridPositionsList());
             }
         }
     }

@@ -37,6 +37,15 @@ namespace TurnBase
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SpinClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""5322d5b7-0690-48cb-93ba-2cb85061dc1f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -50,6 +59,17 @@ namespace TurnBase
                     ""action"": ""MoveClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f7a8b4ac-1039-4799-8818-e08686fd644c"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SpinClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -59,6 +79,7 @@ namespace TurnBase
             // Unit
             m_Unit = asset.FindActionMap("Unit", throwIfNotFound: true);
             m_Unit_MoveClick = m_Unit.FindAction("MoveClick", throwIfNotFound: true);
+            m_Unit_SpinClick = m_Unit.FindAction("SpinClick", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -121,11 +142,13 @@ namespace TurnBase
         private readonly InputActionMap m_Unit;
         private List<IUnitActions> m_UnitActionsCallbackInterfaces = new List<IUnitActions>();
         private readonly InputAction m_Unit_MoveClick;
+        private readonly InputAction m_Unit_SpinClick;
         public struct UnitActions
         {
             private @UnitInputController m_Wrapper;
             public UnitActions(@UnitInputController wrapper) { m_Wrapper = wrapper; }
             public InputAction @MoveClick => m_Wrapper.m_Unit_MoveClick;
+            public InputAction @SpinClick => m_Wrapper.m_Unit_SpinClick;
             public InputActionMap Get() { return m_Wrapper.m_Unit; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -138,6 +161,9 @@ namespace TurnBase
                 @MoveClick.started += instance.OnMoveClick;
                 @MoveClick.performed += instance.OnMoveClick;
                 @MoveClick.canceled += instance.OnMoveClick;
+                @SpinClick.started += instance.OnSpinClick;
+                @SpinClick.performed += instance.OnSpinClick;
+                @SpinClick.canceled += instance.OnSpinClick;
             }
 
             private void UnregisterCallbacks(IUnitActions instance)
@@ -145,6 +171,9 @@ namespace TurnBase
                 @MoveClick.started -= instance.OnMoveClick;
                 @MoveClick.performed -= instance.OnMoveClick;
                 @MoveClick.canceled -= instance.OnMoveClick;
+                @SpinClick.started -= instance.OnSpinClick;
+                @SpinClick.performed -= instance.OnSpinClick;
+                @SpinClick.canceled -= instance.OnSpinClick;
             }
 
             public void RemoveCallbacks(IUnitActions instance)
@@ -165,6 +194,7 @@ namespace TurnBase
         public interface IUnitActions
         {
             void OnMoveClick(InputAction.CallbackContext context);
+            void OnSpinClick(InputAction.CallbackContext context);
         }
     }
 }

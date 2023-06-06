@@ -32,8 +32,7 @@ namespace TurnBase
                 for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
                     GridPosition gridPosition = new GridPosition(x, z);
-                    Transform gridVisualSquadTransform = Instantiate(gridVisualSquadPrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity);
-                    gridVisualSquadTransform.SetParent(gridVisualSquad.transform);
+                    Transform gridVisualSquadTransform = Instantiate(gridVisualSquadPrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, gridVisualSquad.transform);
                     gridSystemVisualSquadArray[x, z] = gridVisualSquadTransform.GetComponent<GridSystemVisualSquad>();
                 }
             }
@@ -66,10 +65,12 @@ namespace TurnBase
         private void UpdateGridVisual()
         {
             HideAllGridPosition();
+            BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
+
             if (UnitActionSystem.Instance.GetSelectedUnit())
             {
                 selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-                ShowGridPositionList(selectedUnit.GetMoveAction().GetValidGridPositionsList());
+                ShowGridPositionList(selectedAction.GetValidActionGridPositionsList());
             }
         }
     }

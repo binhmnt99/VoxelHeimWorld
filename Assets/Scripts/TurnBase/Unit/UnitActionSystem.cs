@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.EventSystems;
 
 namespace TurnBase
 {
@@ -13,9 +14,19 @@ namespace TurnBase
         private RaycastHit raycastHit;
         private UnitInput unitInput;
         public event EventHandler OnSelectedUnitChanged;
+        public event EventHandler OnSelectedActionChanged;
+        public event EventHandler<bool> OnBusyChanged;
+        public event EventHandler OnActionStarted;
+
         [SerializeField] private Unit selectedUnit;
         [SerializeField] private LayerMask layerMask;
+        private bool isBusy;
+        private BaseAction selectedAction;
         // Start is called before the first frame update
+        void Start()
+        {
+            SetSelectedUnit(selectedUnit);
+        }
         void Awake()
         {
             if (Instance != null)
@@ -28,38 +39,73 @@ namespace TurnBase
             unitInput = GetComponent<UnitInput>();
         }
 
-        // Update is called once per frame
-        void Update()
+        private void SetBusy()
         {
+            isBusy = true;
+            OnBusyChanged?.Invoke(this, isBusy);
+        }
 
-            if (unitInput.isLeftClicked)
+        private void ClearBusy()
+        {
+            isBusy = false;
+            OnBusyChanged?.Invoke(this, isBusy);
+        }
+
+        private void HandleSelectedAction()
+        {
+            if (unitInput.isMoveClicked)
             {
-                if (TryHandleUnitSelection())
+                GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
+                if (!selectedAction.IsValidActionGridPosition(mouseGridPosition))
                 {
                     return;
                 }
-                GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
-                if (selectedUnit)
+                if (!selectedUnit.TrySpendActionPointsToTakeAction(selectedAction))
                 {
-                    if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
-                    {
-                        selectedUnit.GetMoveAction().Move(mouseGridPosition);
-                    }
+                    return;
                 }
+                SetBusy();
+                selectedAction.TakeAction(mouseGridPosition, ClearBusy);
+
+                OnActionStarted?.Invoke(this, EventArgs.Empty);
             }
+        }
+        // Update is called once per frame
+        void Update()
+        {
+            if (isBusy)
+            {
+                return;
+            }
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            if (TryHandleUnitSelection())
+            {
+                return;
+            }
+            HandleSelectedAction();
         }
 
         private bool TryHandleUnitSelection()
         {
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out raycastHit, float.MaxValue, layerMask))
+            if (unitInput.isMoveClicked)
             {
-                if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out raycastHit, float.MaxValue, layerMask))
                 {
-                    SetSelectedUnit(unit);
-                    return true;
-                }
+                    if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
+                    {
+                        if (unit == selectedUnit)
+                        {
+                            return false;
+                        }
+                        SetSelectedUnit(unit);
+                        return true;
+                    }
 
+                }
             }
             return false;
         }
@@ -67,12 +113,25 @@ namespace TurnBase
         private void SetSelectedUnit(Unit unit)
         {
             selectedUnit = unit;
+            SetSelectedAction(unit.GetMoveAction());
             OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void SetSelectedAction(BaseAction baseAction)
+        {
+            selectedAction = baseAction;
+
+            OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public Unit GetSelectedUnit()
         {
             return selectedUnit;
+        }
+
+        public BaseAction GetSelectedAction()
+        {
+            return selectedAction;
         }
     }
 }

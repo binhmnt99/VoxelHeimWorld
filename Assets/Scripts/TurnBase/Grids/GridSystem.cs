@@ -50,9 +50,7 @@ namespace TurnBase
                 for (int z = 0; z < height; z++)
                 {
                     GridPosition gridPosition = new GridPosition(x, z);
-                    Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
-
-                    debugTransform.SetParent(deBugGridSystem.transform);
+                    Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity, deBugGridSystem.transform);
 
                     GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
                     gridDebugObject.SetGridObject(GetGridObject(gridPosition));
