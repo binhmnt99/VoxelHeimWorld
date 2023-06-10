@@ -9,6 +9,9 @@ namespace TurnBase
         public static LevelGrid Instance { get; private set; }
         [SerializeField] private Transform gridDebugObjectPrefab;
 
+        [SerializeField] private int gridRow = 10;
+        [SerializeField] private int gridColumn = 10;
+        [SerializeField] private float cellSize = 2f;
         private GridSystem gridSystem;
 
         void Awake()
@@ -20,7 +23,7 @@ namespace TurnBase
                 return;
             }
             Instance = this;
-            gridSystem = new GridSystem(10, 10, 2);
+            gridSystem = new GridSystem(gridRow, gridColumn, cellSize);
             gridSystem.CreateDebugObject(gridDebugObjectPrefab);
         }
 
@@ -79,6 +82,12 @@ namespace TurnBase
         {
             GridObject gridObject = gridSystem.GetGridObject(gridPosition);
             return gridObject.HasAnyUnit();
+        }
+
+        public Unit GetUnitAtGridPosition(GridPosition gridPosition)
+        {
+            GridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            return gridObject.GetUnit();
         }
     }
 

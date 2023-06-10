@@ -9,8 +9,6 @@ namespace TurnBase
 {
     public class CameraController : MonoBehaviour
     {
-        private const float MIN_FOLLOW_OFFSET = 2f;
-        private const float MAX_FOLLOW_OFFSET = 12f;
         private Vector3 inputMoveDir;
         private Vector3 moveVector;
         private Vector3 rotateVector;
@@ -21,6 +19,10 @@ namespace TurnBase
         [SerializeField] private float moveSpeed = 10f;
         [SerializeField] private float rotateSpeed = 75f;
         [SerializeField] private float zoomSpeed = 5f;
+        [SerializeField] private float MIN_FOLLOW_OFFSET_Y = 2f;
+        [SerializeField] private float MAX_FOLLOW_OFFSET_Y = 12f;
+        [SerializeField] private float MIN_FOLLOW_OFFSET_Z = -10f;
+        [SerializeField] private float MAX_FOLLOW_OFFSET_Z = -5f;
 
         void Awake()
         {
@@ -57,12 +59,17 @@ namespace TurnBase
                 if (cameraInput.zoomAxis > 0)
                 {
                     followOffset.y -= zoomAmount;
+                    followOffset.z += zoomAmount;
+
                 }
                 if (cameraInput.zoomAxis < 0)
                 {
                     followOffset.y += zoomAmount;
+                    followOffset.z -= zoomAmount;
+
                 }
-                followOffset.y = Mathf.Clamp(followOffset.y, MIN_FOLLOW_OFFSET, MAX_FOLLOW_OFFSET);
+                followOffset.y = Mathf.Clamp(followOffset.y, MIN_FOLLOW_OFFSET_Y, MAX_FOLLOW_OFFSET_Y);
+                followOffset.z = Mathf.Clamp(followOffset.z, MIN_FOLLOW_OFFSET_Z, MAX_FOLLOW_OFFSET_Z);
                 cinemachineTransposer.m_FollowOffset = Vector3.Lerp(cinemachineTransposer.m_FollowOffset, followOffset, Time.deltaTime * zoomSpeed);
             }
         }

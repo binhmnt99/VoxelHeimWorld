@@ -11,6 +11,7 @@ namespace TurnBase
 
         public event EventHandler OnTurnChanged;
         private int turnNumber = 1;
+        public bool isPlayerTurn = true;
 
         void Awake()
         {
@@ -25,7 +26,8 @@ namespace TurnBase
         public void NextTurn()
         {
             turnNumber++;
-            OnTurnChanged?.Invoke(this,EventArgs.Empty);
+            isPlayerTurn = !isPlayerTurn;
+            OnTurnChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public int GetTurnNumber()
@@ -33,5 +35,9 @@ namespace TurnBase
             return turnNumber;
         }
 
+        public bool IsPlayerTurn()
+        {
+            return isPlayerTurn;
+        }
     }
 }

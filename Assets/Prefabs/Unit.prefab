@@ -109,7 +109,8 @@ GameObject:
   - component: {fileID: 5475078116446677331}
   - component: {fileID: 6149908062248398258}
   - component: {fileID: 1836665931458967209}
-  - component: {fileID: 7481937351936526607}
+  - component: {fileID: 6576715764107264541}
+  - component: {fileID: 5905092802569190271}
   m_Layer: 10
   m_Name: Unit
   m_TagString: Untagged
@@ -167,6 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4864b716e3625140a4cb3168ac383f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionPointMax: 5
+  isEnemy: 0
 --- !u!114 &1836665931458967209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,11 +183,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPosition: {x: 0, y: 0, z: 0}
-  maxMoveDistance: 5
+  maxMoveDistance: 3
   moveSpeed: 4
   rotateSpeed: 10
-  stopDistance: 0.1
---- !u!114 &7481937351936526607
+  stopDistance: 0.075
+--- !u!114 &6576715764107264541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,9 +196,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 6145627115760800449}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c64f96a32207a4441a0014e9c5f9f71d, type: 3}
+  m_Script: {fileID: 11500000, guid: 1cc9458a2fa572c479c3d5e335d717cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxShootDistance: 10
+  aimSpeed: 0
+--- !u!114 &5905092802569190271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6145627115760800449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d58438024294d748b41d6a8681f2517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
 --- !u!1001 &7607173922214575677
 PrefabInstance:
   m_ObjectHideFlags: 0

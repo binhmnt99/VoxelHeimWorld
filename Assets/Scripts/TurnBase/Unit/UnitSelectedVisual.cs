@@ -39,6 +39,11 @@ namespace TurnBase
                 meshRenderer.enabled = false;
             }
         }
+
+        void OnDestroy()
+        {
+            UnitActionSystem.Instance.OnSelectedUnitChanged -= UnitActionSystem_OnSelectedUnitChanged;
+        }
     }
 
 }

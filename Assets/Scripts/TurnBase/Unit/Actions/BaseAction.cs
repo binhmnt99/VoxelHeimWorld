@@ -9,7 +9,7 @@ namespace TurnBase
     {
         protected Unit unit;
         protected bool isActive;
-        protected Action onActionComplete;
+        protected Action OnActionComplete;
         protected virtual void Awake()
         {
             unit = GetComponent<Unit>();
@@ -28,6 +28,18 @@ namespace TurnBase
         public virtual int GetActionPointsCost()
         {
             return 1;
+        }
+
+        protected void ActionStart(Action onActionComplete)
+        {
+            isActive = true;
+            this.OnActionComplete = onActionComplete;
+        }
+
+        protected void ActionComplete()
+        {
+            isActive = false;
+            OnActionComplete();
         }
     }
 

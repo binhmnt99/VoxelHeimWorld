@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,9 @@ namespace TurnBase
         void Awake()
         {
             actionButtonUIList = new List<ActionButtonUI>();
+
+            actionButtonContainerTransform = transform.GetChild(0).GetComponent<Transform>();
+            actionPointText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         }
         void Start()
         {

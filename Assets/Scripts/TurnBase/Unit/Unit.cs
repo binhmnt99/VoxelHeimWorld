@@ -8,28 +8,38 @@ namespace TurnBase
     public class Unit : MonoBehaviour
     {
         [SerializeField] private int actionPointMax = 5;
+        [SerializeField] private bool isEnemy;
         private GridPosition gridPosition;
         private MoveAction moveAction;
-        private SpinAction spinAction;
         private BaseAction[] baseActionArray;
         private int actionPoint;
 
+        private HealthSystem healthSystem;
+
         public static event EventHandler OnAnyActionPointsChanged;
+
+        public Unit()
+        {
+            actionPoint = actionPointMax;
+        }
 
         void Awake()
         {
             moveAction = GetComponent<MoveAction>();
-            spinAction = GetComponent<SpinAction>();
             baseActionArray = GetComponents<BaseAction>();
+            healthSystem = GetComponent<HealthSystem>();
         }
 
         void Start()
         {
-            actionPoint = actionPointMax;
+            //actionPoint = actionPointMax;
+            Debug.Log(actionPoint);
             gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
             LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
 
             TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
+
+            healthSystem.OnDead += HealthSystem_OnDead;
         }
 
         // Update is called once per frame
@@ -48,14 +58,14 @@ namespace TurnBase
             return moveAction;
         }
 
-        public SpinAction GetSpinAction()
-        {
-            return spinAction;
-        }
-
         public GridPosition GetGridPosition()
         {
             return gridPosition;
+        }
+
+        public Vector3 GetWorldPosition()
+        {
+            return transform.position;
         }
 
         public BaseAction[] GetBaseActionArray()
@@ -97,14 +107,36 @@ namespace TurnBase
 
         public int GetActionPoints()
         {
+            Debug.Log("GetActionPoints " + actionPoint);
             return actionPoint;
         }
 
         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
         {
-            actionPoint = actionPointMax;
+            if ((IsEnemy() && TurnSystem.Instance.IsPlayerTurn())
+            || (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
+            {
+                actionPoint = actionPointMax;
 
-            OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+                OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public bool IsEnemy()
+        {
+            return isEnemy;
+        }
+
+        public void Damage(int damageAmount)
+        {
+            healthSystem.Damage(damageAmount);
+            Debug.Log("Damage " + transform);
+        }
+
+        private void HealthSystem_OnDead(object sender, EventArgs e)
+        {
+            LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition,this);
+            Destroy(gameObject);
         }
     }
 }
