@@ -81,8 +81,6 @@ namespace TurnBase
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
-            ActionStart(onActionComplete);
-
             targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
 
             state = ShootState.AIMING;
@@ -90,6 +88,7 @@ namespace TurnBase
             stateTimer = aimingStateTime;
 
             canShootBullet = true;
+            ActionStart(onActionComplete);
         }
 
 
@@ -146,11 +145,18 @@ namespace TurnBase
 
         private void Shoot()
         {
-            OnShoot?.Invoke(this,new OnShootEventArgs{
+            OnShoot?.Invoke(this, new OnShootEventArgs
+            {
                 targetUnit = targetUnit,
                 shootingUnit = unit
             });
             targetUnit.Damage(4);
         }
+
+        public Unit GetTargetUnit()
+        {
+            return targetUnit;
+        }
+
     }
 }

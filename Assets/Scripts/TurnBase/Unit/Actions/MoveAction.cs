@@ -50,19 +50,20 @@ namespace TurnBase
             {
                 transform.position += moveDirection * Time.deltaTime * moveSpeed;
 
-                OnStartMoving?.Invoke(this,EventArgs.Empty);
+                OnStartMoving?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                OnStopMoving?.Invoke(this,EventArgs.Empty);
+                OnStopMoving?.Invoke(this, EventArgs.Empty);
                 ActionComplete();
             }
         }
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
-            ActionStart(onActionComplete);
             this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+            OnStartMoving?.Invoke(this, EventArgs.Empty);
+            ActionStart(onActionComplete);
         }
 
         public override List<GridPosition> GetValidActionGridPositionsList()

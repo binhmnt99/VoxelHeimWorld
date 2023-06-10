@@ -7,6 +7,8 @@ namespace TurnBase
 {
     public abstract class BaseAction : MonoBehaviour
     {
+        public static event EventHandler OnAnyActionStarted;
+        public static event EventHandler OnAnyActionCompleted;
         protected Unit unit;
         protected bool isActive;
         protected Action OnActionComplete;
@@ -34,13 +36,23 @@ namespace TurnBase
         {
             isActive = true;
             this.OnActionComplete = onActionComplete;
+
+            OnAnyActionStarted?.Invoke(this, EventArgs.Empty);
         }
 
         protected void ActionComplete()
         {
             isActive = false;
             OnActionComplete();
+
+            OnAnyActionCompleted?.Invoke(this, EventArgs.Empty);
         }
+
+        public Unit GetUnit()
+        {
+            return unit;
+        }
+
     }
 
 }
