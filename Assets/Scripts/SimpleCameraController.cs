@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 #endif
 
 using UnityEngine;
-using Voxel;
 
 namespace UnityTemplateProjects
 {

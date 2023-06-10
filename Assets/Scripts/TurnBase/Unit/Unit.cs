@@ -32,8 +32,6 @@ namespace TurnBase
 
         void Start()
         {
-            //actionPoint = actionPointMax;
-            Debug.Log(actionPoint);
             gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
             LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
 
@@ -107,7 +105,6 @@ namespace TurnBase
 
         public int GetActionPoints()
         {
-            Debug.Log("GetActionPoints " + actionPoint);
             return actionPoint;
         }
 
@@ -130,7 +127,6 @@ namespace TurnBase
         public void Damage(int damageAmount)
         {
             healthSystem.Damage(damageAmount);
-            Debug.Log("Damage " + transform);
         }
 
         private void HealthSystem_OnDead(object sender, EventArgs e)
