@@ -8,6 +8,8 @@ namespace TurnBase
     public class CameraManager : MonoBehaviour
     {
         [SerializeField] private GameObject actionCameraGameObject;
+        [SerializeField] private Vector3 _actionCameraOffset;
+
         void Start()
         {
             BaseAction.OnAnyActionStarted += BaseAction_OnAnyActionStarted;
@@ -35,11 +37,12 @@ namespace TurnBase
                 case ShootAction shootAction:
                     Unit shooterUnit = shootAction.GetUnit();
                     Unit targetUnit = shootAction.GetTargetUnit();
-                    Vector3 cameraCharacterHeight = (Vector3.up + Vector3.left) * 2.5f;
+                    Vector3 cameraCharacterHeight = Vector3.up * _actionCameraOffset.y;
                     Vector3 shootDirection = (targetUnit.GetWorldPosition() - shooterUnit.GetWorldPosition()).normalized;
-                    float shoulderOffsetAmount = 0.5f;
-                    Vector3 shoulderOffet = Quaternion.Euler(0, 90, 0) * shootDirection * shoulderOffsetAmount;
-                    Vector3 actionCameraPosition = shooterUnit.GetWorldPosition() + cameraCharacterHeight + shoulderOffet + shootDirection * -1;
+                    float shoulderOffsetAmount = _actionCameraOffset.x;
+                    Vector3 shoulderOffset = Quaternion.Euler(0, 90, 0) * shootDirection * shoulderOffsetAmount;
+                    Vector3 actionCameraPosition = shooterUnit.GetWorldPosition() + cameraCharacterHeight 
+                        + shoulderOffset + shootDirection * _actionCameraOffset.z;
                     actionCameraGameObject.transform.position = actionCameraPosition;
                     actionCameraGameObject.transform.LookAt(targetUnit.GetWorldPosition() + cameraCharacterHeight);
                     ShowActionCamera();

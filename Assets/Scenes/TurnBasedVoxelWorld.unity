@@ -2437,6 +2437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionCameraGameObject: {fileID: 762648545}
+  _actionCameraOffset: {x: 8, y: 2.5, z: -4}
 --- !u!1 &1345360801
 GameObject:
   m_ObjectHideFlags: 0
