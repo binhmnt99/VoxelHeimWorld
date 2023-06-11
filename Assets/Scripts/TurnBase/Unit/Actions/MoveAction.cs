@@ -66,7 +66,7 @@ namespace TurnBase
             ActionStart(onActionComplete);
         }
 
-        public override List<GridPosition> GetValidActionGridPositionsList()
+        public override List<GridPosition> GetValidActionGridPositionList()
         {
             List<GridPosition> validGridPositionList = new List<GridPosition>();
             GridPosition unitGridPosition = unit.GetGridPosition();
@@ -99,7 +99,7 @@ namespace TurnBase
 
         public override bool IsValidActionGridPosition(GridPosition gridPosition)
         {
-            List<GridPosition> validGridPositionList = GetValidActionGridPositionsList();
+            List<GridPosition> validGridPositionList = GetValidActionGridPositionList();
             return validGridPositionList.Contains(gridPosition);
         }
 

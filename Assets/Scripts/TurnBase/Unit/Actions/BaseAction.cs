@@ -21,11 +21,11 @@ namespace TurnBase
         public abstract void TakeAction(GridPosition gridPosition, Action onActionComplete);
         public virtual bool IsValidActionGridPosition(GridPosition gridPosition)
         {
-            List<GridPosition> validGridPositionList = GetValidActionGridPositionsList();
+            List<GridPosition> validGridPositionList = GetValidActionGridPositionList();
             return validGridPositionList.Contains(gridPosition);
         }
 
-        public abstract List<GridPosition> GetValidActionGridPositionsList();
+        public abstract List<GridPosition> GetValidActionGridPositionList();
 
         public virtual int GetActionPointsCost()
         {

@@ -14,7 +14,7 @@ namespace TurnBase
             ActionStart(onActionComplete);
             totalSpinAmount = 0;
         }
-        public override List<GridPosition> GetValidActionGridPositionsList()
+        public override List<GridPosition> GetValidActionGridPositionList()
         {
             List<GridPosition> validGridPositionList = new List<GridPosition>();
             GridPosition unitGridPosition = unit.GetGridPosition();

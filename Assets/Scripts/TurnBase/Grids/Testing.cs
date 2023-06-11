@@ -18,8 +18,8 @@ namespace TurnBase
             //Debug.Log(gridSystem.GetGridPosition(MouseWorld.GetPosition()));
             if (Input.GetKeyDown(KeyCode.T))
             {
-                GridSystemVisual.Instance.HideAllGridPosition();
-                GridSystemVisual.Instance.ShowGridPositionList(unit.GetMoveAction().GetValidActionGridPositionsList());
+                //GridSystemVisual.Instance.HideAllGridPosition();
+                //GridSystemVisual.Instance.ShowGridPositionList(unit.GetMoveAction().GetValidActionGridPositionsList());
             }
         }
     }

@@ -38,7 +38,7 @@ namespace TurnBase
             return "Shoot";
         }
 
-        public override List<GridPosition> GetValidActionGridPositionsList()
+        public override List<GridPosition> GetValidActionGridPositionList()
         {
             List<GridPosition> validGridPositionList = new List<GridPosition>();
             GridPosition unitGridPosition = unit.GetGridPosition();
@@ -156,6 +156,11 @@ namespace TurnBase
         public Unit GetTargetUnit()
         {
             return targetUnit;
+        }
+
+        public int GetShootDistance()
+        {
+            return maxShootDistance;
         }
 
     }

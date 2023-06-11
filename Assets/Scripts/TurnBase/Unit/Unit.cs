@@ -46,8 +46,10 @@ namespace TurnBase
             GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
             if (newGridPosition != gridPosition)
             {
-                LevelGrid.Instance.UnitMoveGridPosition(this, gridPosition, newGridPosition);
+                GridPosition oldGridPosition = gridPosition;
                 gridPosition = newGridPosition;
+                LevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
+
             }
         }
 
@@ -131,7 +133,7 @@ namespace TurnBase
 
         private void HealthSystem_OnDead(object sender, EventArgs e)
         {
-            LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition,this);
+            LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
             Destroy(gameObject);
         }
     }
