@@ -13,8 +13,8 @@ namespace TurnBase
 
         [SerializeField] private int gridRow = 10;
         [SerializeField] private int gridColumn = 10;
-        [SerializeField] private float cellSize = 2f;
-        private GridSystem gridSystem;
+        private float cellSize = 2f;
+        private GridSystem<GridObject> gridSystem;
 
         void Awake()
         {
@@ -25,8 +25,8 @@ namespace TurnBase
                 return;
             }
             Instance = this;
-            gridSystem = new GridSystem(gridRow, gridColumn, cellSize);
-            gridSystem.CreateDebugObject(gridDebugObjectPrefab);
+            gridSystem = new GridSystem<GridObject>(gridRow, gridColumn, cellSize,(GridSystem<GridObject> grid, GridPosition gridPosition) => new GridObject(grid, gridPosition));
+            //gridSystem.CreateDebugObject(gridDebugObjectPrefab);
         }
 
         public void AddUnitAtGridPosition(GridPosition gridPosition, Unit unit)

@@ -1,34 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace TurnBase
 {
-    public class GridSystem
+    public class GridSystem<TGridObject>
     {
         private int width;
         private int height;
         private float cellSize;
 
-        private GridObject[,] gridObjects;
+        private TGridObject[,] gridObjects;
         private GridPosition gridPosition;
         private GameObject deBugGridSystem;
 
-        public GridSystem(int width, int height, float cellSize)
+        public GridSystem(int width, int height, float cellSize, Func<GridSystem<TGridObject>, GridPosition, TGridObject> createGridObject)
         {
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
 
-            gridObjects = new GridObject[width, height];
+            gridObjects = new TGridObject[width, height];
             deBugGridSystem = new GameObject("DebugGridSystem");
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)
                 {
-                    //Debug.DrawLine(GetWorldPosition(x,z, cellSize),GetWorldPosition(x,z,cellSize) + Vector3.right * .2f, Color.red, 1000);
                     gridPosition = new GridPosition(x, z);
-                    gridObjects[x, z] = new GridObject(this, gridPosition);
+                    gridObjects[x, z] = createGridObject(this, gridPosition);
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace TurnBase
             }
         }
 
-        public GridObject GetGridObject(GridPosition gridPosition)
+        public TGridObject GetGridObject(GridPosition gridPosition)
         {
             return gridObjects[gridPosition.x, gridPosition.z];
         }
