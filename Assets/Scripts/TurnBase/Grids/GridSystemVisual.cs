@@ -9,7 +9,7 @@ namespace TurnBase
     {
         public static GridSystemVisual Instance { get; private set; }
         [Serializable]
-        public struct GridSystemVisualTypeMaterial
+        public struct GridVisualTypeMaterial
         {
             public GridVisualType gridVisualType;
             public Material gridMaterial;
@@ -23,55 +23,47 @@ namespace TurnBase
             Yellow,
             White
         }
-        [SerializeField] private Transform gridVisualSquadPrefab;
-        [SerializeField] private List<GridSystemVisualTypeMaterial> gridSystemVisualTypeMaterialList;
-        private GridSystemVisualSquad[,] gridSystemVisualSingleArray;
-        private GameObject gridVisualSquad;
-        private Unit selectedUnit;
+        [SerializeField] private Transform gridSystemVisualSquadPrefab;
+        [SerializeField] private List<GridVisualTypeMaterial> gridVisualTypeMaterialList;
 
-        void Awake()
+        private GameObject gridSquadVisual;
+        private GridSystemVisualSquad[,] gridSystemVisualSquadArray;
+
+
+        private void Awake()
         {
             if (Instance != null)
             {
-
                 Destroy(gameObject);
                 return;
             }
             Instance = this;
         }
-        // Start is called before the first frame update
-        void Start()
+
+        private void Start()
         {
-            gridSystemVisualSingleArray = new GridSystemVisualSquad[LevelGrid.Instance.GetWidth(), LevelGrid.Instance.GetHeight()];
-            gridVisualSquad = new GameObject("GridVisualSquad");
+            gridSquadVisual = new GameObject("UnitGridSquadVisual");
+            gridSystemVisualSquadArray = new GridSystemVisualSquad[
+                LevelGrid.Instance.GetWidth(),
+                LevelGrid.Instance.GetHeight()
+            ];
+
             for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++)
             {
                 for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
                     GridPosition gridPosition = new GridPosition(x, z);
-                    Transform gridVisualSquadTransform = Instantiate(gridVisualSquadPrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, gridVisualSquad.transform);
-                    gridSystemVisualSingleArray[x, z] = gridVisualSquadTransform.GetComponent<GridSystemVisualSquad>();
+
+                    Transform gridSystemVisualSingleTransform =
+                        Instantiate(gridSystemVisualSquadPrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, gridSquadVisual.transform);
+
+                    gridSystemVisualSquadArray[x, z] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSquad>();
                 }
             }
 
             UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
             LevelGrid.Instance.OnAnyUnitMovedGridPosition += LevelGrid_OnAnyUnitMovedGridPosition;
 
-            //UpdateGridVisual();
-        }
-
-        private void LevelGrid_OnAnyUnitMovedGridPosition(object sender, EventArgs e)
-        {
-            UpdateGridVisual();
-        }
-
-        private void UnitActionSystem_OnSelectedActionChanged(object sender, EventArgs e)
-        {
-            UpdateGridVisual();
-        }
-
-        void Update()
-        {
             UpdateGridVisual();
         }
 
@@ -81,7 +73,7 @@ namespace TurnBase
             {
                 for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
-                    gridSystemVisualSingleArray[x, z].Hide();
+                    gridSystemVisualSquadArray[x, z].Hide();
                 }
             }
         }
@@ -112,16 +104,15 @@ namespace TurnBase
             }
 
             ShowGridPositionList(gridPositionList, gridVisualType);
-
         }
+
         public void ShowGridPositionList(List<GridPosition> gridPositionList, GridVisualType gridVisualType)
         {
             foreach (GridPosition gridPosition in gridPositionList)
             {
-                gridSystemVisualSingleArray[gridPosition.x, gridPosition.z].
+                gridSystemVisualSquadArray[gridPosition.x, gridPosition.z].
                     Show(GetGridVisualTypeMaterial(gridVisualType));
             }
-
         }
 
         private void UpdateGridVisual()
@@ -149,20 +140,32 @@ namespace TurnBase
                     break;
             }
 
-            ShowGridPositionList(selectedAction.GetValidActionGridPositionList(), gridVisualType);
+            ShowGridPositionList(
+                selectedAction.GetValidActionGridPositionList(), gridVisualType);
+        }
 
+        private void UnitActionSystem_OnSelectedActionChanged(object sender, EventArgs e)
+        {
+            UpdateGridVisual();
+        }
+
+        private void LevelGrid_OnAnyUnitMovedGridPosition(object sender, EventArgs e)
+        {
+            UpdateGridVisual();
         }
 
         private Material GetGridVisualTypeMaterial(GridVisualType gridVisualType)
         {
-            foreach (GridSystemVisualTypeMaterial gridVisualTypeMaterial in gridSystemVisualTypeMaterialList)
+            foreach (GridVisualTypeMaterial gridVisualTypeMaterial in gridVisualTypeMaterialList)
             {
                 if (gridVisualTypeMaterial.gridVisualType == gridVisualType)
                 {
                     return gridVisualTypeMaterial.gridMaterial;
                 }
             }
+
             return null;
         }
+
     }
 }

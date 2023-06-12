@@ -27,6 +27,7 @@ namespace TurnBase
             //animator = GetComponentInChildren<Animator>();
         }
         // Update is called once per frame
+
         void Update()
         {
             MoveDirection();
@@ -91,21 +92,26 @@ namespace TurnBase
                         continue;
                     }
                     validGridPositionList.Add(testGridPosition);
-                    //Debug.Log(testGridPosition);
                 }
             }
             return validGridPositionList;
-        }
-
-        public override bool IsValidActionGridPosition(GridPosition gridPosition)
-        {
-            List<GridPosition> validGridPositionList = GetValidActionGridPositionList();
-            return validGridPositionList.Contains(gridPosition);
         }
 
         public override string GetActionName()
         {
             return "Move";
         }
+
+        public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+        {
+            int targetCountAtGridPosition = unit.GetAction<ShootAction>().GetTargetCountAtPosition(gridPosition);
+
+            return new EnemyAIAction
+            {
+                gridPosition = gridPosition,
+                actionValue = targetCountAtGridPosition * 10,
+            };
+        }
+
     }
 }

@@ -31,7 +31,68 @@ namespace TurnBase
         private Unit targetUnit;
         private bool canShootBullet;
 
-        public List<GameObject> weapon;
+        //public List<GameObject> weapon;
+
+        void Update()
+        {
+            if (!isActive)
+            {
+                return;
+            }
+
+            stateTimer -= Time.deltaTime;
+            switch (state)
+            {
+                case ShootState.AIMING:
+                    Vector3 aimDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
+                    transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * aimSpeed);
+                    break;
+                case ShootState.SHOOTING:
+                    if (canShootBullet)
+                    {
+                        Shoot();
+                        canShootBullet = false;
+                    }
+                    break;
+                case ShootState.COOLOFF:
+
+                    break;
+            }
+            if (stateTimer <= 0f)
+            {
+                NextState();
+            }
+        }
+
+        private void NextState()
+        {
+            switch (state)
+            {
+                case ShootState.AIMING:
+                    state = ShootState.SHOOTING;
+                    float shootingStateTime = .1f;
+                    stateTimer = shootingStateTime;
+                    break;
+                case ShootState.SHOOTING:
+                    state = ShootState.COOLOFF;
+                    float coolOffStateTime = .5f;
+                    stateTimer = coolOffStateTime;
+                    break;
+                case ShootState.COOLOFF:
+                    ActionComplete();
+                    break;
+            }
+        }
+
+        private void Shoot()
+        {
+            OnShoot?.Invoke(this, new OnShootEventArgs
+            {
+                targetUnit = targetUnit,
+                shootingUnit = unit
+            });
+            targetUnit.Damage(4);
+        }
 
         public override string GetActionName()
         {
@@ -40,8 +101,12 @@ namespace TurnBase
 
         public override List<GridPosition> GetValidActionGridPositionList()
         {
-            List<GridPosition> validGridPositionList = new List<GridPosition>();
             GridPosition unitGridPosition = unit.GetGridPosition();
+            return GetValidActionGridPositionList(unitGridPosition);
+        }
+        public List<GridPosition> GetValidActionGridPositionList(GridPosition unitGridPosition)
+        {
+            List<GridPosition> validGridPositionList = new List<GridPosition>();
             for (int x = -maxShootDistance; x <= maxShootDistance; x++)
             {
                 for (int z = -maxShootDistance; z <= maxShootDistance; z++)
@@ -91,68 +156,6 @@ namespace TurnBase
             ActionStart(onActionComplete);
         }
 
-
-        void Update()
-        {
-            if (!isActive)
-            {
-                return;
-            }
-
-            stateTimer -= Time.deltaTime;
-            switch (state)
-            {
-                case ShootState.AIMING:
-                    Vector3 aimDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
-                    transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * aimSpeed);
-                    break;
-                case ShootState.SHOOTING:
-                    if (canShootBullet)
-                    {
-                        Shoot();
-                        canShootBullet = false;
-                    }
-                    break;
-                case ShootState.COOLOFF:
-
-                    break;
-            }
-            if (stateTimer <= 0f)
-            {
-                NextState();
-            }
-        }
-
-        private void NextState()
-        {
-            switch (state)
-            {
-                case ShootState.AIMING:
-                    state = ShootState.SHOOTING;
-                    float shootingStateTime = .15f;
-                    stateTimer = shootingStateTime;
-                    break;
-                case ShootState.SHOOTING:
-                    state = ShootState.COOLOFF;
-                    float coolOffStateTime = .5f;
-                    stateTimer = coolOffStateTime;
-                    break;
-                case ShootState.COOLOFF:
-                    ActionComplete();
-                    break;
-            }
-        }
-
-        private void Shoot()
-        {
-            OnShoot?.Invoke(this, new OnShootEventArgs
-            {
-                targetUnit = targetUnit,
-                shootingUnit = unit
-            });
-            targetUnit.Damage(4);
-        }
-
         public Unit GetTargetUnit()
         {
             return targetUnit;
@@ -163,5 +166,19 @@ namespace TurnBase
             return maxShootDistance;
         }
 
+        public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+        {
+            Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+            return new EnemyAIAction
+            {
+                gridPosition = gridPosition,
+                actionValue = 100 + Mathf.RoundToInt((1 - targetUnit.GetHealthNormalized()) * 100f)
+            };
+        }
+
+        public int GetTargetCountAtPosition(GridPosition gridPosition)
+        {
+            return GetValidActionGridPositionList(gridPosition).Count;
+        }
     }
 }

@@ -15,13 +15,27 @@ namespace TurnBase
         // Update is called once per frame
         void Update()
         {
-            //Debug.Log(gridSystem.GetGridPosition(MouseWorld.GetPosition()));
             if (Input.GetKeyDown(KeyCode.T))
             {
-                //GridSystemVisual.Instance.HideAllGridPosition();
-                //GridSystemVisual.Instance.ShowGridPositionList(unit.GetMoveAction().GetValidActionGridPositionsList());
+                MyClass myClass = new MyClass(6);
+                myClass.Testing<string>("testing");
             }
         }
     }
 
+    public class MyClass
+    {
+        private int i;
+
+        public MyClass(int i)
+        {
+            this.i = i;
+            Debug.Log(i);
+        }
+
+        public void Testing<T>(T t)
+        {
+            Debug.Log(t);
+        }
+    }
 }

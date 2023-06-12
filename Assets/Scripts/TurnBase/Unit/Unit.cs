@@ -7,25 +7,21 @@ namespace TurnBase
 {
     public class Unit : MonoBehaviour
     {
-        [SerializeField] private int actionPointMax = 5;
+        [SerializeField] private int actionPointMax;
         [SerializeField] private bool isEnemy;
         private GridPosition gridPosition;
-        private MoveAction moveAction;
         private BaseAction[] baseActionArray;
         private int actionPoint;
 
         private HealthSystem healthSystem;
 
         public static event EventHandler OnAnyActionPointsChanged;
-
-        public Unit()
-        {
-            actionPoint = actionPointMax;
-        }
+        public static event EventHandler OnAnyUnitSpawned;
+        public static event EventHandler OnAnyUnitDead;
 
         void Awake()
         {
-            moveAction = GetComponent<MoveAction>();
+            actionPoint = actionPointMax;
             baseActionArray = GetComponents<BaseAction>();
             healthSystem = GetComponent<HealthSystem>();
         }
@@ -38,6 +34,8 @@ namespace TurnBase
             TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
 
             healthSystem.OnDead += HealthSystem_OnDead;
+
+            OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
         }
 
         // Update is called once per frame
@@ -53,9 +51,16 @@ namespace TurnBase
             }
         }
 
-        public MoveAction GetMoveAction()
+        public T GetAction<T>() where T : BaseAction
         {
-            return moveAction;
+            foreach (BaseAction baseAction in baseActionArray)
+            {
+                if (baseAction is T)
+                {
+                    return (T)baseAction;
+                }
+            }
+            return null;
         }
 
         public GridPosition GetGridPosition()
@@ -135,6 +140,12 @@ namespace TurnBase
         {
             LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
             Destroy(gameObject);
+            OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
+        }
+
+        public float GetHealthNormalized()
+        {
+            return healthSystem.GetHealthNormalize();
         }
     }
 }
