@@ -14,6 +14,7 @@ namespace TurnBase
         private const int MOVE_DIAGONAL_COST = 14;
 
         [SerializeField] private Transform gridDebugObjectPrefab;
+        [SerializeField] private LayerMask obstaclesLayerMask;
 
         private int width;
         private int height;
@@ -40,8 +41,19 @@ namespace TurnBase
                 (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
             gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
-            GetNode(1,0).SetIsWalkable(false);
-            GetNode(1,1).SetIsWalkable(false);
+            for (int x = 0; x < width; x++)
+            {
+                for (int z = 0; z < height; z++)
+                {
+                    GridPosition gridPosition = new GridPosition(x,z);
+                    Vector3 worldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+                    float rayOffsetDistance = 5f;
+                    if (Physics.Raycast(worldPosition + Vector3.down * rayOffsetDistance, Vector3.up, rayOffsetDistance * 2, obstaclesLayerMask))
+                    {
+                        GetNode(x,z).SetIsWalkable(false);
+                    }
+                }
+            }
         }
 
         public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
