@@ -22,7 +22,6 @@ namespace TurnBase
             this.cellSize = cellSize;
 
             gridObjects = new TGridObject[width, height];
-            deBugGridSystem = new GameObject("DebugGridSystem");
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)
@@ -43,8 +42,9 @@ namespace TurnBase
             return new GridPosition(Mathf.RoundToInt(worldPosition.x / cellSize), Mathf.RoundToInt(worldPosition.z / cellSize));
         }
 
-        public void CreateDebugObject(Transform debugPrefab)
+        public void CreateDebugObjects(Transform debugPrefab)
         {
+            deBugGridSystem = new GameObject("DebugGridSystem");
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)
