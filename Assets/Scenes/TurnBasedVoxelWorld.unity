@@ -576,8 +576,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridDebugObjectPrefab: {fileID: 8687489423780995157, guid: f1fe69ab6c7e81d4288ebd3f2ce227eb, type: 3}
-  gridRow: 10
-  gridColumn: 10
+  width: 10
+  height: 10
+  cellSize: 2
 --- !u!4 &527512966
 Transform:
   m_ObjectHideFlags: 0
@@ -3194,8 +3195,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridDebugObjectPrefab: {fileID: 8687489423780995157, guid: 0deb01e75eaf8f44cb669b0cebafb335, type: 3}
-  width: 0
-  height: 0
 --- !u!4 &1709029127
 Transform:
   m_ObjectHideFlags: 0
