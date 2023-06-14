@@ -10,22 +10,15 @@ namespace TurnBase
     {
         public event EventHandler OnStartMoving;
         public event EventHandler OnStopMoving;
-        [SerializeField] private Vector3 targetPosition;
-        [SerializeField][Range(0, 100)] private int maxMoveDistance = 5;
+        [SerializeField] private List<Vector3> positionList;
+        private int currentPositionIndex;
+        [SerializeField] private int maxMoveDistance = 3;
         private float roundedEnd = 0.5f;
         [SerializeField] private float moveSpeed = 4f;
         [SerializeField] private float rotateSpeed = 50f;
         [SerializeField] private float stopDistance = .1f;
         private Vector3 moveDirection;
-        //private Animator animator;
 
-        // Start is called before the first frame update
-        protected override void Awake()
-        {
-            base.Awake();
-            targetPosition = transform.position;
-            //animator = GetComponentInChildren<Animator>();
-        }
         // Update is called once per frame
 
         void Update()
@@ -39,6 +32,8 @@ namespace TurnBase
             {
                 return;
             }
+
+            Vector3 targetPosition = positionList[currentPositionIndex];
             moveDirection = (targetPosition - transform.position).normalized;
             float differentAngle = Vector3.Angle(moveDirection, transform.forward);
             if (differentAngle > 0f)
@@ -55,14 +50,25 @@ namespace TurnBase
             }
             else
             {
-                OnStopMoving?.Invoke(this, EventArgs.Empty);
-                ActionComplete();
+                currentPositionIndex++;
+                if (currentPositionIndex >= positionList.Count)
+                {
+                    OnStopMoving?.Invoke(this, EventArgs.Empty);
+                    ActionComplete();
+                }
             }
         }
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
-            this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+            List<GridPosition> pathGridPositionList = Pathfinding.Instance.FindPath(unit.GetGridPosition(), gridPosition, out int pathLength);
+            currentPositionIndex = 0;
+            positionList = new List<Vector3>();
+            foreach (GridPosition pathGridPosition in pathGridPositionList)
+            {
+                positionList.Add(LevelGrid.Instance.GetWorldPosition(pathGridPosition));
+            }
+
             OnStartMoving?.Invoke(this, EventArgs.Empty);
             ActionStart(onActionComplete);
         }
@@ -88,6 +94,19 @@ namespace TurnBase
                         continue;
                     }
                     if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
+                    {
+                        continue;
+                    }
+                    if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                    {
+                        continue;
+                    }
+                    if (!Pathfinding.Instance.HasPath(unitGridPosition,testGridPosition))
+                    {
+                        continue;
+                    }
+                    int pathfindingDistanceMultiplier = 10;
+                    if(Pathfinding.Instance.GetPathLength(unitGridPosition, testGridPosition) > maxMoveDistance * pathfindingDistanceMultiplier)
                     {
                         continue;
                     }

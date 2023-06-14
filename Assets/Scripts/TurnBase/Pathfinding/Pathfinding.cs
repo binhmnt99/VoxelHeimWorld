@@ -45,18 +45,18 @@ namespace TurnBase
             {
                 for (int z = 0; z < height; z++)
                 {
-                    GridPosition gridPosition = new GridPosition(x,z);
+                    GridPosition gridPosition = new GridPosition(x, z);
                     Vector3 worldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
                     float rayOffsetDistance = 5f;
                     if (Physics.Raycast(worldPosition + Vector3.down * rayOffsetDistance, Vector3.up, rayOffsetDistance * 2, obstaclesLayerMask))
                     {
-                        GetNode(x,z).SetIsWalkable(false);
+                        GetNode(x, z).SetIsWalkable(false);
                     }
                 }
             }
         }
 
-        public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
+        public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition, out int pathLength)
         {
             List<PathNode> openList = new List<PathNode>();
             List<PathNode> closedList = new List<PathNode>();
@@ -89,6 +89,7 @@ namespace TurnBase
 
                 if (currentNode == endNode)
                 {
+                    pathLength = endNode.GetFCost();
                     // Reached final node
                     return CalculatePath(endNode);
                 }
@@ -126,7 +127,7 @@ namespace TurnBase
                     }
                 }
             }
-
+            pathLength = 0;
             // No path found
             return null;
         }
@@ -233,6 +234,21 @@ namespace TurnBase
             return gridPositionList;
         }
 
+        public bool IsWalkableGridPosition(GridPosition gridPosition)
+        {
+            return gridSystem.GetGridObject(gridPosition).IsWalkable();
+        }
+
+        public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)
+        {
+            return FindPath(startGridPosition, endGridPosition, out int pathLength) != null;
+        }
+
+        public int GetPathLength(GridPosition startGridPosition, GridPosition endGridPosition)
+        {
+            FindPath(startGridPosition, endGridPosition, out int pathLength);
+            return pathLength;
+        }
     }
 
 }

@@ -69,7 +69,10 @@ namespace TurnBase
                 EnemyAIAction enemyAIAction = GetEnemyAIAction(gridPosition);
                 enemyAIActionList.Add(enemyAIAction);
             }
-
+            foreach (var item in enemyAIActionList)
+            {
+                Debug.Log(item.actionValue);
+            }
             if (enemyAIActionList.Count > 0)
             {
                 enemyAIActionList.Sort((EnemyAIAction a, EnemyAIAction b) => b.actionValue - a.actionValue);

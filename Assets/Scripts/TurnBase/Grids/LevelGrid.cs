@@ -29,7 +29,7 @@ public static LevelGrid Instance { get; private set; }
         }
         Instance = this;
 
-        gridSystem = new GridSystem<GridObject>(10, 10, 2f, 
+        gridSystem = new GridSystem<GridObject>(width, height, cellSize, 
                 (GridSystem<GridObject> g, GridPosition gridPosition) => new GridObject(g, gridPosition));
         //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
     }

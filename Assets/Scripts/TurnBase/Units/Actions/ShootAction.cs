@@ -28,8 +28,11 @@ namespace TurnBase
 
         [SerializeField] private float aimSpeed = 10f;
 
+        [SerializeField] private LayerMask obstaclesMaskLayer;
+
         private Unit targetUnit;
         private bool canShootBullet;
+
 
         //public List<GameObject> weapon;
 
@@ -135,7 +138,19 @@ namespace TurnBase
                     {
                         continue;
                     }
-
+                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                    Vector3 shootDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
+                    float unitShoulderHeight = 1.5f;
+                    if (Physics.Raycast(
+                        unitWorldPosition + Vector3.up * unitShoulderHeight,
+                        shootDirection,
+                        Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
+                        obstaclesMaskLayer
+                    ))
+                    {
+                        //Block by Obstacles
+                        continue;
+                    }
                     validGridPositionList.Add(testGridPosition);
 
 
