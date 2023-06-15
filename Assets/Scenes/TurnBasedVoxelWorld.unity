@@ -358,6 +358,14 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7637842907733278197, guid: e742e7891c1b0a84e8faef9ac9bdb629, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7900032934659750944, guid: e742e7891c1b0a84e8faef9ac9bdb629, type: 3}
+      propertyPath: stopDistance
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 7900032934659750944, guid: e742e7891c1b0a84e8faef9ac9bdb629, type: 3}
       propertyPath: maxMoveDistance
       value: 5
@@ -434,6 +442,10 @@ PrefabInstance:
     - target: {fileID: 4233478894324689937, guid: e742e7891c1b0a84e8faef9ac9bdb629, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7900032934659750944, guid: e742e7891c1b0a84e8faef9ac9bdb629, type: 3}
+      propertyPath: stopDistance
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7900032934659750944, guid: e742e7891c1b0a84e8faef9ac9bdb629, type: 3}
       propertyPath: maxMoveDistance

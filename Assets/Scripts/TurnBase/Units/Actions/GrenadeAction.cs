@@ -16,7 +16,6 @@ namespace TurnBase
             {
                 return;
             }
-            ActionComplete();
         }
         public override string GetActionName()
         {
@@ -63,7 +62,7 @@ namespace TurnBase
         {
             Transform grenadeProjectileTransform = Instantiate(grenadeProjectilePrefab, unit.GetWorldPosition(), Quaternion.identity);
             GrenadeProjectile grenadeProjectile = grenadeProjectileTransform.GetComponent<GrenadeProjectile>();
-            grenadeProjectile.Setup(gridPosition, OnGrenadeBehaviourComplete);
+            grenadeProjectile.Setup(gridPosition, OnGrenadeBehaviourComplete, unit.IsEnemy());
             ActionStart(onActionComplete);
         }
 
@@ -71,6 +70,7 @@ namespace TurnBase
         {
             ActionComplete();
         }
+
     }
 
 }

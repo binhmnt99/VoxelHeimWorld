@@ -16,7 +16,7 @@ namespace TurnBase
         private float roundedEnd = 0.5f;
         [SerializeField] private float moveSpeed = 4f;
         [SerializeField] private float rotateSpeed = 50f;
-        [SerializeField] private float stopDistance = .1f;
+        [SerializeField] private float stopDistance = .01f;
         private Vector3 moveDirection;
 
         // Update is called once per frame
@@ -35,13 +35,13 @@ namespace TurnBase
 
             Vector3 targetPosition = positionList[currentPositionIndex];
             moveDirection = (targetPosition - transform.position).normalized;
-            float differentAngle = Vector3.Angle(moveDirection, transform.forward);
-            if (differentAngle > 0f)
-            {
-                transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
-                return;
-            }
-
+            // float differentAngle = Vector3.Angle(moveDirection, transform.forward);
+            // if (differentAngle > 0f)
+            // {
+            //     transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
+            //     return;
+            // }
+            transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
             if (Vector3.Distance(transform.position, targetPosition) > stopDistance)
             {
                 transform.position += moveDirection * Time.deltaTime * moveSpeed;
@@ -101,12 +101,12 @@ namespace TurnBase
                     {
                         continue;
                     }
-                    if (!Pathfinding.Instance.HasPath(unitGridPosition,testGridPosition))
+                    if (!Pathfinding.Instance.HasPath(unitGridPosition, testGridPosition))
                     {
                         continue;
                     }
                     int pathfindingDistanceMultiplier = 10;
-                    if(Pathfinding.Instance.GetPathLength(unitGridPosition, testGridPosition) > maxMoveDistance * pathfindingDistanceMultiplier)
+                    if (Pathfinding.Instance.GetPathLength(unitGridPosition, testGridPosition) > maxMoveDistance * pathfindingDistanceMultiplier)
                     {
                         continue;
                     }

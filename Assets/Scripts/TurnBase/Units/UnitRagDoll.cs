@@ -7,11 +7,11 @@ namespace TurnBase
     public class UnitRagDoll : MonoBehaviour
     {
         [SerializeField] private Transform ragDollRootBone;
-
         public void SetUp(Transform originalRootBone)
         {
             MatchAllChildTransforms(originalRootBone, ragDollRootBone);
-            ApplyExplosionToRagDoll(ragDollRootBone, 450f, transform.position, 10f);
+            Vector3 randomDirection = new Vector3(Random.Range(-1f,1f),0,Random.Range(-1f,1f));
+            ApplyExplosionToRagDoll(ragDollRootBone, 450f, transform.position + randomDirection, 10f);
         }
 
         private void MatchAllChildTransforms(Transform root, Transform clone)
