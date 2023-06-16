@@ -43,6 +43,10 @@ namespace TurnBase
                             targetUnit.Damage(10);
                         }
                     }
+                    if (targetCollider.TryGetComponent<DestructibleCrate>(out DestructibleCrate targetCrate))
+                    {
+                        targetCrate.Damage();
+                    }
                 }
                 OnAnyGrenadeExploded?.Invoke(this, EventArgs.Empty);
                 trailRenderer.transform.parent = null;

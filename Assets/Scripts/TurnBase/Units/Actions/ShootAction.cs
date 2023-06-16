@@ -147,7 +147,7 @@ namespace TurnBase
                     }
                     Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
                     Vector3 shootDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
-                    float unitShoulderHeight = 1.5f;
+                    float unitShoulderHeight = 1.1f;
                     if (Physics.Raycast(
                         unitWorldPosition + Vector3.up * unitShoulderHeight,
                         shootDirection,
