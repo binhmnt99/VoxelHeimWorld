@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace TurnBase
         private GridSystem<GridObject> gridSystem;
         private GridPosition gridPosition;
         private List<Unit> unitList;
+        private IInteractable interactable;
 
         public GridObject(GridSystem<GridObject> gridSystem, GridPosition gridPosition)
         {
@@ -57,6 +59,16 @@ namespace TurnBase
             {
                 return null;
             }
+        }
+
+        public IInteractable GetInteractable()
+        {
+            return interactable;
+        }
+
+        public void SetInteractable(IInteractable interactable)
+        {
+            this.interactable = interactable;
         }
     }
 

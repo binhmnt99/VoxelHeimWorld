@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 634187197660793121}
   - component: {fileID: 3449407389994821813}
   - component: {fileID: 3707199033163618509}
+  - component: {fileID: 7047782072607924134}
   - component: {fileID: 7900032934659750944}
   - component: {fileID: 7637842907733278197}
   - component: {fileID: 1809621021685965821}
@@ -105,8 +106,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4864b716e3625140a4cb3168ac383f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionPointMax: 7
+  actionPointMax: 2
   isEnemy: 1
+--- !u!114 &7047782072607924134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2196576013153291904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64f96a32207a4441a0014e9c5f9f71d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalSpinAmount: 0
 --- !u!114 &7900032934659750944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,7 +137,7 @@ MonoBehaviour:
   maxMoveDistance: 5
   moveSpeed: 2
   rotateSpeed: 15
-  stopDistance: 0.5
+  stopDistance: 0.01
 --- !u!114 &7637842907733278197
 MonoBehaviour:
   m_ObjectHideFlags: 0

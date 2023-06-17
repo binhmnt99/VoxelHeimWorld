@@ -135,8 +135,13 @@ namespace TurnBase
                     break;
                 case ShootAction shootAction:
                     gridVisualType = GridVisualType.Red;
-
                     ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetShootDistance(), GridVisualType.RedSoft);
+                    break;
+                case GrenadeAction grenadeAction:
+                    gridVisualType = GridVisualType.Yellow;
+                    break;
+                case InteractAction interactAction:
+                    gridVisualType = GridVisualType.Blue;
                     break;
             }
 

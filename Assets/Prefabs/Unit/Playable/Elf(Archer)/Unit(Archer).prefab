@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1679943660812719230}
   - component: {fileID: 4967873056222236571}
   - component: {fileID: 5653764760686836150}
+  - component: {fileID: 6306683556925891266}
   - component: {fileID: 1295376254611072994}
   - component: {fileID: 3023316171816776898}
   - component: {fileID: 1289217312430076056}
@@ -40,7 +41,7 @@ Transform:
   - {fileID: 2230857306021195818}
   - {fileID: 2346872313499810733}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8767484688067269200
 BoxCollider:
@@ -75,7 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4864b716e3625140a4cb3168ac383f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionPointMax: 5
+  actionPointMax: 2
   isEnemy: 0
 --- !u!114 &1679943660812719230
 MonoBehaviour:
@@ -90,8 +91,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   positionList: []
-  maxMoveDistance: 5
-  moveSpeed: 2
+  maxMoveDistance: 3
+  moveSpeed: 3
   rotateSpeed: 10
   stopDistance: 0.05
 --- !u!114 &4967873056222236571
@@ -124,6 +125,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grenadeProjectilePrefab: {fileID: 6004174009458905346, guid: a5514c6a68a01ae489c197890b8852e1, type: 3}
+--- !u!114 &6306683556925891266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4946730998909862687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6ca2ff25e20f974bad421962a6e84b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1295376254611072994
 MonoBehaviour:
   m_ObjectHideFlags: 0
