@@ -11,7 +11,7 @@ namespace TurnBase
 
 
         private const int MOVE_STRAIGHT_COST = 10;
-        private const int MOVE_DIAGONAL_COST = 14;
+        //private const int MOVE_DIAGONAL_COST = 14;
 
         [SerializeField] private Transform gridDebugObjectPrefab;
         [SerializeField] private LayerMask obstaclesLayerMask;
@@ -19,7 +19,7 @@ namespace TurnBase
         private int width;
         private int height;
         private float cellSize;
-        private GridSystem<PathNode> gridSystem;
+        private GridSystemHex<PathNode> gridSystem;
 
         private void Awake()
         {
@@ -37,8 +37,8 @@ namespace TurnBase
             this.height = height;
             this.cellSize = cellSize;
 
-            gridSystem = new GridSystem<PathNode>(width, height, cellSize,
-                (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
+            gridSystem = new GridSystemHex<PathNode>(width, height, cellSize,
+                (GridSystemHex<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
             gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
             for (int x = 0; x < width; x++)
@@ -80,7 +80,7 @@ namespace TurnBase
             }
 
             startNode.SetGCost(0);
-            startNode.SetHCost(CalculateDistance(startGridPosition, endGridPosition));
+            startNode.SetHCost(CalculateHeuristicDistance(startGridPosition, endGridPosition));
             startNode.CalculateFCost();
 
             while (openList.Count > 0)
@@ -111,13 +111,13 @@ namespace TurnBase
                     }
 
                     int tentativeGCost =
-                        currentNode.GetGCost() + CalculateDistance(currentNode.GetGridPosition(), neighborNode.GetGridPosition());
+                        currentNode.GetGCost() + CalculateHeuristicDistance(currentNode.GetGridPosition(), neighborNode.GetGridPosition());
 
                     if (tentativeGCost < neighborNode.GetGCost())
                     {
                         neighborNode.SetCameFromPathNode(currentNode);
                         neighborNode.SetGCost(tentativeGCost);
-                        neighborNode.SetHCost(CalculateDistance(neighborNode.GetGridPosition(), endGridPosition));
+                        neighborNode.SetHCost(CalculateHeuristicDistance(neighborNode.GetGridPosition(), endGridPosition));
                         neighborNode.CalculateFCost();
 
                         if (!openList.Contains(neighborNode))
@@ -132,13 +132,10 @@ namespace TurnBase
             return null;
         }
 
-        public int CalculateDistance(GridPosition gridPositionA, GridPosition gridPositionB)
+        public int CalculateHeuristicDistance(GridPosition gridPositionA, GridPosition gridPositionB)
         {
-            GridPosition gridPositionDistance = gridPositionA - gridPositionB;
-            int xDistance = Mathf.Abs(gridPositionDistance.x);
-            int zDistance = Mathf.Abs(gridPositionDistance.z);
-            int remaining = Mathf.Abs(xDistance - zDistance);
-            return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, zDistance) + MOVE_STRAIGHT_COST * remaining;
+            return Mathf.RoundToInt(MOVE_STRAIGHT_COST *
+            Vector3.Distance(gridSystem.GetWorldPosition(gridPositionA), gridSystem.GetWorldPosition(gridPositionB)));
         }
 
         private PathNode GetLowestFCostPathNode(List<PathNode> pathNodeList)
@@ -169,33 +166,12 @@ namespace TurnBase
             {
                 // Left
                 neighborList.Add(GetNode(gridPosition.x - 1, gridPosition.z + 0));
-                if (gridPosition.z - 1 >= 0)
-                {
-                    // Left Down
-                    neighborList.Add(GetNode(gridPosition.x - 1, gridPosition.z - 1));
-                }
-
-                if (gridPosition.z + 1 < gridSystem.GetHeight())
-                {
-                    // Left Up
-                    neighborList.Add(GetNode(gridPosition.x - 1, gridPosition.z + 1));
-                }
             }
 
             if (gridPosition.x + 1 < gridSystem.GetWidth())
             {
                 // Right
                 neighborList.Add(GetNode(gridPosition.x + 1, gridPosition.z + 0));
-                if (gridPosition.z - 1 >= 0)
-                {
-                    // Right Down
-                    neighborList.Add(GetNode(gridPosition.x + 1, gridPosition.z - 1));
-                }
-                if (gridPosition.z + 1 < gridSystem.GetHeight())
-                {
-                    // Right Up
-                    neighborList.Add(GetNode(gridPosition.x + 1, gridPosition.z + 1));
-                }
             }
 
             if (gridPosition.z - 1 >= 0)
@@ -208,7 +184,38 @@ namespace TurnBase
                 // Up
                 neighborList.Add(GetNode(gridPosition.x + 0, gridPosition.z + 1));
             }
+            bool oddRow = gridPosition.z % 2 == 1;
+            if (oddRow)
+            {
+                if (gridPosition.x + 1 < gridSystem.GetWidth())
+                {
+                    if (gridPosition.z - 1 >= 0)
+                    {
+                        neighborList.Add(GetNode(gridPosition.x + 1, gridPosition.z - 1));
 
+                    }
+                    if (gridPosition.z + 1 < gridSystem.GetHeight())
+                    {
+                        neighborList.Add(GetNode(gridPosition.x + 1, gridPosition.z + 1));
+                    }
+                }
+
+            }
+            else
+            {
+                if (gridPosition.x - 1 >= 0)
+                {
+                    if (gridPosition.z - 1 >= 0)
+                    {
+                        neighborList.Add(GetNode(gridPosition.x - 1, gridPosition.z - 1));
+                    }
+                    if (gridPosition.z + 1 < gridSystem.GetHeight())
+                    {
+                        neighborList.Add(GetNode(gridPosition.x - 1, gridPosition.z + 1));
+                    }
+                }
+
+            }
             return neighborList;
         }
 

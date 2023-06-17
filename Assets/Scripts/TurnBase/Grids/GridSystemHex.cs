@@ -5,8 +5,9 @@ using UnityEngine;
 
 namespace TurnBase
 {
-    public class GridSystem<TGridObject>
+    public class GridSystemHex<TGridObject>
     {
+        private const float HEX_VERTICAL_OFFSET_MULTIPLIER = 0.75f;
         private int width;
         private int height;
         private float cellSize;
@@ -15,7 +16,7 @@ namespace TurnBase
         private GridPosition gridPosition;
         private GameObject deBugGridSystem;
 
-        public GridSystem(int width, int height, float cellSize, Func<GridSystem<TGridObject>, GridPosition, TGridObject> createGridObject)
+        public GridSystemHex(int width, int height, float cellSize, Func<GridSystemHex<TGridObject>, GridPosition, TGridObject> createGridObject)
         {
             this.width = width;
             this.height = height;
@@ -34,12 +35,36 @@ namespace TurnBase
 
         public Vector3 GetWorldPosition(GridPosition gridPosition)
         {
-            return new Vector3(gridPosition.x, 0, gridPosition.z) * cellSize;
+            return new Vector3(gridPosition.x, 0, 0) * cellSize +
+            new Vector3(0, 0, gridPosition.z) * cellSize * HEX_VERTICAL_OFFSET_MULTIPLIER +
+            (((gridPosition.z % 2) == 1) ? new Vector3(1, 0, 0) * cellSize * .5f : Vector3.zero);
         }
 
         public GridPosition GetGridPosition(Vector3 worldPosition)
         {
-            return new GridPosition(Mathf.RoundToInt(worldPosition.x / cellSize), Mathf.RoundToInt(worldPosition.z / cellSize));
+            GridPosition roughXZ = new GridPosition(
+                Mathf.RoundToInt(worldPosition.x / cellSize), 
+                Mathf.RoundToInt(worldPosition.z / cellSize/HEX_VERTICAL_OFFSET_MULTIPLIER)
+            );
+            bool oddRow = roughXZ.z % 2 ==1;
+            List<GridPosition> neighborGridPositionList = new List<GridPosition>
+            {
+                roughXZ + new GridPosition(-1,0),
+                roughXZ + new GridPosition(1,0),
+                roughXZ + new GridPosition(0,1),
+                roughXZ + new GridPosition(0,-1),
+                roughXZ + new GridPosition(oddRow ? 1 : -1,1),
+                roughXZ + new GridPosition(oddRow ? 1 : -1,-1)
+            };
+            GridPosition closestGridPosition = roughXZ;
+            foreach (GridPosition neighborGridPosition in neighborGridPositionList)
+            {
+                if((Vector3.Distance(worldPosition, GetWorldPosition(neighborGridPosition))) < (Vector3.Distance(worldPosition, GetWorldPosition(closestGridPosition))))
+                {
+                    closestGridPosition = neighborGridPosition;
+                }
+            }
+            return closestGridPosition;
         }
 
         public void CreateDebugObjects(Transform debugPrefab)

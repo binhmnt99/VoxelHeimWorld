@@ -2,14 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridSystemVisualSquad : MonoBehaviour
+public class GridSystemVisualSingle : MonoBehaviour
 {
     [SerializeField] private MeshRenderer meshRenderer;
-    // Start is called before the first frame update
-    void Awake()
-    {
-        meshRenderer = GetComponentInChildren<MeshRenderer>();
-    }
+    [SerializeField] private GameObject selectedGameObject;
+
 
     public void Show(Material material)
     {
@@ -20,5 +17,15 @@ public class GridSystemVisualSquad : MonoBehaviour
     public void Hide()
     {
         meshRenderer.enabled = false;
+    }
+
+    public void ShowSelected()
+    {
+        selectedGameObject.SetActive(true);
+    }
+
+    public void HideSelected()
+    {
+        selectedGameObject.SetActive(false);
     }
 }
