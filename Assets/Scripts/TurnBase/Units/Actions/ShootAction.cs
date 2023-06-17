@@ -101,7 +101,7 @@ namespace TurnBase
                 shootingUnit = unit
             });
 
-            targetUnit.Damage(4);
+            targetUnit.Damage(1);
         }
 
         public override string GetActionName()

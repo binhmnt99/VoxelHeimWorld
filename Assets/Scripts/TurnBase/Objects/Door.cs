@@ -6,6 +6,8 @@ namespace TurnBase
 {
     public class Door : MonoBehaviour,IInteractable
     {
+        public static event EventHandler OnAnyDoorOpened;
+        public event EventHandler OnDoorOpened;
         [SerializeField] private bool isOpen;
         private GridPosition gridPosition;
         private Animator animator;
@@ -20,14 +22,14 @@ namespace TurnBase
         {
             gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
             LevelGrid.Instance.SetInteractableAtGridPosition(gridPosition, this);
-            if (isOpen)
-            {
-                OpenDoor();
-            }
-            else
-            {
-                CloseDoor();
-            }
+            // if (isOpen)
+            // {
+            //     OpenDoor();
+            // }
+            // else
+            // {
+            //     CloseDoor();
+            // }
         }
 
         void Update()
@@ -62,6 +64,9 @@ namespace TurnBase
             isOpen = true;
             animator.SetBool("isOpen", isOpen);
             Pathfinding.Instance.SetIsWalkableGridPosition(gridPosition, true);
+
+            OnDoorOpened?.Invoke(this,EventArgs.Empty);
+            OnAnyDoorOpened?.Invoke(this,EventArgs.Empty);
         }
         private void CloseDoor()
         {

@@ -10,7 +10,6 @@ namespace TurnBase
     {
         public static UnitActionSystem Instance { get; private set; }
         private RaycastHit raycastHit;
-        private UnitInput unitInput;
         public event EventHandler OnSelectedUnitChanged;
         public event EventHandler OnSelectedActionChanged;
         public event EventHandler<bool> OnBusyChanged;
@@ -29,7 +28,6 @@ namespace TurnBase
                 return;
             }
             Instance = this;
-            unitInput = GetComponent<UnitInput>();
         }
 
         void Start()
@@ -60,7 +58,7 @@ namespace TurnBase
 
         private void HandleSelectedAction()
         {
-            if (unitInput.isMoveClicked)
+            if (InputManager.Instance.GetLeftMouseButtonDown())
             {
                 GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
 
@@ -95,9 +93,9 @@ namespace TurnBase
 
         private bool TryHandleUnitSelection()
         {
-            if (unitInput.isMoveClicked)
+            if (InputManager.Instance.GetLeftMouseButtonDown())
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
                 if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, layerMask))
                 {
                     if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))

@@ -6,7 +6,7 @@ namespace TurnBase
 {
     public class MouseWorld : MonoBehaviour
     {
-        private static MouseWorld instance;
+        private static MouseWorld Instance;
 
         private Ray ray;
         private RaycastHit hit;
@@ -14,14 +14,14 @@ namespace TurnBase
         // Start is called before the first frame update
         void Awake()
         {
-            instance = this;
+            Instance = this;
         }
 
         public static Vector3 GetPosition()
         {
-            instance.ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Physics.Raycast(instance.ray, out instance.hit, float.MaxValue, instance.layerMask);
-            return instance.hit.point;
+            Instance.ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
+            Physics.Raycast(Instance.ray, out Instance.hit, float.MaxValue, Instance.layerMask);
+            return Instance.hit.point;
         }
     }
 

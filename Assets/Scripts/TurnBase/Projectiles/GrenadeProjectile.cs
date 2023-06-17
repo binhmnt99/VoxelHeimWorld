@@ -40,7 +40,7 @@ namespace TurnBase
                     {
                         if (targetUnit.IsEnemy() != isEntityAction)
                         {
-                            targetUnit.Damage(10);
+                            targetUnit.Damage(3);
                         }
                     }
                     if (targetCollider.TryGetComponent<DestructibleCrate>(out DestructibleCrate targetCrate))

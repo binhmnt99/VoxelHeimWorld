@@ -8,66 +8,66 @@ namespace TurnBase
 {
     public class UnitInput : MonoBehaviour
     {
-        private UnitInputController unitInput;
+        // private UnitInputController unitInput;
 
-        public bool isMoveClicked { get; private set; }
-        public bool isSpinClicked { get; private set; }
+        // public bool isMoveClicked { get; private set; }
+        // public bool isSpinClicked { get; private set; }
 
-        void Awake()
-        {
-            unitInput = new UnitInputController();
-            unitInput.Unit.Enable();
-            GetMoveButton();
-            GetSpinButton();
-        }
+        // void Awake()
+        // {
+        //     unitInput = new UnitInputController();
+        //     unitInput.Unit.Enable();
+        //     GetMoveButton();
+        //     GetSpinButton();
+        // }
 
-        private void GetSpinButton()
-        {
-            unitInput.Unit.SpinClick.started += RightMouseButton;
-            unitInput.Unit.SpinClick.performed += RightMouseButton;
-            unitInput.Unit.SpinClick.canceled += RightMouseButton;
-        }
+        // private void GetSpinButton()
+        // {
+        //     unitInput.Unit.SpinClick.started += RightMouseButton;
+        //     unitInput.Unit.SpinClick.performed += RightMouseButton;
+        //     unitInput.Unit.SpinClick.canceled += RightMouseButton;
+        // }
 
-        private void RightMouseButton(InputAction.CallbackContext context)
-        {
-            if (context.started)
-            {
-                isSpinClicked = true;
+        // private void RightMouseButton(InputAction.CallbackContext context)
+        // {
+        //     if (context.started)
+        //     {
+        //         isSpinClicked = true;
 
-            }
-            if (context.performed)
-            {
+        //     }
+        //     if (context.performed)
+        //     {
 
-            }
-            if (context.canceled)
-            {
-                isSpinClicked = false;
-            }
-        }
+        //     }
+        //     if (context.canceled)
+        //     {
+        //         isSpinClicked = false;
+        //     }
+        // }
 
-        private void GetMoveButton()
-        {
-            unitInput.Unit.MoveClick.started += LeftMouseButton;
-            unitInput.Unit.MoveClick.performed += LeftMouseButton;
-            unitInput.Unit.MoveClick.canceled += LeftMouseButton;
-        }
+        // private void GetMoveButton()
+        // {
+        //     unitInput.Unit.MoveClick.started += LeftMouseButton;
+        //     unitInput.Unit.MoveClick.performed += LeftMouseButton;
+        //     unitInput.Unit.MoveClick.canceled += LeftMouseButton;
+        // }
 
-        private void LeftMouseButton(InputAction.CallbackContext context)
-        {
-            if (context.started)
-            {
-                isMoveClicked = true;
+        // private void LeftMouseButton(InputAction.CallbackContext context)
+        // {
+        //     if (context.started)
+        //     {
+        //         isMoveClicked = true;
 
-            }
-            if (context.performed)
-            {
+        //     }
+        //     if (context.performed)
+        //     {
 
-            }
-            if (context.canceled)
-            {
-                isMoveClicked = false;
-            }
-        }
+        //     }
+        //     if (context.canceled)
+        //     {
+        //         isMoveClicked = false;
+        //     }
+        // }
     }
 }
 

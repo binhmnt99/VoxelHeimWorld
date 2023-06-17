@@ -23,10 +23,10 @@ namespace TurnBase
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                cinemachineImpulseSource.GenerateImpulse();
-            }
+            // if (Input.GetKeyDown(KeyCode.T))
+            // {
+            //     cinemachineImpulseSource.GenerateImpulse();
+            // }
         }
 
         public void Shake(float intensity = 1f)
