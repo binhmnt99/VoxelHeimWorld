@@ -54,6 +54,8 @@ namespace TurnBase
                 if (currentPositionIndex >= positionList.Count)
                 {
                     Pathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[0]),true);
+                    Pathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[positionList.Count-1]),false);
+                    transform.position = LevelGrid.Instance.GetWorldPosition(LevelGrid.Instance.GetGridPosition(positionList[positionList.Count-1]));
                     OnStopMoving?.Invoke(this, EventArgs.Empty);
                     ActionComplete();
                 }
