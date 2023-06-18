@@ -3277,7 +3277,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1679943660812719230, guid: 933866e9ab69d8f40ab4defac7945c25, type: 3}
       propertyPath: maxMoveDistance
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2898207744987992055, guid: 933866e9ab69d8f40ab4defac7945c25, type: 3}
       propertyPath: m_RootOrder
@@ -6197,7 +6197,7 @@ MonoBehaviour:
   gridDebugObjectPrefab: {fileID: 8687489423780995157, guid: 0deb01e75eaf8f44cb669b0cebafb335, type: 3}
   obstaclesLayerMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 3072
 --- !u!4 &1709029127
 Transform:
   m_ObjectHideFlags: 0
@@ -7579,7 +7579,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1703488578869440281}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.2995, y: 5.058028, z: 5.0487}
+  m_LocalPosition: {x: -7.3019, y: 5.058028, z: 5.0487}
   m_LocalScale: {x: 1, y: 3, z: 40.007153}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7617,7 +7617,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1679943660812719230, guid: 933866e9ab69d8f40ab4defac7945c25, type: 3}
       propertyPath: maxMoveDistance
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2898207744987992055, guid: 933866e9ab69d8f40ab4defac7945c25, type: 3}
       propertyPath: m_RootOrder

@@ -35,13 +35,13 @@ namespace TurnBase
 
             Vector3 targetPosition = positionList[currentPositionIndex];
             moveDirection = (targetPosition - transform.position).normalized;
-            // float differentAngle = Vector3.Angle(moveDirection, transform.forward);
-            // if (differentAngle > 0f)
-            // {
-            //     transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
-            //     return;
-            // }
-            transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
+            float differentAngle = Vector3.Angle(moveDirection, transform.forward);
+            if (differentAngle > 0f)
+            {
+                transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
+                return;
+            }
+            //transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
             if (Vector3.Distance(transform.position, targetPosition) > stopDistance)
             {
                 transform.position += moveDirection * Time.deltaTime * moveSpeed;
@@ -53,6 +53,7 @@ namespace TurnBase
                 currentPositionIndex++;
                 if (currentPositionIndex >= positionList.Count)
                 {
+                    Pathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[0]),true);
                     OnStopMoving?.Invoke(this, EventArgs.Empty);
                     ActionComplete();
                 }
@@ -81,8 +82,8 @@ namespace TurnBase
             {
                 for (int z = -maxMoveDistance; z <= maxMoveDistance; z++)
                 {
-                    float distance = (new Vector2(x, z)).magnitude;
-                    if (distance > maxMoveDistance + roundedEnd) continue;
+                    // float distance = (new Vector2(x, z)).magnitude;
+                    // if (distance > maxMoveDistance + roundedEnd) continue;
                     GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
                     if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))

@@ -10,7 +10,7 @@ namespace TurnBase
         // Start is called before the first frame update
         void Start()
         {
-DestructibleCrate.OnAnyDestroyed += DestructibleCrate_OnAnyDestroyed;
+            DestructibleCrate.OnAnyDestroyed += DestructibleCrate_OnAnyDestroyed;
         }
 
         private void DestructibleCrate_OnAnyDestroyed(object sender, EventArgs e)
