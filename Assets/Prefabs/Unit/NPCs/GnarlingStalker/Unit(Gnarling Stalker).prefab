@@ -71,7 +71,7 @@ Transform:
   - {fileID: 1270586074339374658}
   - {fileID: 1282897599040752031}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &3449407389994821813
 BoxCollider:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e20e7bf1ab1d54b877cbc33fff7a23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
+  health: 5
 --- !u!114 &4642379911254098698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,14 +389,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 634187197660793121}
     m_Modifications:
-    - target: {fileID: 430752852785721485, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
-      propertyPath: m_PresetInfoIsWorld
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2453241500772636467, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
-      propertyPath: invert
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4974525760858095567, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -467,7 +459,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4974525760858095567, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4974525760858095567, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

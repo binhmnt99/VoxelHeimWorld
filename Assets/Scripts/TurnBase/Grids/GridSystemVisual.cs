@@ -53,7 +53,7 @@ namespace TurnBase
             {
                 for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
-                    GridPosition gridPosition = new GridPosition(x, z);
+                    GridPosition gridPosition = new GridPosition(x, z, 0);
 
                     Transform gridSystemVisualSingleTransform =
                         Instantiate(gridSystemVisualSinglePrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, gridSquadVisual.transform);
@@ -115,7 +115,7 @@ namespace TurnBase
             {
                 for (int z = -range; z <= range; z++)
                 {
-                    GridPosition testGridPosition = gridPosition + new GridPosition(x, z);
+                    GridPosition testGridPosition = gridPosition + new GridPosition(x, z, 0);
 
                     if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
@@ -149,33 +149,37 @@ namespace TurnBase
             HideAllGridPosition();
 
             Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-            BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
-
-            GridVisualType gridVisualType;
-
-            switch (selectedAction)
+            if (selectedUnit)
             {
-                default:
-                case MoveAction moveAction:
-                    gridVisualType = GridVisualType.White;
-                    break;
-                case SpinAction spinAction:
-                    gridVisualType = GridVisualType.Blue;
-                    break;
-                case ShootAction shootAction:
-                    gridVisualType = GridVisualType.Red;
-                    ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetShootDistance(), GridVisualType.RedSoft);
-                    break;
-                case GrenadeAction grenadeAction:
-                    gridVisualType = GridVisualType.Yellow;
-                    break;
-                case InteractAction interactAction:
-                    gridVisualType = GridVisualType.Blue;
-                    break;
+                BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
+
+                GridVisualType gridVisualType;
+
+                switch (selectedAction)
+                {
+                    default:
+                    case MoveAction moveAction:
+                        gridVisualType = GridVisualType.White;
+                        break;
+                    case SpinAction spinAction:
+                        gridVisualType = GridVisualType.Blue;
+                        break;
+                    case ShootAction shootAction:
+                        gridVisualType = GridVisualType.Red;
+                        ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetShootDistance(), GridVisualType.RedSoft);
+                        break;
+                    case GrenadeAction grenadeAction:
+                        gridVisualType = GridVisualType.Yellow;
+                        break;
+                    case InteractAction interactAction:
+                        gridVisualType = GridVisualType.Blue;
+                        break;
+                }
+
+                ShowGridPositionList(
+                    selectedAction.GetValidActionGridPositionList(), gridVisualType);
             }
 
-            ShowGridPositionList(
-                selectedAction.GetValidActionGridPositionList(), gridVisualType);
         }
 
         private void UnitActionSystem_OnSelectedActionChanged(object sender, EventArgs e)

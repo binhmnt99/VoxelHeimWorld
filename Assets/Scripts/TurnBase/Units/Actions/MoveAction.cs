@@ -13,7 +13,6 @@ namespace TurnBase
         [SerializeField] private List<Vector3> positionList;
         private int currentPositionIndex;
         [SerializeField] private int maxMoveDistance = 3;
-        private float roundedEnd = 0.5f;
         [SerializeField] private float moveSpeed = 4f;
         [SerializeField] private float rotateSpeed = 50f;
         [SerializeField] private float stopDistance = .01f;
@@ -25,6 +24,8 @@ namespace TurnBase
         {
             MoveDirection();
         }
+
+
 
         private void MoveDirection()
         {
@@ -53,9 +54,8 @@ namespace TurnBase
                 currentPositionIndex++;
                 if (currentPositionIndex >= positionList.Count)
                 {
-                    Pathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[0]),true);
-                    Pathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[positionList.Count-1]),false);
-                    transform.position = LevelGrid.Instance.GetWorldPosition(LevelGrid.Instance.GetGridPosition(positionList[positionList.Count-1]));
+                    Pathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[positionList.Count - 1]), false);
+                    transform.position = LevelGrid.Instance.GetWorldPosition(LevelGrid.Instance.GetGridPosition(positionList[positionList.Count - 1]));
                     OnStopMoving?.Invoke(this, EventArgs.Empty);
                     ActionComplete();
                 }
@@ -71,7 +71,7 @@ namespace TurnBase
             {
                 positionList.Add(LevelGrid.Instance.GetWorldPosition(pathGridPosition));
             }
-
+            Pathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[0]), true);
             OnStartMoving?.Invoke(this, EventArgs.Empty);
             ActionStart(onActionComplete);
         }
@@ -86,7 +86,7 @@ namespace TurnBase
                 {
                     // float distance = (new Vector2(x, z)).magnitude;
                     // if (distance > maxMoveDistance + roundedEnd) continue;
-                    GridPosition offsetGridPosition = new GridPosition(x, z);
+                    GridPosition offsetGridPosition = new GridPosition(x, z, 0);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
                     if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {

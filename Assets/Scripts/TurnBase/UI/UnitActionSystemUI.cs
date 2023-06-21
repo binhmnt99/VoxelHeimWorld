@@ -44,12 +44,18 @@ namespace TurnBase
             actionButtonUIList.Clear();
 
             Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-            foreach (BaseAction baseAction in selectedUnit.GetBaseActionArray())
+            if (selectedUnit)
             {
-                Transform actionButtonTransform = Instantiate(actionButtonPrefabTransform, actionButtonContainerTransform);
-                ActionButtonUI actionButtonUI = actionButtonTransform.GetComponent<ActionButtonUI>();
-                actionButtonUI.SetBaseAction(baseAction);
-                actionButtonUIList.Add(actionButtonUI);
+                foreach (BaseAction baseAction in selectedUnit.GetBaseActionArray())
+                {
+                    if (baseAction != selectedUnit.GetAction<MoveAction>())
+                    {
+                        Transform actionButtonTransform = Instantiate(actionButtonPrefabTransform, actionButtonContainerTransform);
+                        ActionButtonUI actionButtonUI = actionButtonTransform.GetComponent<ActionButtonUI>();
+                        actionButtonUI.SetBaseAction(baseAction);
+                        actionButtonUIList.Add(actionButtonUI);
+                    }
+                }
             }
         }
 
@@ -91,7 +97,7 @@ namespace TurnBase
         {
             Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
 
-            actionPointText.text = "Action Points: " + selectedUnit.GetActionPoints();
+            actionPointText.text = (selectedUnit ? "Action Points: " + selectedUnit.GetActionPoints() : "");
         }
     }
 

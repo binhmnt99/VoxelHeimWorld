@@ -9,18 +9,25 @@ namespace TurnBase
     {
         [SerializeField] private Unit units;
         private MeshRenderer meshRenderer;
+        private Quaternion initialRotation;
 
         // Start is called before the first frame update
         void Awake()
         {
             units = GetComponentInParent<Unit>();
             meshRenderer = GetComponent<MeshRenderer>();
+            initialRotation = transform.localRotation;
         }
 
         void Start()
         {
             UnitActionSystem.Instance.OnSelectedUnitChanged += UnitActionSystem_OnSelectedUnitChanged;
             UpdateVisual();
+        }
+
+        void LateUpdate()
+        {
+            transform.rotation = initialRotation;
         }
 
         private void UnitActionSystem_OnSelectedUnitChanged(object sender, EventArgs empty)

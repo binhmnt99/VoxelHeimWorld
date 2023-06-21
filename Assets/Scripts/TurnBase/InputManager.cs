@@ -39,6 +39,15 @@ namespace TurnBase
 #endif
         }
 
+        public bool GetRightMouseButtonDown()
+        {
+#if USE_NEW_INPUT_SYSTEM
+            return unitInputAction.Player.RightMouseClick.WasPressedThisFrame();
+#else
+            return Input.GetMouseButtonDown(1);
+#endif
+        }
+
         public Vector2 GetCameraMoveVector()
         {
 #if USE_NEW_INPUT_SYSTEM

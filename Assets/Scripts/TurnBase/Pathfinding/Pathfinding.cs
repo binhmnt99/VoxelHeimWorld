@@ -37,7 +37,7 @@ namespace TurnBase
             this.height = height;
             this.cellSize = cellSize;
 
-            gridSystem = new GridSystemHex<PathNode>(width, height, cellSize,
+            gridSystem = new GridSystemHex<PathNode>(width, height, cellSize, 0, LevelGrid.FLOOR_HEIGHT,
                 (GridSystemHex<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
             gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
@@ -45,7 +45,7 @@ namespace TurnBase
             {
                 for (int z = 0; z < height; z++)
                 {
-                    GridPosition gridPosition = new GridPosition(x, z);
+                    GridPosition gridPosition = new GridPosition(x, z, 0);
                     Vector3 worldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
                     float rayOffsetDistance = 5f;
                     if (Physics.Raycast(worldPosition + Vector3.down * rayOffsetDistance, Vector3.up, rayOffsetDistance * 2, obstaclesLayerMask))
@@ -69,7 +69,7 @@ namespace TurnBase
             {
                 for (int z = 0; z < gridSystem.GetHeight(); z++)
                 {
-                    GridPosition gridPosition = new GridPosition(x, z);
+                    GridPosition gridPosition = new GridPosition(x, z, 0);
                     PathNode pathNode = gridSystem.GetGridObject(gridPosition);
 
                     pathNode.SetGCost(int.MaxValue);
@@ -153,7 +153,7 @@ namespace TurnBase
 
         private PathNode GetNode(int x, int z)
         {
-            return gridSystem.GetGridObject(new GridPosition(x, z));
+            return gridSystem.GetGridObject(new GridPosition(x, z, 0));
         }
 
         private List<PathNode> GetNeighborList(PathNode currentNode)
