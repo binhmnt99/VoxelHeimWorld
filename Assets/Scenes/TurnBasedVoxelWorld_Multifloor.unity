@@ -4379,6 +4379,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 950422877}
   m_CullTransparentMesh: 1
+--- !u!4 &954747956 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2349066329335033801, guid: 933866e9ab69d8f40ab4defac7945c25, type: 3}
+  m_PrefabInstance: {fileID: 9027929063679924022}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &976007518
 GameObject:
   m_ObjectHideFlags: 0
@@ -4632,6 +4637,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1029552746 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8143532101953081843, guid: 933866e9ab69d8f40ab4defac7945c25, type: 3}
+  m_PrefabInstance: {fileID: 9027929063679924022}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1072773066
 GameObject:
   m_ObjectHideFlags: 0
@@ -7863,6 +7873,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1289217312430076056, guid: 933866e9ab69d8f40ab4defac7945c25, type: 3}
+      propertyPath: originalRootBone
+      value: 
+      objectReference: {fileID: 1029552746}
+    - target: {fileID: 1295376254611072994, guid: 933866e9ab69d8f40ab4defac7945c25, type: 3}
+      propertyPath: shootPoint
+      value: 
+      objectReference: {fileID: 954747956}
     - target: {fileID: 1679943660812719230, guid: 933866e9ab69d8f40ab4defac7945c25, type: 3}
       propertyPath: stopDistance
       value: 0.075

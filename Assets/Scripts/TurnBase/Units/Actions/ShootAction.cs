@@ -90,18 +90,27 @@ namespace TurnBase
 
         private void Shoot()
         {
-            OnAnyShoot?.Invoke(this, new OnShootEventArgs
-            {
-                targetUnit = targetUnit,
-                shootingUnit = unit
-            });
             OnShoot?.Invoke(this, new OnShootEventArgs
             {
                 targetUnit = targetUnit,
                 shootingUnit = unit
             });
+            if (TryGetComponent<UnitAnimator>(out UnitAnimator unitAnimator))
+            {
+                unitAnimator.OnShootAnim -= UnitAnimator_OnShootAnim;
+                unitAnimator.OnShootAnim += UnitAnimator_OnShootAnim;
+            }
+            //targetUnit.Damage(2);
+        }
 
-            targetUnit.Damage(1);
+        private void UnitAnimator_OnShootAnim(object sender, EventArgs e)
+        {
+            OnAnyShoot?.Invoke(this, new OnShootEventArgs
+            {
+                targetUnit = targetUnit,
+                shootingUnit = unit
+            });
+            targetUnit.Damage(2);
         }
 
         public override string GetActionName()

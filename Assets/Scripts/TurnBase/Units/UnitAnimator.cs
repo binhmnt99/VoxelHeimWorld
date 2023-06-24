@@ -7,9 +7,12 @@ namespace TurnBase
 {
     public class UnitAnimator : MonoBehaviour
     {
+        public event EventHandler OnShootAnim;
         [SerializeField] private Animator animator;
         [SerializeField] private Transform arrowProjectilePrefab;
         [SerializeField] private Transform shootPoint;
+        private Vector3 targetUnitShootAtPosition;
+        private Unit targetUnit;
 
         void Awake()
         {
@@ -28,11 +31,16 @@ namespace TurnBase
         private void ShootAction_OnShoot(object sender, ShootAction.OnShootEventArgs e)
         {
             animator.SetTrigger("isBowShoot");
+            targetUnitShootAtPosition = e.targetUnit.GetWorldPosition();
+        }
+
+        public void BowShoot()
+        {
             Transform arrowTransform = Instantiate(arrowProjectilePrefab, shootPoint.position, Quaternion.identity);
             ArrowProjectile arrowProjectile = arrowTransform.GetComponent<ArrowProjectile>();
-            Vector3 targetUnitShootAtPosition = e.targetUnit.GetWorldPosition();
             targetUnitShootAtPosition.y = shootPoint.position.y;
             arrowProjectile.Setup(targetUnitShootAtPosition);
+            OnShootAnim?.Invoke(this,EventArgs.Empty);
         }
 
         private void MoveAction_OnStopMoving(object sender, EventArgs e)

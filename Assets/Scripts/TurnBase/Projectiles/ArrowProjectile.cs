@@ -10,6 +10,7 @@ namespace TurnBase
         [SerializeField] private TrailRenderer trailRenderer;
 
         [SerializeField] private Transform arrowVFXPrefab;
+        [SerializeField] private Transform arrowObject;
 
         void Awake()
         {
@@ -28,6 +29,8 @@ namespace TurnBase
             float moveSpeed = 200f;
 
             transform.position += moveDirection * moveSpeed * Time.deltaTime;
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            arrowObject.transform.rotation = Quaternion.Slerp(arrowObject.transform.rotation, targetRotation, 200f * Time.deltaTime);
 
             float distanceAfterMoving = Vector3.Distance(transform.position, targetPosition);
 
@@ -37,7 +40,7 @@ namespace TurnBase
                 trailRenderer.transform.parent = null;
                 Destroy(gameObject);
 
-                Instantiate(arrowVFXPrefab, targetPosition,Quaternion.identity);
+                Instantiate(arrowVFXPrefab, targetPosition, Quaternion.identity);
             }
         }
     }
