@@ -13,9 +13,10 @@ namespace TurnBase
         private GridPosition gridPosition;
         private BaseAction[] baseActionArray;
         private int actionPoint;
-        [SerializeField] private int movePoint;
+        private int movePoint;
 
         private HealthSystem healthSystem;
+        private int positionCount;
 
         public static event EventHandler OnAnyActionPointsChanged;
         public static event EventHandler OnAnyMovePointsChanged;
@@ -95,11 +96,11 @@ namespace TurnBase
             }
         }
 
-        public bool TrySpendMovePointsToTakeAction(int positionListCount)
+        public bool TrySpendMovePointsToTakeAction(GridPosition mouseGridPosition)
         {
-            if (CanSpendMovePointsToTakeAction(positionListCount))
+            if (CanSpendMovePointsToTakeAction(mouseGridPosition))
             {
-                SpendMovePoints(positionListCount);
+                SpendMovePoints(positionCount);
                 return true;
             }
             else
@@ -120,9 +121,12 @@ namespace TurnBase
             }
         }
 
-        public bool CanSpendMovePointsToTakeAction(int positionListCount)
+        public bool CanSpendMovePointsToTakeAction(GridPosition mouseGridPosition)
         {
-            if (movePoint >= positionListCount)
+            List<GridPosition> pathGridPositionList = Pathfinding.Instance.FindPath(GetGridPosition(), mouseGridPosition, out int pathLength);
+            positionCount = pathGridPositionList.Count - 1;
+            //Debug.Log(" point count " + positionCount + " move point " + movePoint);
+            if (movePoint >= positionCount)
             {
                 return true;
             }
@@ -147,7 +151,7 @@ namespace TurnBase
         private void SpendMovePoints(int value)
         {
             movePoint -= value;
-
+            //Debug.Log(movePoint);
             OnAnyMovePointsChanged?.Invoke(this, EventArgs.Empty);
         }
 

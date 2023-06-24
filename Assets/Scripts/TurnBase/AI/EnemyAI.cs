@@ -92,7 +92,7 @@ namespace TurnBase
                 }
                 else
                 {
-                    if (enemyUnit.TrySpendMovePointsToTakeAction(enemyUnit.GetAction<MoveAction>().GetPositionListCount()))
+                    if (enemyUnit.TrySpendMovePointsToTakeAction(bestEnemyAIAction.gridPosition))
                     {
                         bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
                         return true;

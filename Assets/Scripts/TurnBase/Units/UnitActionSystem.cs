@@ -124,7 +124,7 @@ namespace TurnBase
                 }
                 else
                 {
-                    if (!selectedUnit.TrySpendMovePointsToTakeAction(selectedUnit.GetAction<MoveAction>().GetPositionListCount()))
+                    if (!selectedUnit.TrySpendMovePointsToTakeAction(mouseGridPosition))
                     {
                         currentState = UnitActionSystemState.SelectedUnit;
                         return;
