@@ -115,10 +115,20 @@ namespace TurnBase
                 {
                     return;
                 }
-
-                if (!selectedUnit.TrySpendActionPointsToTakeAction(selectedAction))
+                if (selectedAction != selectedUnit.GetAction<MoveAction>())
                 {
-                    return;
+                    if (!selectedUnit.TrySpendActionPointsToTakeAction(selectedAction))
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    if (!selectedUnit.TrySpendMovePointsToTakeAction(selectedUnit.GetAction<MoveAction>().GetPositionListCount()))
+                    {
+                        currentState = UnitActionSystemState.SelectedUnit;
+                        return;
+                    }
                 }
 
                 SetBusy();

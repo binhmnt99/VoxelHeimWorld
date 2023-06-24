@@ -76,16 +76,46 @@ namespace TurnBase
                 }
 
             }
-
-            if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
+            if (bestEnemyAIAction != null)
             {
-                bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
-                return true;
+                if (bestBaseAction != enemyUnit.GetAction<MoveAction>())
+                {
+                    if (enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
+                    {
+                        bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (enemyUnit.TrySpendMovePointsToTakeAction(enemyUnit.GetAction<MoveAction>().GetPositionListCount()))
+                    {
+                        bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
             }
             else
             {
                 return false;
             }
+            // if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
+            // {
+            //     bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
+            //     return true;
+            // }
+            // else
+            // {
+            //     return false;
+            // }
 
         }
 

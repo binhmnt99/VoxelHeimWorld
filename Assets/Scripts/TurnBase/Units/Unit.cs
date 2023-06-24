@@ -8,20 +8,24 @@ namespace TurnBase
     public class Unit : MonoBehaviour
     {
         [SerializeField] private int actionPointMax;
+        [SerializeField] private int movePointMax;
         [SerializeField] private bool isEnemy;
         private GridPosition gridPosition;
         private BaseAction[] baseActionArray;
         private int actionPoint;
+        [SerializeField] private int movePoint;
 
         private HealthSystem healthSystem;
 
         public static event EventHandler OnAnyActionPointsChanged;
+        public static event EventHandler OnAnyMovePointsChanged;
         public static event EventHandler OnAnyUnitSpawned;
         public static event EventHandler OnAnyUnitDead;
 
         void Awake()
         {
             actionPoint = actionPointMax;
+            movePoint = movePointMax;
             baseActionArray = GetComponents<BaseAction>();
             healthSystem = GetComponent<HealthSystem>();
         }
@@ -91,9 +95,34 @@ namespace TurnBase
             }
         }
 
+        public bool TrySpendMovePointsToTakeAction(int positionListCount)
+        {
+            if (CanSpendMovePointsToTakeAction(positionListCount))
+            {
+                SpendMovePoints(positionListCount);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
         {
             if (actionPoint >= baseAction.GetActionPointsCost())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CanSpendMovePointsToTakeAction(int positionListCount)
+        {
+            if (movePoint >= positionListCount)
             {
                 return true;
             }
@@ -115,14 +144,28 @@ namespace TurnBase
             return actionPoint;
         }
 
+        private void SpendMovePoints(int value)
+        {
+            movePoint -= value;
+
+            OnAnyMovePointsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public int GetMovePoints()
+        {
+            return movePoint;
+        }
+
         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
         {
             if ((IsEnemy() && TurnSystem.Instance.IsPlayerTurn())
             || (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
             {
                 actionPoint = actionPointMax;
+                movePoint = movePointMax;
 
                 OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+                OnAnyMovePointsChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 

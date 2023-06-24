@@ -25,7 +25,10 @@ namespace TurnBase
             MoveDirection();
         }
 
-
+        public int GetPositionListCount()
+        {
+            return positionList.Count;
+        }
 
         private void MoveDirection()
         {
@@ -124,6 +127,15 @@ namespace TurnBase
             return "Move";
         }
 
+        public override int GetActionPointsCost()
+        {
+            return 0;
+        }
+
+        public override int GetMovePointsCost()
+        {
+            return base.GetMovePointsCost();
+        }
         public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
         {
             int targetCountAtGridPosition = unit.GetAction<ShootAction>().GetTargetCountAtPosition(gridPosition);
