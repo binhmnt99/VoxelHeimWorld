@@ -18,7 +18,7 @@ namespace TurnBase
         }
 
 
-        [SerializeField] private Transform gridDebugObjectPrefab;
+        //[SerializeField] private Transform gridDebugObjectPrefab;
 
         [SerializeField] private int width;
         [SerializeField] private int height;

@@ -5,7 +5,7 @@ using TMPro;
 
 namespace TurnBase
 {
-    public class PathfindingGridDebusObject : GridDebugObject
+    public class PathfindingGridDebugObject : GridDebugObject
     {
         [SerializeField] private TextMeshPro gCostText;
         [SerializeField] private TextMeshPro hCostText;

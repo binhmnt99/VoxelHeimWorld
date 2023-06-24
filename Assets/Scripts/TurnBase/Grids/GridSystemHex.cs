@@ -86,6 +86,7 @@ namespace TurnBase
         public void CreateDebugObjects(Transform debugPrefab)
         {
             deBugGridSystem = new GameObject("DebugGridSystem");
+
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)

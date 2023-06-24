@@ -39,7 +39,7 @@ namespace TurnBase
 
             gridSystem = new GridSystemHex<PathNode>(width, height, cellSize, 0, LevelGrid.FLOOR_HEIGHT,
                 (GridSystemHex<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
-            gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+            //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
             for (int x = 0; x < width; x++)
             {
