@@ -175,8 +175,7 @@ namespace TurnBase
                         break;
                 }
 
-                ShowGridPositionList(
-                    selectedAction.GetValidActionGridPositionList(), gridVisualType);
+                ShowGridPositionList(selectedAction.GetValidActionGridPositionList(), gridVisualType);
             }
 
         }
