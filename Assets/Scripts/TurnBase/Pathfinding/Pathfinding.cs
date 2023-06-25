@@ -56,10 +56,13 @@ namespace TurnBase
             }
         }
 
+        List<PathNode> openList = new List<PathNode>();
+        List<PathNode> closedList = new List<PathNode>();
+
         public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition, out int pathLength)
         {
-            List<PathNode> openList = new List<PathNode>();
-            List<PathNode> closedList = new List<PathNode>();
+            openList.Clear();
+            closedList.Clear();
 
             PathNode startNode = gridSystem.GetGridObject(startGridPosition);
             PathNode endNode = gridSystem.GetGridObject(endGridPosition);
@@ -128,6 +131,7 @@ namespace TurnBase
                 }
             }
             pathLength = 0;
+
             // No path found
             return null;
         }
@@ -156,9 +160,10 @@ namespace TurnBase
             return gridSystem.GetGridObject(new GridPosition(x, z, 0));
         }
 
+        List<PathNode> neighborList = new();
         private List<PathNode> GetNeighborList(PathNode currentNode)
         {
-            List<PathNode> neighborList = new List<PathNode>();
+            neighborList.Clear();
 
             GridPosition gridPosition = currentNode.GetGridPosition();
 
@@ -219,9 +224,12 @@ namespace TurnBase
             return neighborList;
         }
 
+        List<PathNode> pathNodeList = new();
+        List<GridPosition> gridPositionList = new ();
+
         private List<GridPosition> CalculatePath(PathNode endNode)
         {
-            List<PathNode> pathNodeList = new List<PathNode>();
+            pathNodeList.Clear();
             pathNodeList.Add(endNode);
             PathNode currentNode = endNode;
             while (currentNode.GetCameFromPathNode() != null)
@@ -232,12 +240,11 @@ namespace TurnBase
 
             pathNodeList.Reverse();
 
-            List<GridPosition> gridPositionList = new List<GridPosition>();
+            gridPositionList.Clear();
             foreach (PathNode pathNode in pathNodeList)
             {
                 gridPositionList.Add(pathNode.GetGridPosition());
             }
-
             return gridPositionList;
         }
 

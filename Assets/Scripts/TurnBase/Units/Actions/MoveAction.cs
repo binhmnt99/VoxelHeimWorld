@@ -108,12 +108,15 @@ namespace TurnBase
                     {
                         continue;
                     }
-                    if (!Pathfinding.Instance.HasPath(unitGridPosition, testGridPosition))
+
+                    List<GridPosition> path =
+                        Pathfinding.Instance.FindPath(unitGridPosition, testGridPosition, out int pathLength);
+                    if (path == null)
                     {
                         continue;
                     }
                     int pathfindingDistanceMultiplier = 10;
-                    if (Pathfinding.Instance.GetPathLength(unitGridPosition, testGridPosition) > maxMoveDistance * pathfindingDistanceMultiplier)
+                    if (pathLength > maxMoveDistance * pathfindingDistanceMultiplier)
                     {
                         continue;
                     }
