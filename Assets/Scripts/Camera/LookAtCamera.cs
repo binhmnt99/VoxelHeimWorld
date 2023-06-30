@@ -6,14 +6,14 @@ namespace TurnBase
 {
     public class LookAtCamera : MonoBehaviour
     {
-        private Transform cameraTransform;
+        [SerializeField]private Transform cameraTransform;
 
         void Awake()
         {
             cameraTransform = Camera.main.transform;
         }
 
-        void LateUpdate()
+        void Update()
         {
             transform.LookAt(transform.position + cameraTransform.forward);
         }

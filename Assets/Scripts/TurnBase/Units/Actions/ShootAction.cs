@@ -132,7 +132,7 @@ namespace TurnBase
                 {
                     GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
-                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
                         continue;
                     }
@@ -143,18 +143,18 @@ namespace TurnBase
                         continue;
                     }
 
-                    if (!LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
+                    if (!HexLevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
                     {
                         continue;
                     }
 
-                    Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
+                    Unit targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
 
                     if (targetUnit.IsEnemy() == unit.IsEnemy())
                     {
                         continue;
                     }
-                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                    Vector3 unitWorldPosition = HexLevelGrid.Instance.GetWorldPosition(unitGridPosition);
                     Vector3 shootDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
                     float unitShoulderHeight = 1.1f;
                     if (Physics.Raycast(
@@ -177,7 +177,7 @@ namespace TurnBase
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
-            targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+            targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
 
             state = ShootState.AIMING;
             float aimingStateTime = 1f;
@@ -199,7 +199,7 @@ namespace TurnBase
 
         public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
         {
-            Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+            Unit targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
             return new EnemyAIAction
             {
                 gridPosition = gridPosition,

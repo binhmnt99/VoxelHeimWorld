@@ -17,29 +17,21 @@ namespace TurnBase
 
         private TGridObject[,] gridObjectArray;
 
-        public HexGridSystem(List<Vector3> positionList, int width, int height, float cellSize, Func<HexGridSystem<TGridObject>, GridPosition, TGridObject> createGridObject)
+        public HexGridSystem(int width, int height, float cellSize, Func<HexGridSystem<TGridObject>, GridPosition, TGridObject> createGridObject)
         {
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
             gridObjectArray = new TGridObject[width, height];
-
-            foreach (Vector3 position in positionList)
+            GridPosition gridPosition;
+            for (int x = 0; x < width; x++)
             {
-                GridPosition gridPosition = GetGridPosition(position);
-                gridObjectArray[gridPosition.x, gridPosition.z] = createGridObject(this, gridPosition);
+                for (int z = 0; z < height; z++)
+                {
+                    gridPosition = new GridPosition(x,z);
+                    gridObjectArray[gridPosition.x, gridPosition.z] = createGridObject(this, gridPosition);
+                }
             }
-
-            // for (int x = 0; x < width; x++)
-            // {
-            //     for (int z = 0; z < height; z++)
-            //     {
-            //         if (gridObjectArray[x, z] as HexGridObject != null)
-            //         {
-            //             Debug.Log((gridObjectArray[x, z] as HexGridObject).GetGridPosition());
-            //         }
-            //     }
-            // }
         }
 
         public Vector3 GetWorldPosition(GridPosition gridPosition)

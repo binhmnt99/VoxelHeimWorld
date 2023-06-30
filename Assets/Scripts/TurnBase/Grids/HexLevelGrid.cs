@@ -46,14 +46,13 @@ namespace TurnBase
             //mapPositionList.Sort(CompareVector);
             FindMinMax();
             CalculateWidthAndHeight();
-            gridSystem = new HexGridSystem<HexGridObject>(mapPositionList,width, height, cellSize,
+            gridSystem = new HexGridSystem<HexGridObject>(width, height, cellSize,
             (HexGridSystem<HexGridObject> g, GridPosition gridPosition) => new HexGridObject(g, gridPosition));
-            //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
         }
         // Start is called before the first frame update
         void Start()
         {
-            //HexPathfinding.Instance.SetUp(mapPositionList,width, height, cellSize);
+            HexPathfinding.Instance.SetUp(width, height, cellSize);
         }
 
         // Update is called once per frame
@@ -135,10 +134,6 @@ namespace TurnBase
             height = GetAbsoluteValue(minZ) + GetAbsoluteValue(maxZ);
         }
 
-        public List<Vector3> GetMapPositionList()
-        {
-            return mapPositionList;
-        }
         public void AddUnitAtGridPosition(GridPosition gridPosition, Unit unit)
         {
             hexGridObject = gridSystem.GetGridObject(gridPosition);
@@ -183,33 +178,34 @@ namespace TurnBase
 
         public bool HasAnyUnitOnGridPosition(GridPosition gridPosition)
         {
-            hexGridObject = gridSystem.GetGridObject(gridPosition);
-            return hexGridObject.HasAnyUnit();
+            HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            return gridObject.HasAnyUnit();
         }
 
         public Unit GetUnitAtGridPosition(GridPosition gridPosition)
         {
-            hexGridObject = gridSystem.GetGridObject(gridPosition);
-            return hexGridObject.GetUnit();
+            HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            return gridObject.GetUnit();
         }
 
         public IInteractable GetInteractableAtGridPosition(GridPosition gridPosition)
         {
-            hexGridObject = gridSystem.GetGridObject(gridPosition);
-            return hexGridObject.GetInteractable();
+            HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            return gridObject.GetInteractable();
         }
 
         public void SetInteractableAtGridPosition(GridPosition gridPosition, IInteractable interactable)
         {
-            hexGridObject = gridSystem.GetGridObject(gridPosition);
-            hexGridObject.SetInteractable(interactable);
+            HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            gridObject.SetInteractable(interactable);
         }
 
         public void ClearInteractableAtGridPosition(GridPosition gridPosition)
         {
-            hexGridObject = gridSystem.GetGridObject(gridPosition);
-            hexGridObject.ClearInteractable();
+            HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            gridObject.ClearInteractable();
         }
+
     }
 
 }

@@ -40,7 +40,7 @@ namespace TurnBase
 
         private void UpdateHealthBar()
         {
-            healthBarImage.fillAmount = healthSystem.GetHealthNormalize();
+            healthBarImage.fillAmount = healthSystem.GetHealthNormalized();
         }
     }
 

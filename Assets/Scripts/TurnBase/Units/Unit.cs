@@ -8,33 +8,32 @@ namespace TurnBase
     public class Unit : MonoBehaviour
     {
         [SerializeField] private int actionPointMax;
-        [SerializeField] private int movePointMax;
-        [SerializeField] private bool isEnemy;
-        private GridPosition gridPosition;
-        private BaseAction[] baseActionArray;
         private int actionPoint;
-        private int movePoint;
 
-        private HealthSystem healthSystem;
-        private int positionCount;
 
         public static event EventHandler OnAnyActionPointsChanged;
-        public static event EventHandler OnAnyMovePointsChanged;
         public static event EventHandler OnAnyUnitSpawned;
         public static event EventHandler OnAnyUnitDead;
 
-        void Awake()
+
+        [SerializeField] private bool isEnemy;
+
+
+        private GridPosition gridPosition;
+        private HealthSystem healthSystem;
+        private BaseAction[] baseActionArray;
+
+        private void Awake()
         {
             actionPoint = actionPointMax;
-            movePoint = movePointMax;
-            baseActionArray = GetComponents<BaseAction>();
             healthSystem = GetComponent<HealthSystem>();
+            baseActionArray = GetComponents<BaseAction>();
         }
 
-        void Start()
+        private void Start()
         {
-            gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
-            LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
+            gridPosition = HexLevelGrid.Instance.GetGridPosition(transform.position);
+            HexLevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
 
             TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
 
@@ -43,16 +42,16 @@ namespace TurnBase
             OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
-            GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+            GridPosition newGridPosition = HexLevelGrid.Instance.GetGridPosition(transform.position);
             if (newGridPosition != gridPosition)
             {
+                // Unit changed Grid Position
                 GridPosition oldGridPosition = gridPosition;
                 gridPosition = newGridPosition;
-                LevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
 
+                HexLevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
             }
         }
 
@@ -96,19 +95,6 @@ namespace TurnBase
             }
         }
 
-        public bool TrySpendMovePointsToTakeAction(GridPosition mouseGridPosition)
-        {
-            if (CanSpendMovePointsToTakeAction(mouseGridPosition))
-            {
-                SpendMovePoints(positionCount);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
         {
             if (actionPoint >= baseAction.GetActionPointsCost())
@@ -121,24 +107,9 @@ namespace TurnBase
             }
         }
 
-        public bool CanSpendMovePointsToTakeAction(GridPosition mouseGridPosition)
+        private void SpendActionPoints(int amount)
         {
-            List<GridPosition> pathGridPositionList = HexPathfinding.Instance.FindPath(GetGridPosition(), mouseGridPosition, out int pathLength);
-            positionCount = pathGridPositionList.Count - 1;
-            //Debug.Log(" point count " + positionCount + " move point " + movePoint);
-            if (movePoint >= positionCount)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private void SpendActionPoints(int value)
-        {
-            actionPoint -= value;
+            actionPoint -= amount;
 
             OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -148,28 +119,14 @@ namespace TurnBase
             return actionPoint;
         }
 
-        private void SpendMovePoints(int value)
-        {
-            movePoint -= value;
-            //Debug.Log(movePoint);
-            OnAnyMovePointsChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public int GetMovePoints()
-        {
-            return movePoint;
-        }
-
         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
         {
-            if ((IsEnemy() && TurnSystem.Instance.IsPlayerTurn())
-            || (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
+            if ((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) ||
+                (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
             {
                 actionPoint = actionPointMax;
-                movePoint = movePointMax;
 
                 OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
-                OnAnyMovePointsChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -185,14 +142,17 @@ namespace TurnBase
 
         private void HealthSystem_OnDead(object sender, EventArgs e)
         {
-            LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
+            HexLevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
+
             Destroy(gameObject);
+
             OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
         }
 
         public float GetHealthNormalized()
         {
-            return healthSystem.GetHealthNormalize();
+            return healthSystem.GetHealthNormalized();
         }
+
     }
 }

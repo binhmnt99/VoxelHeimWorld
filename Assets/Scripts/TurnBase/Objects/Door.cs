@@ -20,8 +20,8 @@ namespace TurnBase
         }
         void Start()
         {
-            gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
-            LevelGrid.Instance.SetInteractableAtGridPosition(gridPosition, this);
+            gridPosition = HexLevelGrid.Instance.GetGridPosition(transform.position);
+            HexLevelGrid.Instance.SetInteractableAtGridPosition(gridPosition, this);
             // if (isOpen)
             // {
             //     OpenDoor();

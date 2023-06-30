@@ -30,7 +30,6 @@ namespace TurnBase
         private void MoveActionButton_Click(BaseAction baseAction)
         {
             UnitActionSystem.Instance.SetSelectedAction(baseAction);
-            UnitActionSystem.Instance.SetState(UnitActionSystem.UnitActionSystemState.SelectedUnitAction);
         }
 
         public void UpdateSelectedVisual()

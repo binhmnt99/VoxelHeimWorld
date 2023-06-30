@@ -50,16 +50,22 @@ namespace TurnBase
             ];
 
             GridPosition gridPosition;
-            foreach (Vector3 mapPosition in HexLevelGrid.Instance.GetMapPositionList())
+            for (int x = 0; x < HexLevelGrid.Instance.GetWidth(); x++)
             {
-                gridPosition = HexLevelGrid.Instance.GetGridPosition(mapPosition);
-                Transform gridSystemVisualSingleTransform = Instantiate(gridSystemVisualSinglePrefab, HexLevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, gridSquadVisual.transform);
+                for (int z = 0; z < HexLevelGrid.Instance.GetHeight(); z++)
+                {
+                    gridPosition = new GridPosition(x, z);
 
-                gridSystemVisualSingleArray[gridPosition.x, gridPosition.z] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
+                    Transform gridSystemVisualSingleTransform =
+                        Instantiate(gridSystemVisualSinglePrefab, HexLevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity,gridSquadVisual.transform);
+
+                    gridSystemVisualSingleArray[x, z] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
+                }
             }
 
-            //UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
-            //HexLevelGrid.Instance.OnAnyUnitMovedGridPosition += HexLevelGrid_OnAnyUnitMovedGridPosition;
+
+            UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
+            HexLevelGrid.Instance.OnAnyUnitMovedGridPosition += HexLevelGrid_OnAnyUnitMovedGridPosition;
 
             UpdateGridVisual();
 
@@ -94,12 +100,14 @@ namespace TurnBase
 
         public void HideAllGridPosition()
         {
-            GridPosition gridPosition;
-            foreach (Vector3 mapPos in HexLevelGrid.Instance.GetMapPositionList())
+            for (int x = 0; x < HexLevelGrid.Instance.GetWidth(); x++)
             {
-                gridPosition = HexLevelGrid.Instance.GetGridPosition(mapPos);
-                gridSystemVisualSingleArray[gridPosition.x, gridPosition.z].Hide();
+                for (int z = 0; z < HexLevelGrid.Instance.GetHeight(); z++)
+                {
+                    gridSystemVisualSingleArray[x, z].Hide();
+                }
             }
+
         }
 
         private void ShowGridPositionRange(GridPosition gridPosition, int range, GridVisualType gridVisualType)
@@ -143,36 +151,36 @@ namespace TurnBase
         {
             HideAllGridPosition();
 
-            // Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-            // if (selectedUnit)
-            // {
-            //     BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
+            Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
+            if (selectedUnit)
+            {
+                BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
 
-            //     GridVisualType gridVisualType;
+                GridVisualType gridVisualType;
 
-            //     switch (selectedAction)
-            //     {
-            //         default:
-            //         case MoveAction moveAction:
-            //             gridVisualType = GridVisualType.White;
-            //             break;
-            //         case SpinAction spinAction:
-            //             gridVisualType = GridVisualType.Blue;
-            //             break;
-            //         case ShootAction shootAction:
-            //             gridVisualType = GridVisualType.Red;
-            //             ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetShootDistance(), GridVisualType.RedSoft);
-            //             break;
-            //         case GrenadeAction grenadeAction:
-            //             gridVisualType = GridVisualType.Yellow;
-            //             break;
-            //         case InteractAction interactAction:
-            //             gridVisualType = GridVisualType.Blue;
-            //             break;
-            //     }
+                switch (selectedAction)
+                {
+                    default:
+                    case MoveAction moveAction:
+                        gridVisualType = GridVisualType.White;
+                        break;
+                    case SpinAction spinAction:
+                        gridVisualType = GridVisualType.Blue;
+                        break;
+                    case ShootAction shootAction:
+                        gridVisualType = GridVisualType.Red;
+                        ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetShootDistance(), GridVisualType.RedSoft);
+                        break;
+                    case GrenadeAction grenadeAction:
+                        gridVisualType = GridVisualType.Yellow;
+                        break;
+                    case InteractAction interactAction:
+                        gridVisualType = GridVisualType.Blue;
+                        break;
+                }
 
-            //     ShowGridPositionList(selectedAction.GetValidActionGridPositionList(), gridVisualType);
-            // }
+                ShowGridPositionList(selectedAction.GetValidActionGridPositionList(), gridVisualType);
+            }
 
         }
 

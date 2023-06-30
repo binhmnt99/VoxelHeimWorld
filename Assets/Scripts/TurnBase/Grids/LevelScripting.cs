@@ -20,7 +20,7 @@ namespace TurnBase
 
         void Start()
         {
-            LevelGrid.Instance.OnAnyUnitMovedGridPosition += LevelGrid_OnAnyUnitMovedGridPosition;
+            HexLevelGrid.Instance.OnAnyUnitMovedGridPosition += LevelGrid_OnAnyUnitMovedGridPosition;
             door1.OnDoorOpened += (object sender, EventArgs e) =>
             {
                 SetActiveGameObjectList(hider2List, false);
@@ -33,7 +33,7 @@ namespace TurnBase
 
         }
 
-        private void LevelGrid_OnAnyUnitMovedGridPosition(object sender, LevelGrid.OnAnyUnitMovedGridPositionEventArgs e)
+        private void LevelGrid_OnAnyUnitMovedGridPosition(object sender, HexLevelGrid.OnAnyUnitMovedGridPositionEventArgs e)
         {
             if (e.toGridPosition.z == 5 && !hasShownFirstHider)
             {

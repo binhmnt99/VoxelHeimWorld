@@ -37,7 +37,7 @@ namespace TurnBase
             OnDead?.Invoke(this, EventArgs.Empty);
         }
 
-        public float GetHealthNormalize()
+        public float GetHealthNormalized()
         {
             return (float)health / healthMax;
         }

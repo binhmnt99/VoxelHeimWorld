@@ -10,26 +10,65 @@ namespace TurnBase
         private enum State
         {
             WaitingForEnemyTurn,
-            TalkingTurn,
-            InAction
+            TakingTurn,
+            Busy,
         }
+
         private State state;
         private float timer;
-        void Awake()
+
+        private void Awake()
         {
             state = State.WaitingForEnemyTurn;
         }
-        // Start is called before the first frame update
-        void Start()
+
+        private void Start()
         {
             TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
+        }
+
+        private void Update()
+        {
+            if (TurnSystem.Instance.IsPlayerTurn())
+            {
+                return;
+            }
+
+            switch (state)
+            {
+                case State.WaitingForEnemyTurn:
+                    break;
+                case State.TakingTurn:
+                    timer -= Time.deltaTime;
+                    if (timer <= 0f)
+                    {
+                        if (TryTakeEnemyAIAction(SetStateTakingTurn))
+                        {
+                            state = State.Busy;
+                        }
+                        else
+                        {
+                            // No more enemies have actions they can take, end enemy turn
+                            TurnSystem.Instance.NextTurn();
+                        }
+                    }
+                    break;
+                case State.Busy:
+                    break;
+            }
+        }
+
+        private void SetStateTakingTurn()
+        {
+            timer = 0.5f;
+            state = State.TakingTurn;
         }
 
         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
         {
             if (!TurnSystem.Instance.IsPlayerTurn())
             {
-                state = State.TalkingTurn;
+                state = State.TakingTurn;
                 timer = 2f;
             }
         }
@@ -76,82 +115,15 @@ namespace TurnBase
                 }
 
             }
-            if (bestEnemyAIAction != null)
+
+            if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
             {
-                if (bestBaseAction != enemyUnit.GetAction<MoveAction>())
-                {
-                    if (enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
-                    {
-                        bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (enemyUnit.TrySpendMovePointsToTakeAction(bestEnemyAIAction.gridPosition))
-                    {
-                        bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
+                bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
+                return true;
             }
             else
             {
                 return false;
-            }
-            // if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
-            // {
-            //     bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
-            //     return true;
-            // }
-            // else
-            // {
-            //     return false;
-            // }
-
-        }
-
-        private void SetStateTakingTurn()
-        {
-            timer = .5f;
-            state = State.TalkingTurn;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            if (TurnSystem.Instance.IsPlayerTurn())
-            {
-                return;
-            }
-            switch (state)
-            {
-                case State.WaitingForEnemyTurn:
-                    break;
-                case State.TalkingTurn:
-                    timer -= Time.deltaTime;
-                    if (timer <= 0f)
-                    {
-                        if (TryTakeEnemyAIAction(SetStateTakingTurn))
-                        {
-                            state = State.InAction;
-                        }
-                        else
-                        {
-                            TurnSystem.Instance.NextTurn();
-                        }
-                    }
-                    break;
-                case State.InAction:
-                    break;
             }
         }
     }

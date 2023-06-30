@@ -13,7 +13,6 @@ namespace TurnBase
         [SerializeField] private Transform actionButtonPrefabTransform;
         [SerializeField] private Transform actionButtonContainerTransform;
         [SerializeField] private TextMeshProUGUI actionPointText;
-        [SerializeField] private TextMeshProUGUI movePointText;
         private List<ActionButtonUI> actionButtonUIList;
         void Awake()
         {
@@ -21,7 +20,6 @@ namespace TurnBase
 
             actionButtonContainerTransform = transform.GetChild(0).GetComponent<Transform>();
             actionPointText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-            movePointText = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
         }
         void Start()
         {
@@ -30,10 +28,9 @@ namespace TurnBase
             UnitActionSystem.Instance.OnActionStarted += UnitActionSystem_OnActionStarted;
             TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
             Unit.OnAnyActionPointsChanged += Unit_OnAnyActionPointsChanged;
-            Unit.OnAnyMovePointsChanged += Unit_OnAnyMovePointsChanged;
 
             UpdateActionPoints();
-            UpdateMovePoints();
+
             CreateUnitActionButton();
             UpdateSelectedVisual();
         }
@@ -52,13 +49,10 @@ namespace TurnBase
             {
                 foreach (BaseAction baseAction in selectedUnit.GetBaseActionArray())
                 {
-                    if (baseAction != selectedUnit.GetAction<MoveAction>())
-                    {
-                        Transform actionButtonTransform = Instantiate(actionButtonPrefabTransform, actionButtonContainerTransform);
-                        ActionButtonUI actionButtonUI = actionButtonTransform.GetComponent<ActionButtonUI>();
-                        actionButtonUI.SetBaseAction(baseAction);
-                        actionButtonUIList.Add(actionButtonUI);
-                    }
+                    Transform actionButtonTransform = Instantiate(actionButtonPrefabTransform, actionButtonContainerTransform);
+                    ActionButtonUI actionButtonUI = actionButtonTransform.GetComponent<ActionButtonUI>();
+                    actionButtonUI.SetBaseAction(baseAction);
+                    actionButtonUIList.Add(actionButtonUI);
                 }
             }
         }
@@ -68,7 +62,7 @@ namespace TurnBase
             CreateUnitActionButton();
             UpdateSelectedVisual();
             UpdateActionPoints();
-            UpdateMovePoints();
+
         }
 
         private void UnitActionSystem_OnSelectedActionChanged(object sender, EventArgs e)
@@ -79,13 +73,13 @@ namespace TurnBase
         private void UnitActionSystem_OnActionStarted(object sender, EventArgs e)
         {
             UpdateActionPoints();
-            UpdateMovePoints();
+
         }
 
         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
         {
             UpdateActionPoints();
-            UpdateMovePoints();
+
         }
 
         private void Unit_OnAnyActionPointsChanged(object sender, EventArgs e)
@@ -93,10 +87,6 @@ namespace TurnBase
             UpdateActionPoints();
         }
 
-        private void Unit_OnAnyMovePointsChanged(object sender, EventArgs e)
-        {
-            UpdateMovePoints();
-        }
 
         private void UpdateSelectedVisual()
         {
@@ -113,12 +103,6 @@ namespace TurnBase
             actionPointText.text = (selectedUnit ? "Action Points: " + selectedUnit.GetActionPoints() : "");
         }
 
-        private void UpdateMovePoints()
-        {
-            Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-
-            movePointText.text = (selectedUnit ? "Move Points: " + selectedUnit.GetMovePoints() : "");
-        }
     }
 
 }

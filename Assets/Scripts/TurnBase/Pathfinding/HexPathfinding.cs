@@ -31,26 +31,29 @@ namespace TurnBase
             Instance = this;
         }
 
-        public void SetUp(List<Vector3> positionList,int width, int height, float cellSize)
+        public void SetUp(int width, int height, float cellSize)
         {
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
 
-            gridSystem = new HexGridSystem<PathNode>(positionList, width, height, cellSize,
+            gridSystem = new HexGridSystem<PathNode>(width, height, cellSize,
                 (HexGridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
             //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
             GridPosition gridPosition;
             Vector3 worldPosition;
             float rayOffsetDistance = 5f;
 
-            foreach (Vector3 mapPos in positionList)
+            for (int x = 0; x < width; x++)
             {
-                gridPosition = HexLevelGrid.Instance.GetGridPosition(mapPos);
-                worldPosition = HexLevelGrid.Instance.GetWorldPosition(gridPosition);
-                if (Physics.Raycast(worldPosition + Vector3.down * rayOffsetDistance, Vector3.up, rayOffsetDistance * 2, obstaclesLayerMask))
+                for (int z = 0; z < height; z++)
                 {
-                    GetNode(gridPosition.x, gridPosition.z).SetIsWalkable(false);
+                    gridPosition = new GridPosition(x, z);
+                    worldPosition = HexLevelGrid.Instance.GetWorldPosition(gridPosition);
+                    if (Physics.Raycast(worldPosition + Vector3.down * rayOffsetDistance, Vector3.up, rayOffsetDistance * 2, obstaclesLayerMask))
+                    {
+                        GetNode(x, z).SetIsWalkable(false);
+                    }
                 }
             }
         }
@@ -67,16 +70,21 @@ namespace TurnBase
             PathNode endNode = gridSystem.GetGridObject(endGridPosition);
             openList.Add(startNode);
 
-            foreach (Vector3 mapPos in HexLevelGrid.Instance.GetMapPositionList())
+            for (int x = 0; x < gridSystem.GetWidth(); x++)
             {
-                GridPosition gridPosition = HexLevelGrid.Instance.GetGridPosition(mapPos);
-                PathNode pathNode = gridSystem.GetGridObject(gridPosition);
+                for (int z = 0; z < gridSystem.GetHeight(); z++)
+                {
+                    GridPosition gridPosition = new GridPosition(x, z);
+                    PathNode pathNode = gridSystem.GetGridObject(gridPosition);
 
-                pathNode.SetGCost(int.MaxValue);
-                pathNode.SetHCost(0);
-                pathNode.CalculateFCost();
-                pathNode.ResetCameFromPathNode();
+                    pathNode.SetGCost(int.MaxValue);
+                    pathNode.SetHCost(0);
+                    pathNode.CalculateFCost();
+                    pathNode.ResetCameFromPathNode();
+                }
             }
+
+
 
             startNode.SetGCost(0);
             startNode.SetHCost(CalculateHeuristicDistance(startGridPosition, endGridPosition));
@@ -251,7 +259,7 @@ namespace TurnBase
 
         public bool IsWalkableGridPosition(GridPosition gridPosition)
         {
-            return gridSystem.GetGridObject(gridPosition).IsWalkable();
+            return (gridSystem.GetGridObject(gridPosition) != null) ? gridSystem.GetGridObject(gridPosition).IsWalkable() : false;
         }
 
         public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)

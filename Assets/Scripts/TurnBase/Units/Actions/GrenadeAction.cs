@@ -41,7 +41,7 @@ namespace TurnBase
                 {
                     GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = gridPosition + offsetGridPosition;
-                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
                         continue;
                     }
