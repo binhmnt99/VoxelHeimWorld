@@ -19,6 +19,7 @@ TagManager:
   - MousePlane
   - Unit
   - Obstacles
+  - Land
   - 
   - 
   - 
@@ -37,8 +38,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - HLOD
   m_SortingLayers:
   - name: Default
     uniqueID: 0

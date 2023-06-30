@@ -39,7 +39,7 @@ namespace TurnBase
             {
                 for (int z = -maxThrowDistance; z <= maxThrowDistance; z++)
                 {
-                    GridPosition offsetGridPosition = new GridPosition(x, z, 0);
+                    GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = gridPosition + offsetGridPosition;
                     if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {

@@ -29,6 +29,11 @@ namespace TurnBase
             return gridPosition.ToString() + "\n" + unitString;
         }
 
+        public GridPosition GetGridPosition()
+        {
+            return gridPosition;
+        }
+
         public void AddUnit(Unit unit)
         {
             unitList.Add(unit);
@@ -70,6 +75,11 @@ namespace TurnBase
         {
             this.interactable = interactable;
         }
+        public void ClearInteractable()
+        {
+            this.interactable = null;
+        }
+
     }
 
 }

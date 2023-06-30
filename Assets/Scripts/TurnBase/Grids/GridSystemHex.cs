@@ -11,27 +11,23 @@ namespace TurnBase
         private int width;
         private int height;
         private float cellSize;
-        private int floor;
-        private float floorHeight;
 
         private TGridObject[,] gridObjects;
         private GridPosition gridPosition;
         private GameObject deBugGridSystem;
 
-        public GridSystemHex(int width, int height, float cellSize, int floor, float floorHeight, Func<GridSystemHex<TGridObject>, GridPosition, TGridObject> createGridObject)
+        public GridSystemHex(int width, int height, float cellSize, Func<GridSystemHex<TGridObject>, GridPosition, TGridObject> createGridObject)
         {
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
-            this.floor = floor;
-            this.floorHeight = floorHeight;
 
             gridObjects = new TGridObject[width, height];
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)
                 {
-                    gridPosition = new GridPosition(x, z, floor);
+                    gridPosition = new GridPosition(x, z);
                     gridObjects[x, z] = createGridObject(this, gridPosition);
                 }
             }
@@ -39,49 +35,48 @@ namespace TurnBase
 
         public Vector3 GetWorldPosition(GridPosition gridPosition)
         {
-            return new Vector3(gridPosition.x, 0, 0) * cellSize +
-            new Vector3(0, 0, gridPosition.z) * cellSize * HEX_VERTICAL_OFFSET_MULTIPLIER +
-            new Vector3(0, gridPosition.floor, 0) * floorHeight +
-            (((gridPosition.z % 2) == 1) ? new Vector3(1, 0, 0) * cellSize * .5f : Vector3.zero);
+            return
+                new Vector3(gridPosition.x, 0, 0) * cellSize +
+                new Vector3(0, 0, gridPosition.z) * cellSize * HEX_VERTICAL_OFFSET_MULTIPLIER +
+                (((gridPosition.z % 2) == 1) ? new Vector3(1, 0, 0) * cellSize * .5f : Vector3.zero);
         }
 
         public GridPosition GetGridPosition(Vector3 worldPosition)
         {
-            //Debug.Log("1) " + worldPosition);
             GridPosition roughXZ = new GridPosition(
                 Mathf.RoundToInt(worldPosition.x / cellSize),
-                Mathf.RoundToInt(worldPosition.z / cellSize / HEX_VERTICAL_OFFSET_MULTIPLIER),
-                floor
+                Mathf.RoundToInt(worldPosition.z / cellSize / HEX_VERTICAL_OFFSET_MULTIPLIER)
             );
-            //Debug.Log("2) " + Mathf.RoundToInt(worldPosition.x / cellSize) + " " + Mathf.RoundToInt(worldPosition.z / cellSize / HEX_VERTICAL_OFFSET_MULTIPLIER));
+
             bool oddRow = roughXZ.z % 2 == 1;
 
-            List<GridPosition> neighborGridPositionList = new List<GridPosition>
-            {
-                roughXZ + new GridPosition(-1, 0, 0),
-                roughXZ + new GridPosition(+1, 0, 0),
+            List<GridPosition> neighbourGridPositionList = new List<GridPosition>
+        {
+            roughXZ + new GridPosition(-1, 0),
+            roughXZ + new GridPosition(+1, 0),
 
-                roughXZ + new GridPosition(0, +1, 0),
-                roughXZ + new GridPosition(0, -1, 0),
+            roughXZ + new GridPosition(0, +1),
+            roughXZ + new GridPosition(0, -1),
 
-                roughXZ + new GridPosition(oddRow ? +1 : -1, +1, 0),
-                roughXZ + new GridPosition(oddRow ? +1 : -1, -1, 0),
-            };
+            roughXZ + new GridPosition(oddRow ? +1 : -1, +1),
+            roughXZ + new GridPosition(oddRow ? +1 : -1, -1),
+        };
+
             GridPosition closestGridPosition = roughXZ;
 
-            foreach (GridPosition neighborGridPosition in neighborGridPositionList)
+            foreach (GridPosition neighbourGridPosition in neighbourGridPositionList)
             {
-                if (Vector3.Distance(worldPosition, GetWorldPosition(neighborGridPosition)) <
+                if (Vector3.Distance(worldPosition, GetWorldPosition(neighbourGridPosition)) <
                     Vector3.Distance(worldPosition, GetWorldPosition(closestGridPosition)))
                 {
                     // Closer than the Closest
-                    closestGridPosition = neighborGridPosition;
+                    closestGridPosition = neighbourGridPosition;
                 }
             }
-            //Debug.Log("3) " + closestGridPosition.x + " " + closestGridPosition.z);
-            return closestGridPosition;
 
+            return closestGridPosition;
         }
+
 
         public void CreateDebugObjects(Transform debugPrefab)
         {
@@ -91,7 +86,7 @@ namespace TurnBase
             {
                 for (int z = 0; z < height; z++)
                 {
-                    GridPosition gridPosition = new GridPosition(x, z, floor);
+                    GridPosition gridPosition = new GridPosition(x, z);
                     Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity, deBugGridSystem.transform);
 
                     GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
@@ -110,8 +105,7 @@ namespace TurnBase
             return gridPosition.x >= 0 &&
                     gridPosition.z >= 0 &&
                     gridPosition.x < width &&
-                    gridPosition.z < height &&
-                    gridPosition.floor == floor;
+                    gridPosition.z < height;
         }
 
         public int GetWidth()

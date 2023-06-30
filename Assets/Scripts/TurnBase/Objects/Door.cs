@@ -63,7 +63,7 @@ namespace TurnBase
         {
             isOpen = true;
             animator.SetBool("isOpen", isOpen);
-            Pathfinding.Instance.SetIsWalkableGridPosition(gridPosition, true);
+            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition, true);
 
             OnDoorOpened?.Invoke(this,EventArgs.Empty);
             OnAnyDoorOpened?.Invoke(this,EventArgs.Empty);
@@ -72,7 +72,7 @@ namespace TurnBase
         {
             isOpen = false;
             animator.SetBool("isOpen", isOpen);
-            Pathfinding.Instance.SetIsWalkableGridPosition(gridPosition, false);
+            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition, false);
         }
     }
 

@@ -123,7 +123,7 @@ namespace TurnBase
 
         public bool CanSpendMovePointsToTakeAction(GridPosition mouseGridPosition)
         {
-            List<GridPosition> pathGridPositionList = Pathfinding.Instance.FindPath(GetGridPosition(), mouseGridPosition, out int pathLength);
+            List<GridPosition> pathGridPositionList = HexPathfinding.Instance.FindPath(GetGridPosition(), mouseGridPosition, out int pathLength);
             positionCount = pathGridPositionList.Count - 1;
             //Debug.Log(" point count " + positionCount + " move point " + movePoint);
             if (movePoint >= positionCount)

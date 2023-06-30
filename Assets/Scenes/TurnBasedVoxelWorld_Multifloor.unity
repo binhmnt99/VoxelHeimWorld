@@ -3049,10 +3049,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c76d53035648ec418a2da74a0d6ce55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridDebugObjectPrefab: {fileID: 0}
   width: 50
   height: 50
   cellSize: 2
-  floorAmount: 1
 --- !u!4 &527512966
 Transform:
   m_ObjectHideFlags: 0
@@ -5819,7 +5819,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0

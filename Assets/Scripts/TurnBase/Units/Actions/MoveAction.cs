@@ -57,7 +57,7 @@ namespace TurnBase
                 currentPositionIndex++;
                 if (currentPositionIndex >= positionList.Count)
                 {
-                    Pathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[positionList.Count - 1]), false);
+                    HexPathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[positionList.Count - 1]), false);
                     transform.position = LevelGrid.Instance.GetWorldPosition(LevelGrid.Instance.GetGridPosition(positionList[positionList.Count - 1]));
                     OnStopMoving?.Invoke(this, EventArgs.Empty);
                     //positionList.Clear();
@@ -68,7 +68,7 @@ namespace TurnBase
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
-            List<GridPosition> pathGridPositionList = Pathfinding.Instance.FindPath(unit.GetGridPosition(), gridPosition, out int pathLength);
+            List<GridPosition> pathGridPositionList = HexPathfinding.Instance.FindPath(unit.GetGridPosition(), gridPosition, out int pathLength);
             //Debug.Log(pathGridPositionList);
             currentPositionIndex = 0;
             positionList = new List<Vector3>();
@@ -76,7 +76,7 @@ namespace TurnBase
             {
                 positionList.Add(LevelGrid.Instance.GetWorldPosition(pathGridPosition));
             }
-            Pathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[0]), true);
+            HexPathfinding.Instance.SetIsWalkableGridPosition(LevelGrid.Instance.GetGridPosition(positionList[0]), true);
             OnStartMoving?.Invoke(this, EventArgs.Empty);
             ActionStart(onActionComplete);
         }
@@ -90,7 +90,7 @@ namespace TurnBase
             {
                 for (int z = -maxMoveDistance; z <= maxMoveDistance; z++)
                 {
-                    GridPosition offsetGridPosition = new GridPosition(x, z, 0);
+                    GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
                     if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
@@ -104,13 +104,13 @@ namespace TurnBase
                     {
                         continue;
                     }
-                    if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                    if (!HexPathfinding.Instance.IsWalkableGridPosition(testGridPosition))
                     {
                         continue;
                     }
 
                     List<GridPosition> path =
-                        Pathfinding.Instance.FindPath(unitGridPosition, testGridPosition, out int pathLength);
+                        HexPathfinding.Instance.FindPath(unitGridPosition, testGridPosition, out int pathLength);
                     if (path == null)
                     {
                         continue;
