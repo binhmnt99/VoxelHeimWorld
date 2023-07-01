@@ -6,6 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TurnBasedVoxelWorld_Multifloor.unity
-    guid: f710dfdae7f490a49ab01a518f64ad32
-  m_configObjects: {}
+    path: Assets/Scenes/MainMenu.unity
+    guid: 5e803f4327e1b594d992834c24e7b751
+  - enabled: 1
+    path: Assets/Scenes/VoxelHeim_GrassLand.unity
+    guid: 72a661169ff0845479190bcf2829690f
+  - enabled: 1
+    path: Assets/Scenes/WinScene.unity
+    guid: 8d1d6c2f239738d4c862b8dd29831f54
+  - enabled: 1
+    path: Assets/Scenes/LoseScene.unity
+    guid: 19040703ff2770b4a8a7f811c7269379
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 4afb73328705dfa47bbc650507c20793, type: 2}

@@ -19,7 +19,13 @@ namespace TurnBase
         {
             Unit.OnAnyActionPointsChanged += Unit_OnAnyActionPointsChanged;
             healthSystem.OnDamage += HealthSystem_OnDamage;
+            healthSystem.OnHealth += healthSystem_OnHealth;
             UpdateActionPointText();
+            UpdateHealthBar();
+        }
+
+        private void healthSystem_OnHealth(object sender, EventArgs e)
+        {
             UpdateHealthBar();
         }
 

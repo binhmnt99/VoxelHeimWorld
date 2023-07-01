@@ -55,11 +55,6 @@ namespace TurnBase
             HexPathfinding.Instance.SetUp(width, height, cellSize);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
         private int CompareVector(Vector3 a, Vector3 b)
         {
             // Compare the Y component of the vectors

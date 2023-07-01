@@ -7,11 +7,13 @@ namespace TurnBase
     public class UnitRagDoll : MonoBehaviour
     {
         [SerializeField] private Transform ragDollRootBone;
+        private float waitTime = 2f;
         public void SetUp(Transform originalRootBone)
         {
             MatchAllChildTransforms(originalRootBone, ragDollRootBone);
-            Vector3 randomDirection = new Vector3(Random.Range(-1f,1f),0,Random.Range(-1f,1f));
+            Vector3 randomDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
             ApplyExplosionToRagDoll(ragDollRootBone, 450f, transform.position + randomDirection, 10f);
+            StartCoroutine(SelfDestruct());
         }
 
         private void MatchAllChildTransforms(Transform root, Transform clone)
@@ -39,6 +41,12 @@ namespace TurnBase
 
                 ApplyExplosionToRagDoll(child, explosionForce, explosionPosition, explosionRange);
             }
+        }
+
+        private IEnumerator SelfDestruct()
+        {
+            yield return new WaitForSeconds(waitTime);
+            Destroy(gameObject);
         }
     }
 

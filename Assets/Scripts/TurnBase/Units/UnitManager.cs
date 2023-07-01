@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TurnBase
 {
     public class UnitManager : MonoBehaviour
     {
-        public static UnitManager Instance {get; private set;}
+        public static UnitManager Instance { get; private set; }
         private List<Unit> unitList;
         private List<Unit> friendlyUnitList;
         private List<Unit> enemyUnitList;
@@ -37,10 +38,18 @@ namespace TurnBase
             if (unit.IsEnemy())
             {
                 enemyUnitList.Remove(unit);
+                if (enemyUnitList.Count < 1)
+                {
+                    SceneManager.LoadScene(2);
+                }
             }
             else
             {
                 friendlyUnitList.Remove(unit);
+                if (friendlyUnitList.Count < 1)
+                {
+                    SceneManager.LoadScene(3);
+                }
             }
         }
 

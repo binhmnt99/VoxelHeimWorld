@@ -9,6 +9,7 @@ namespace TurnBase
     {
         public event EventHandler OnDead;
         public event EventHandler OnDamage;
+        public event EventHandler OnHealth;
         [SerializeField] int health = 10;
         private int healthMax;
 
@@ -17,6 +18,16 @@ namespace TurnBase
             healthMax = health;
         }
 
+        public void AddHealth(int amount)
+        {
+            health += amount;
+            if (health >= healthMax)
+            {
+                health = healthMax;
+            }
+            OnHealth?.Invoke(this,EventArgs.Empty);
+            Debug.Log("Health " + health);
+        }
         public void Damage(int damageAmount)
         {
             health -= damageAmount;

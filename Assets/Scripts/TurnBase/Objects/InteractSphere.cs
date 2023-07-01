@@ -48,16 +48,19 @@ namespace TurnBase
 
         public void Interact(Action onInteractionComplete)
         {
+            UnitActionSystem.Instance.GetSelectedUnit().gameObject.TryGetComponent<HealthSystem>(out HealthSystem healthSystem);
             this.onInteractionComplete = onInteractionComplete;
             isActive = true;
             timer = .5f;
             if (isGreen)
             {
                 SetColorRed();
+                healthSystem.AddHealth(5);
             }
             else
             {
                 SetColorGreen();
+                healthSystem.AddHealth(3);
             }
         }
     }

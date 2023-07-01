@@ -22,7 +22,6 @@ namespace TurnBase
             Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
             Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, Instance.layerMask);
             return raycastHit.point;
-
         }
     }
 
