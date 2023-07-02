@@ -10,7 +10,7 @@ namespace TurnBase
         public UnityEvent OnDamage;
         public void Damage()
         {
-            Debug.Log("Damage");
+            //Debug.Log("Damage");
             OnDamage.Invoke();
         }
     }
