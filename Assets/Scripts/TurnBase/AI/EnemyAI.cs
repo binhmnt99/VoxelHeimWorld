@@ -145,14 +145,13 @@ namespace TurnBase
 //             Busy,
 //         }
 
-//         [SerializeField] private State state;
+//         [SerializeField]
+//         private State state;
 //         private float timer;
-//         private List<Coroutine> enemyTurnCoroutines;
 
 //         private void Awake()
 //         {
 //             state = State.WaitingForEnemyTurn;
-//             enemyTurnCoroutines = new List<Coroutine>();
 //         }
 
 //         private void Start()
@@ -175,65 +174,29 @@ namespace TurnBase
 //                     timer -= Time.deltaTime;
 //                     if (timer <= 0f)
 //                     {
-//                         StartCoroutine(TakeEnemyTurn(SetStateTakingTurn));
+//                         StartCoroutine(TakeEnemyTurnCoroutine());
 //                     }
-//                     // else
-//                     // {
-//                     //     // No more enemies have actions they can take, end enemy turn
-//                     //     TurnSystem.Instance.NextTurn();
-//                     // }
 //                     break;
 //                 case State.Busy:
 //                     break;
 //             }
 //         }
 
-//         private IEnumerator TakeEnemyTurn(Action onEnemyAIActionComplete)
+//         private IEnumerator TakeEnemyTurnCoroutine()
 //         {
-//             List<Unit> enemyUnits = UnitManager.Instance.GetEnemyUnitList();
-//             enemyTurnCoroutines.Clear();
-
-//             foreach (Unit enemyUnit in enemyUnits)
+//             foreach (Unit enemyUnit in UnitManager.Instance.GetEnemyUnitList())
 //             {
-//                 Coroutine enemyTurnCoroutine = StartCoroutine(TakeEnemyAIAction(enemyUnit, onEnemyAIActionComplete));
-//                 enemyTurnCoroutines.Add(enemyTurnCoroutine);
-//             }
-
-//             // Wait for all enemy turns to complete
-//             yield return new WaitForSeconds(0.1f); // Adjust the delay if necessary
-
-//             while (enemyTurnCoroutines.Count > 0)
-//             {
-//                 for (int i = enemyTurnCoroutines.Count - 1; i >= 0; i--)
+//                 if (TryTakeEnemyAIAction(enemyUnit))
 //                 {
-//                     if (enemyTurnCoroutines[i] == null)
-//                     {
-//                         enemyTurnCoroutines.RemoveAt(i);
-//                     }
+//                     yield return null; // Wait for the current frame to finish
 //                 }
-//                 yield return null;
 //             }
 
-//             // All enemy turns have completed
-//             onEnemyAIActionComplete?.Invoke();
+//             state = State.WaitingForEnemyTurn;
+//             TurnSystem.Instance.NextTurn();
 //         }
 
-//         private void SetStateTakingTurn()
-//         {
-//             timer = 0.5f;
-//             state = State.TakingTurn;
-//         }
-
-//         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
-//         {
-//             if (!TurnSystem.Instance.IsPlayerTurn())
-//             {
-//                 state = State.TakingTurn;
-//                 timer = 2f;
-//             }
-//         }
-
-//         private IEnumerator TakeEnemyAIAction(Unit enemyUnit, Action onEnemyAIActionComplete)
+//         private bool TryTakeEnemyAIAction(Unit enemyUnit)
 //         {
 //             EnemyAIAction bestEnemyAIAction = null;
 //             BaseAction bestBaseAction = null;
@@ -264,32 +227,32 @@ namespace TurnBase
 
 //             if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
 //             {
-//                 yield return StartCoroutine(TakeActionCoroutine(bestBaseAction, bestEnemyAIAction.gridPosition, onEnemyAIActionComplete));
-//             }
+//                 bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, () =>
+//                 {
+//                     // Action complete callback
+//                     // Do something if needed
+//                 });
 
-//             onEnemyAIActionComplete?.Invoke();
-//             state = State.WaitingForEnemyTurn;
-//             TurnSystem.Instance.NextTurn();
+//                 return true;
+//             }
+//             else
+//             {
+//                 return false;
+//             }
 //         }
 
-//         private IEnumerator TakeActionCoroutine(BaseAction baseAction, GridPosition gridPosition, Action onComplete)
+//         private void SetStateTakingTurn()
 //         {
-//             bool actionCompleted = false;
+//             timer = 0.5f;
+//             state = State.TakingTurn;
+//         }
 
-//             // Define a separate callback to mark completion
-//             void ActionCompleteCallback()
+//         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
+//         {
+//             if (!TurnSystem.Instance.IsPlayerTurn())
 //             {
-//                 actionCompleted = true;
-//                 onComplete?.Invoke(); // Invoke the provided onComplete callback
-//             }
-
-//             // Call the action and provide the separate callback
-//             baseAction.TakeAction(gridPosition, ActionCompleteCallback);
-
-//             // Wait until the action is completed
-//             while (!actionCompleted)
-//             {
-//                 yield return null;
+//                 state = State.TakingTurn;
+//                 timer = 2f;
 //             }
 //         }
 //     }

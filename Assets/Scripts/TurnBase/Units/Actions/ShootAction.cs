@@ -43,7 +43,10 @@ namespace TurnBase
             {
                 return;
             }
-
+            if (targetUnit == null)
+            {
+                state = ShootState.COOLOFF;
+            }
             stateTimer -= Time.deltaTime;
             switch (state)
             {
