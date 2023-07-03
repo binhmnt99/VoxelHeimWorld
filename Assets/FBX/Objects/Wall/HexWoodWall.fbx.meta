@@ -7,8 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: WoodWallHex_Material
-    second: {fileID: 2100000, guid: b4e78d400cf2f654b9e08f40fdc62c16, type: 2}
+      name: WoodWallHex_Material.001
+    second: {fileID: 2100000, guid: a323e12974ca67e4092ce0fa15674d39, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

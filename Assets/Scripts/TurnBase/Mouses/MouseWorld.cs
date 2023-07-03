@@ -13,10 +13,6 @@ namespace TurnBase
         {
             Instance = this;
         }
-        void Update()
-        {
-            transform.localPosition = GetPosition();
-        }
         public static Vector3 GetPosition()
         {
             Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
