@@ -21,6 +21,7 @@ namespace TurnBase
 
         private void HealthSystem_OnDead(object sender, EventArgs e)
         {
+            
             Transform ragDollTransform = Instantiate(ragDollPrefab, transform.position, transform.rotation);
             UnitRagDoll unitRagDoll = ragDollTransform.GetComponent<UnitRagDoll>();
             unitRagDoll.SetUp(originalRootBone);

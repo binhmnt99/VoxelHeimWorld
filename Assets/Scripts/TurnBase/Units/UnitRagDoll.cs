@@ -7,7 +7,7 @@ namespace TurnBase
     public class UnitRagDoll : MonoBehaviour
     {
         [SerializeField] private Transform ragDollRootBone;
-        private float waitTime = 2f;
+        [SerializeField] private float waitTime = 1f;
         public void SetUp(Transform originalRootBone)
         {
             MatchAllChildTransforms(originalRootBone, ragDollRootBone);

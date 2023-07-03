@@ -37,6 +37,7 @@ namespace TurnBase
             unitList.Remove(unit);
             if (unit.IsEnemy())
             {
+                HexPathfinding.Instance.SetIsWalkableGridPosition(unit.GetGridPosition(), true);
                 enemyUnitList.Remove(unit);
                 if (enemyUnitList.Count < 1)
                 {
@@ -45,6 +46,7 @@ namespace TurnBase
             }
             else
             {
+                HexPathfinding.Instance.SetIsWalkableGridPosition(unit.GetGridPosition(), true);
                 friendlyUnitList.Remove(unit);
                 if (friendlyUnitList.Count < 1)
                 {

@@ -8,13 +8,11 @@ namespace TurnBase
     public class HexGridSystem<TGridObject>
     {
         private const float HEX_VERTICAL_OFFSET_MULTIPLIER = 0.75f;
+
+
         private int width;
         private int height;
-
         private float cellSize;
-        private int x;
-        private int z;
-
         private TGridObject[,] gridObjectArray;
 
         public HexGridSystem(int width, int height, float cellSize, Func<HexGridSystem<TGridObject>, GridPosition, TGridObject> createGridObject)
@@ -22,14 +20,15 @@ namespace TurnBase
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
+
             gridObjectArray = new TGridObject[width, height];
-            GridPosition gridPosition;
+
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)
                 {
-                    gridPosition = new GridPosition(x,z);
-                    gridObjectArray[gridPosition.x, gridPosition.z] = createGridObject(this, gridPosition);
+                    GridPosition gridPosition = new GridPosition(x, z);
+                    gridObjectArray[x, z] = createGridObject(this, gridPosition);
                 }
             }
         }
@@ -40,19 +39,18 @@ namespace TurnBase
                 new Vector3(gridPosition.x, 0, 0) * cellSize +
                 new Vector3(0, 0, gridPosition.z) * cellSize * HEX_VERTICAL_OFFSET_MULTIPLIER +
                 (((gridPosition.z % 2) == 1) ? new Vector3(1, 0, 0) * cellSize * .5f : Vector3.zero);
-
         }
 
         public GridPosition GetGridPosition(Vector3 worldPosition)
         {
             GridPosition roughXZ = new GridPosition(
-                        Mathf.RoundToInt(worldPosition.x / cellSize),
-                        Mathf.RoundToInt((worldPosition.z / cellSize) / HEX_VERTICAL_OFFSET_MULTIPLIER)
-                    );
+                Mathf.RoundToInt(worldPosition.x / cellSize),
+                Mathf.RoundToInt(worldPosition.z / cellSize / HEX_VERTICAL_OFFSET_MULTIPLIER)
+            );
 
             bool oddRow = roughXZ.z % 2 == 1;
 
-            List<GridPosition> neighborGridPositionList = new List<GridPosition>
+            List<GridPosition> neighbourGridPositionList = new List<GridPosition>
         {
             roughXZ + new GridPosition(-1, 0),
             roughXZ + new GridPosition(+1, 0),
@@ -66,31 +64,28 @@ namespace TurnBase
 
             GridPosition closestGridPosition = roughXZ;
 
-            foreach (GridPosition neighborGridPosition in neighborGridPositionList)
+            foreach (GridPosition neighbourGridPosition in neighbourGridPositionList)
             {
-                if (Vector3.Distance(worldPosition, GetWorldPosition(neighborGridPosition)) <
+                if (Vector3.Distance(worldPosition, GetWorldPosition(neighbourGridPosition)) <
                     Vector3.Distance(worldPosition, GetWorldPosition(closestGridPosition)))
                 {
                     // Closer than the Closest
-                    closestGridPosition = neighborGridPosition;
+                    closestGridPosition = neighbourGridPosition;
                 }
             }
 
             return closestGridPosition;
-
         }
 
         public void CreateDebugObjects(Transform debugPrefab)
         {
-            GameObject deBugGridSystem = new GameObject("DebugGridSystem");
-            GridPosition gridPosition;
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)
                 {
-                    gridPosition = new GridPosition(x, z);
-                    Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity, deBugGridSystem.transform);
+                    GridPosition gridPosition = new GridPosition(x, z);
 
+                    Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
                     GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
                     gridDebugObject.SetGridObject(GetGridObject(gridPosition));
                 }
@@ -119,7 +114,6 @@ namespace TurnBase
         {
             return height;
         }
-
 
     }
 }

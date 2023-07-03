@@ -40,7 +40,7 @@ namespace TurnBase
                 currentPositionIndex++;
                 if (currentPositionIndex >= positionList.Count)
                 {
-                    HexPathfinding.Instance.SetIsWalkableGridPosition(HexLevelGrid.Instance.GetGridPosition(positionList[positionList.Count - 1]), false);
+                    //HexPathfinding.Instance.SetIsWalkableGridPosition(HexLevelGrid.Instance.GetGridPosition(positionList[positionList.Count - 1]), false);
                     transform.position = HexLevelGrid.Instance.GetWorldPosition(HexLevelGrid.Instance.GetGridPosition(positionList[positionList.Count - 1]));
                     OnStopMoving?.Invoke(this, EventArgs.Empty);
 
@@ -61,7 +61,7 @@ namespace TurnBase
             {
                 positionList.Add(HexLevelGrid.Instance.GetWorldPosition(pathGridPosition));
             }
-            HexPathfinding.Instance.SetIsWalkableGridPosition(HexLevelGrid.Instance.GetGridPosition(positionList[0]), true);
+            //HexPathfinding.Instance.SetIsWalkableGridPosition(HexLevelGrid.Instance.GetGridPosition(positionList[0]), true);
             OnStartMoving?.Invoke(this, EventArgs.Empty);
 
             ActionStart(onActionComplete);

@@ -71,7 +71,7 @@ namespace TurnBase
             {
                 GridPosition mouseGridPosition = HexLevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
 
-                if (!selectedAction.IsValidActionGridPosition(mouseGridPosition))
+                if (!selectedAction.IsValidActionGridPosition(GridSystemVisual.Instance.GetGridPositionSelected()))
                 {
                     return;
                 }
@@ -82,7 +82,7 @@ namespace TurnBase
                 }
 
                 SetBusy();
-                selectedAction.TakeAction(mouseGridPosition, ClearBusy);
+                selectedAction.TakeAction(GridSystemVisual.Instance.GetGridPositionSelected(), ClearBusy);
 
                 OnActionStarted?.Invoke(this, EventArgs.Empty);
             }
