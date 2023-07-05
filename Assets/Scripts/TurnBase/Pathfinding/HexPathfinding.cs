@@ -84,8 +84,6 @@ namespace TurnBase
                 }
             }
 
-
-
             startNode.SetGCost(0);
             startNode.SetHCost(CalculateHeuristicDistance(startGridPosition, endGridPosition));
             startNode.CalculateFCost();
@@ -148,15 +146,7 @@ namespace TurnBase
 
         private PathNode GetLowestFCostPathNode(List<PathNode> pathNodeList)
         {
-            PathNode lowestFCostPathNode = pathNodeList[0];
-            for (int i = 0; i < pathNodeList.Count; i++)
-            {
-                if (pathNodeList[i].GetFCost() < lowestFCostPathNode.GetFCost())
-                {
-                    lowestFCostPathNode = pathNodeList[i];
-                }
-            }
-            return lowestFCostPathNode;
+            return pathNodeList.MinBy(node => node.GetFCost());
         }
 
         private PathNode GetNode(int x, int z)
@@ -168,63 +158,46 @@ namespace TurnBase
         private List<PathNode> GetNeighborList(PathNode currentNode)
         {
             neighborList.Clear();
-
             GridPosition gridPosition = currentNode.GetGridPosition();
+            int width = gridSystem.GetWidth();
+            int height = gridSystem.GetHeight();
 
-            if (gridPosition.x - 1 >= 0)
-            {
-                // Left
-                neighborList.Add(GetNode(gridPosition.x - 1, gridPosition.z + 0));
-            }
+            int leftX = gridPosition.x - 1;
+            int rightX = gridPosition.x + 1;
+            int upZ = gridPosition.z + 1;
+            int downZ = gridPosition.z - 1;
 
-            if (gridPosition.x + 1 < gridSystem.GetWidth())
-            {
-                // Right
-                neighborList.Add(GetNode(gridPosition.x + 1, gridPosition.z + 0));
-            }
+            if (leftX >= 0)
+                neighborList.Add(GetNode(leftX, gridPosition.z));
 
-            if (gridPosition.z - 1 >= 0)
-            {
-                // Down
-                neighborList.Add(GetNode(gridPosition.x + 0, gridPosition.z - 1));
-            }
-            if (gridPosition.z + 1 < gridSystem.GetHeight())
-            {
-                // Up
-                neighborList.Add(GetNode(gridPosition.x + 0, gridPosition.z + 1));
-            }
+            if (rightX < width)
+                neighborList.Add(GetNode(rightX, gridPosition.z));
+
+            if (downZ >= 0)
+                neighborList.Add(GetNode(gridPosition.x, downZ));
+
+            if (upZ < height)
+                neighborList.Add(GetNode(gridPosition.x, upZ));
+
             bool oddRow = gridPosition.z % 2 == 1;
+
             if (oddRow)
             {
-                if (gridPosition.x + 1 < gridSystem.GetWidth())
-                {
-                    if (gridPosition.z - 1 >= 0)
-                    {
-                        neighborList.Add(GetNode(gridPosition.x + 1, gridPosition.z - 1));
+                if (rightX < width && downZ >= 0)
+                    neighborList.Add(GetNode(rightX, downZ));
 
-                    }
-                    if (gridPosition.z + 1 < gridSystem.GetHeight())
-                    {
-                        neighborList.Add(GetNode(gridPosition.x + 1, gridPosition.z + 1));
-                    }
-                }
-
+                if (rightX < width && upZ < height)
+                    neighborList.Add(GetNode(rightX, upZ));
             }
             else
             {
-                if (gridPosition.x - 1 >= 0)
-                {
-                    if (gridPosition.z - 1 >= 0)
-                    {
-                        neighborList.Add(GetNode(gridPosition.x - 1, gridPosition.z - 1));
-                    }
-                    if (gridPosition.z + 1 < gridSystem.GetHeight())
-                    {
-                        neighborList.Add(GetNode(gridPosition.x - 1, gridPosition.z + 1));
-                    }
-                }
+                if (leftX >= 0 && downZ >= 0)
+                    neighborList.Add(GetNode(leftX, downZ));
 
+                if (leftX >= 0 && upZ < height)
+                    neighborList.Add(GetNode(leftX, upZ));
             }
+
             return neighborList;
         }
 

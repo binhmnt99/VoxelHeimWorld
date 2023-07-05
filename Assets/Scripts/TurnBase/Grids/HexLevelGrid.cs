@@ -46,7 +46,6 @@ namespace TurnBase
             HexPathfinding.Instance.SetUp(width, height, cellSize);
         }
 
-
         public void AddUnitAtGridPosition(GridPosition gridPosition, Unit unit)
         {
             HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
