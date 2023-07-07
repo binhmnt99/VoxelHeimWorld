@@ -1356,6 +1356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc9458a2fa572c479c3d5e335d717cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   maxShootDistance: 10
   aimSpeed: 10
   obstaclesMaskLayer:
@@ -3910,7 +3911,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3760427445388320907, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
-      value: 0
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4974525760858095567, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
       propertyPath: m_Pivot.x

@@ -37,11 +37,6 @@ namespace TurnBase
             return 1;
         }
 
-        public virtual int GetMovePointsCost()
-        {
-            return 1;
-        }
-
         protected void ActionStart(Action onActionComplete)
         {
             isActive = true;
@@ -87,7 +82,7 @@ namespace TurnBase
 
         }
 
-        public abstract EnemyAIAction GetEnemyAIAction(GridPosition gridPosition);
+        public abstract EnemyAIAction GetEnemyAIAction(GridPosition validActionGridPosition);
 
     }
 

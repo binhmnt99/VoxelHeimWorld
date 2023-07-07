@@ -50,7 +50,6 @@ namespace TurnBase
         {
             HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
             gridObject.AddUnit(unit);
-            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition,false);
         }
 
         public List<Unit> GetUnitListAtGridPosition(GridPosition gridPosition)
@@ -61,7 +60,6 @@ namespace TurnBase
 
         public void RemoveUnitAtGridPosition(GridPosition gridPosition, Unit unit)
         {
-            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition,true);
             HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
             gridObject.RemoveUnit(unit);
         }

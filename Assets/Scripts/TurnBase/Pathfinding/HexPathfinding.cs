@@ -109,12 +109,11 @@ namespace TurnBase
                         continue;
                     }
 
-                    if (!neighborNode.IsWalkable())
+                    if (!neighborNode.IsWalkable() || HexLevelGrid.Instance.HasAnyUnitOnGridPosition(neighborNode.GetGridPosition()))
                     {
                         closedList.Add(neighborNode);
                         continue;
                     }
-
                     int tentativeGCost =
                         currentNode.GetGCost() + CalculateHeuristicDistance(currentNode.GetGridPosition(), neighborNode.GetGridPosition());
 

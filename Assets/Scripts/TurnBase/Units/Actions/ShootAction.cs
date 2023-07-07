@@ -23,7 +23,7 @@ namespace TurnBase
             public Unit shootingUnit;
         }
 
-        private ShootState state;
+        [SerializeField] private ShootState state;
         private float stateTimer;
         [SerializeField] private int maxShootDistance = 10;
 
@@ -121,6 +121,11 @@ namespace TurnBase
             return "Shoot";
         }
 
+        public override int GetActionPointsCost()
+        {
+            return 2;
+        }
+
         public override List<GridPosition> GetValidActionGridPositionList()
         {
             GridPosition unitGridPosition = unit.GetGridPosition();
@@ -152,7 +157,18 @@ namespace TurnBase
                     }
 
                     Unit targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
-
+                    if (unit.GetGridPosition() == testGridPosition)
+                    {
+                        continue;
+                    }
+                    if (targetUnit)
+                    {
+                        Debug.Log("Detect Unit" + testGridPosition);
+                    }
+                    else
+                    {
+                        Debug.Log("No Unit Detected");
+                    }
                     if (targetUnit.IsEnemy() == unit.IsEnemy())
                     {
                         continue;
@@ -170,17 +186,20 @@ namespace TurnBase
                         //Block by Obstacles
                         continue;
                     }
+                    Debug.Log("Valid Grid " + testGridPosition);
                     validGridPositionList.Add(testGridPosition);
 
 
                 }
             }
+
             return validGridPositionList;
         }
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
             targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+            //Debug.Log(gridPosition);
 
             state = ShootState.AIMING;
             float aimingStateTime = 1f;

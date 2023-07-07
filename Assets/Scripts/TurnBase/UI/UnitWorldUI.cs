@@ -10,13 +10,14 @@ namespace TurnBase
     public class UnitWorldUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI actionPointsText;
-        [SerializeField] private Unit unit;
+        private Unit unit;
         [SerializeField] private Image healthBarImage;
         [SerializeField] private HealthSystem healthSystem;
 
 
         void Start()
         {
+            unit = GetComponentInParent<Unit>();
             Unit.OnAnyActionPointsChanged += Unit_OnAnyActionPointsChanged;
             healthSystem.OnDamage += HealthSystem_OnDamage;
             healthSystem.OnHealth += healthSystem_OnHealth;

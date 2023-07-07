@@ -1029,7 +1029,7 @@ GameObject:
   - component: {fileID: 634187197660793121}
   - component: {fileID: 3449407389994821813}
   - component: {fileID: 3707199033163618509}
-  - component: {fileID: 7047782072607924134}
+  - component: {fileID: 1617185481511030592}
   - component: {fileID: 7900032934659750944}
   - component: {fileID: 7637842907733278197}
   - component: {fileID: 1809621021685965821}
@@ -1095,7 +1095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionPointMax: 2
   isEnemy: 1
---- !u!114 &7047782072607924134
+--- !u!114 &1617185481511030592
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1104,10 +1104,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2196576013153291904}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c64f96a32207a4441a0014e9c5f9f71d, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a428db93b0051548b16594c1bd17bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalSpinAmount: 0
+  onAction: 0
 --- !u!114 &7900032934659750944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1133,6 +1133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc9458a2fa572c479c3d5e335d717cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   maxShootDistance: 8
   aimSpeed: 10
   obstaclesMaskLayer:
@@ -3995,6 +3996,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 634187197660793121}
     m_Modifications:
+    - target: {fileID: 430752852785721485, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 775180365614294174, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
       propertyPath: m_Layer
       value: 7

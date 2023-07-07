@@ -8,7 +8,7 @@ namespace TurnBase
     public class Unit : MonoBehaviour
     {
         [SerializeField] private int actionPointMax;
-        private int actionPoint;
+        [SerializeField] private int actionPoint;
 
 
         public static event EventHandler OnAnyActionPointsChanged;
@@ -110,7 +110,6 @@ namespace TurnBase
         private void SpendActionPoints(int amount)
         {
             actionPoint -= amount;
-
             OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -125,7 +124,6 @@ namespace TurnBase
                 (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
             {
                 actionPoint = actionPointMax;
-
                 OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
             }
         }
