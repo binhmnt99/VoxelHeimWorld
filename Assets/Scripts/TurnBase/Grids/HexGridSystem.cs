@@ -115,5 +115,9 @@ namespace TurnBase
             return height;
         }
 
+        public float GetCellSize()
+        {
+            return cellSize;
+        }
     }
 }

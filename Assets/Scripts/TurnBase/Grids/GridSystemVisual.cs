@@ -62,7 +62,7 @@ namespace TurnBase
                     GridPosition gridPosition = new GridPosition(x, z);
 
                     Transform gridSystemVisualSingleTransform =
-                        Instantiate(gridSystemVisualSinglePrefab, HexLevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity,gridSquadVisual.transform);
+                        Instantiate(gridSystemVisualSinglePrefab, HexLevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, gridSquadVisual.transform);
 
                     gridSystemVisualSingleArray[x, z] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
                 }
@@ -137,12 +137,22 @@ namespace TurnBase
                         continue;
                     }
 
-                    int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
-                    if (testDistance > range)
+                    if (!HexPathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                    {
+                        continue;
+                    }
+                    if (!HexPathfinding.Instance.HasPath(gridPosition, testGridPosition))
                     {
                         continue;
                     }
 
+                    Vector3 unitWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(gridPosition);
+                    Vector3 testWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
+                    float distance = Vector3.Distance(unitWorldPosition,testWorldPosition);
+                    if (distance > range)
+                    {
+                        continue;
+                    }
                     gridPositionList.Add(testGridPosition);
                 }
             }

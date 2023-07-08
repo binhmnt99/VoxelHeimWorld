@@ -1035,6 +1035,7 @@ GameObject:
   - component: {fileID: 1809621021685965821}
   - component: {fileID: 7998062540910247620}
   - component: {fileID: 4642379911254098698}
+  - component: {fileID: 3169760884702035529}
   m_Layer: 7
   m_Name: Unit(Gnarling Stalker)
   m_TagString: Untagged
@@ -1094,6 +1095,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionPointMax: 2
+  actionPoint: 0
   isEnemy: 1
 --- !u!114 &1617185481511030592
 MonoBehaviour:
@@ -1121,6 +1123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxMoveDistance: 5
+  obstaclesLayerMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &7637842907733278197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1133,12 +1138,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc9458a2fa572c479c3d5e335d717cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
+  obstaclesLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  unitLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   maxShootDistance: 8
   aimSpeed: 10
-  obstaclesMaskLayer:
-    serializedVersion: 2
-    m_Bits: 2048
 --- !u!114 &1809621021685965821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1181,6 +1188,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ragDollPrefab: {fileID: 634187197660793121, guid: 2560bdf090487aa498da669376b7d56e, type: 3}
   originalRootBone: {fileID: 4054187679155941790}
+--- !u!114 &3169760884702035529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2196576013153291904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f4d87557f4cd5446ac028f7cb0ed75b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  healthThreshold: 0.3
 --- !u!1 &2687080893504477270
 GameObject:
   m_ObjectHideFlags: 0

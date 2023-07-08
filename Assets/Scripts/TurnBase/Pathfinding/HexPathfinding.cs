@@ -109,7 +109,7 @@ namespace TurnBase
                         continue;
                     }
 
-                    if (!neighborNode.IsWalkable() || HexLevelGrid.Instance.HasAnyUnitOnGridPosition(neighborNode.GetGridPosition()))
+                    if (!neighborNode.IsWalkable())
                     {
                         closedList.Add(neighborNode);
                         continue;
@@ -202,6 +202,7 @@ namespace TurnBase
 
         List<PathNode> pathNodeList = new();
         List<GridPosition> gridPositionList = new();
+    
 
         private List<GridPosition> CalculatePath(PathNode endNode)
         {

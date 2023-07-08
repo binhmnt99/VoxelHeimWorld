@@ -7,14 +7,8 @@ namespace TurnBase
 {
     public class ShootAction : BaseAction
     {
-        private enum ShootState
-        {
-            AIMING,
-            SHOOTING,
-            COOLOFF
-        }
-
         public static event EventHandler<OnShootEventArgs> OnAnyShoot;
+
         public event EventHandler<OnShootEventArgs> OnShoot;
 
         public class OnShootEventArgs : EventArgs
@@ -23,20 +17,22 @@ namespace TurnBase
             public Unit shootingUnit;
         }
 
-        [SerializeField] private ShootState state;
+        private enum State
+        {
+            Aiming,
+            Shooting,
+            Cooloff,
+        }
+
+        [SerializeField] private LayerMask obstaclesLayerMask;
+        [SerializeField] private LayerMask unitLayerMask;
+        [SerializeField] private int maxShootDistance = 7;
+        [SerializeField] private float aimSpeed = 15f;
         private float stateTimer;
-        [SerializeField] private int maxShootDistance = 10;
-
-        [SerializeField] private float aimSpeed = 10f;
-
-        [SerializeField] private LayerMask obstaclesMaskLayer;
-
         private Unit targetUnit;
         private bool canShootBullet;
 
-
-        //public List<GameObject> weapon;
-
+        private State state;
         void Update()
         {
             if (!isActive)
@@ -45,23 +41,23 @@ namespace TurnBase
             }
             if (targetUnit == null)
             {
-                state = ShootState.COOLOFF;
+                state = State.Cooloff;
             }
             stateTimer -= Time.deltaTime;
             switch (state)
             {
-                case ShootState.AIMING:
+                case State.Aiming:
                     Vector3 aimDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
                     transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * aimSpeed);
                     break;
-                case ShootState.SHOOTING:
+                case State.Shooting:
                     if (canShootBullet)
                     {
                         Shoot();
                         canShootBullet = false;
                     }
                     break;
-                case ShootState.COOLOFF:
+                case State.Cooloff:
 
                     break;
             }
@@ -75,17 +71,17 @@ namespace TurnBase
         {
             switch (state)
             {
-                case ShootState.AIMING:
-                    state = ShootState.SHOOTING;
+                case State.Aiming:
+                    state = State.Shooting;
                     float shootingStateTime = .1f;
                     stateTimer = shootingStateTime;
                     break;
-                case ShootState.SHOOTING:
-                    state = ShootState.COOLOFF;
+                case State.Shooting:
+                    state = State.Cooloff;
                     float coolOffStateTime = .5f;
                     stateTimer = coolOffStateTime;
                     break;
-                case ShootState.COOLOFF:
+                case State.Cooloff:
                     ActionComplete();
                     break;
             }
@@ -93,28 +89,31 @@ namespace TurnBase
 
         private void Shoot()
         {
-            OnShoot?.Invoke(this, new OnShootEventArgs
-            {
-                targetUnit = targetUnit,
-                shootingUnit = unit
-            });
-            if (TryGetComponent<UnitAnimator>(out UnitAnimator unitAnimator))
-            {
-                unitAnimator.OnShootAnim -= UnitAnimator_OnShootAnim;
-                unitAnimator.OnShootAnim += UnitAnimator_OnShootAnim;
-            }
-            //targetUnit.Damage(2);
-        }
-
-        private void UnitAnimator_OnShootAnim(object sender, EventArgs e)
-        {
             OnAnyShoot?.Invoke(this, new OnShootEventArgs
             {
                 targetUnit = targetUnit,
                 shootingUnit = unit
             });
-            targetUnit.Damage(2);
+
+            OnShoot?.Invoke(this, new OnShootEventArgs
+            {
+                targetUnit = targetUnit,
+                shootingUnit = unit
+            });
+
+            targetUnit.Damage(4);
         }
+
+
+        // private void UnitAnimator_OnShootAnim(object sender, EventArgs e)
+        // {
+        //     OnAnyShoot?.Invoke(this, new OnShootEventArgs
+        //     {
+        //         targetUnit = targetUnit,
+        //         shootingUnit = unit
+        //     });
+        //     targetUnit.Damage(2);
+        // }
 
         public override string GetActionName()
         {
@@ -130,23 +129,22 @@ namespace TurnBase
         {
             GridPosition unitGridPosition = unit.GetGridPosition();
             return GetValidActionGridPositionList(unitGridPosition);
+
         }
+        List<GridPosition> validGridPositionList = new List<GridPosition>();
+        List<GridPosition> blockGridList = new List<GridPosition>();
+
         public List<GridPosition> GetValidActionGridPositionList(GridPosition unitGridPosition)
         {
-            List<GridPosition> validGridPositionList = new List<GridPosition>();
+            validGridPositionList.Clear();
             for (int x = -maxShootDistance; x <= maxShootDistance; x++)
             {
                 for (int z = -maxShootDistance; z <= maxShootDistance; z++)
                 {
                     GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
-                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
-                    {
-                        continue;
-                    }
 
-                    int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
-                    if (testDistance > maxShootDistance)
+                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
                         continue;
                     }
@@ -161,18 +159,7 @@ namespace TurnBase
                     {
                         continue;
                     }
-                    if (targetUnit)
-                    {
-                        Debug.Log("Detect Unit" + testGridPosition);
-                    }
-                    else
-                    {
-                        Debug.Log("No Unit Detected");
-                    }
-                    if (targetUnit.IsEnemy() == unit.IsEnemy())
-                    {
-                        continue;
-                    }
+
                     Vector3 unitWorldPosition = HexLevelGrid.Instance.GetWorldPosition(unitGridPosition);
                     Vector3 shootDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
                     float unitShoulderHeight = 1.1f;
@@ -180,19 +167,45 @@ namespace TurnBase
                         unitWorldPosition + Vector3.up * unitShoulderHeight,
                         shootDirection,
                         Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
-                        obstaclesMaskLayer
+                        obstaclesLayerMask
                     ))
                     {
                         //Block by Obstacles
                         continue;
                     }
-                    Debug.Log("Valid Grid " + testGridPosition);
+
+                    //Vector3 unitWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(unitGridPosition);
+                    Vector3 testWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
+                    float distance = Vector3.Distance(unitWorldPosition, testWorldPosition);
+                    if (distance >= maxShootDistance)
+                    {
+                        continue;
+                    }
+
+                    //Vector3 testWorldPosition = HexLevelGrid.Instance.GetWorldPosition(testGridPosition);
+                    Vector3 testDirection = (testWorldPosition - unit.GetWorldPosition()).normalized;
+                    distance = Vector3.Distance(unit.GetWorldPosition(), testWorldPosition);
+                    RaycastHit[] hits = Physics.RaycastAll(unit.GetWorldPosition(), testDirection, distance, unitLayerMask);
+                    foreach (var hit in hits)
+                    {
+                        GridPosition testGrid = HexLevelGrid.Instance.GetGridPosition(hit.collider.transform.position);
+                        //Debug.Log("When " + validGrid + " and distance " + distance + " Hit Grit " + testGrid);
+
+                        if (testGrid != testGridPosition && !blockGridList.Contains(testGridPosition))
+                        {
+                            //Debug.Log("Remove blocked Grid " + validGrid);
+                            blockGridList.Add(testGridPosition);
+                        }
+                    }
                     validGridPositionList.Add(testGridPosition);
-
-
                 }
             }
-
+            foreach (GridPosition gridPosition in blockGridList)
+            {
+                //Debug.Log("Remove blocked Grid " + gridPosition);
+                validGridPositionList.Remove(gridPosition);
+            }
+            blockGridList.Clear();
             return validGridPositionList;
         }
 
@@ -201,7 +214,7 @@ namespace TurnBase
             targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
             //Debug.Log(gridPosition);
 
-            state = ShootState.AIMING;
+            state = State.Aiming;
             float aimingStateTime = 1f;
             stateTimer = aimingStateTime;
 

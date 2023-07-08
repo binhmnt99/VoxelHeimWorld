@@ -34,6 +34,7 @@ namespace TurnBase
         private void Unit_OnAnyUnitDead(object sender, EventArgs e)
         {
             Unit unit = sender as Unit;
+            HexPathfinding.Instance.SetIsWalkableGridPosition(unit.GetGridPosition(),true);
             unitList.Remove(unit);
             if (unit.IsEnemy())
             {
@@ -56,6 +57,7 @@ namespace TurnBase
         private void Unit_OnAnyUnitSpawned(object sender, EventArgs e)
         {
             Unit unit = sender as Unit;
+            HexPathfinding.Instance.SetIsWalkableGridPosition(unit.GetGridPosition(),false);
             unitList.Add(unit);
             if (unit.IsEnemy())
             {
@@ -64,7 +66,7 @@ namespace TurnBase
             else
             {
                 friendlyUnitList.Add(unit);
-                Debug.Log(unit.GetGridPosition());
+                //Debug.Log(unit.GetGridPosition());
             }
         }
 

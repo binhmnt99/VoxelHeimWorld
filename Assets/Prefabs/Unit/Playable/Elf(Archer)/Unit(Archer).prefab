@@ -1330,6 +1330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionPointMax: 5
+  actionPoint: 0
   isEnemy: 0
 --- !u!114 &1679943660812719230
 MonoBehaviour:
@@ -1344,6 +1345,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxMoveDistance: 10
+  obstaclesLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &4967873056222236571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1356,12 +1360,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc9458a2fa572c479c3d5e335d717cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
-  maxShootDistance: 10
-  aimSpeed: 10
-  obstaclesMaskLayer:
+  obstaclesLayerMask:
     serializedVersion: 2
     m_Bits: 2048
+  unitLayerMask:
+    serializedVersion: 2
+    m_Bits: 1152
+  maxShootDistance: 10
+  aimSpeed: 10
 --- !u!114 &5653764760686836150
 MonoBehaviour:
   m_ObjectHideFlags: 0
