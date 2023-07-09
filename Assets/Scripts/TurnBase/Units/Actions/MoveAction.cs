@@ -17,7 +17,7 @@ namespace TurnBase
         [Header("Only LayerMask enemy")]
         [SerializeField] private LayerMask obstaclesLayerMask;
 
-        private List<Vector3> positionList;
+        [SerializeField] private List<Vector3> positionList;
         private int currentPositionIndex;
 
         private void Update()
@@ -131,12 +131,6 @@ namespace TurnBase
                         continue;
                     }
 
-                    int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
-                    if (testDistance > maxMoveDistance)
-                    {
-                        continue;
-                    }
-
                     if (!HexLevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
                     {
                         continue;
@@ -149,20 +143,28 @@ namespace TurnBase
                     }
 
                     Vector3 unitWorldPosition = HexLevelGrid.Instance.GetWorldPosition(unitGridPosition);
-                    Vector3 shootDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
-                    float unitShoulderHeight = 1.1f;
-                    if (Physics.Raycast(
-                        unitWorldPosition + Vector3.up * unitShoulderHeight,
-                        shootDirection,
-                        Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
-                        obstaclesLayerMask
-                    ))
+                    Vector3 testWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
+                    float distance = Vector3.Distance(unitWorldPosition, testWorldPosition);
+                    if (distance > maxMoveDistance)
                     {
-                        //Block by Obstacles
                         continue;
                     }
-                    validGridPositionList.Add(testGridPosition);
 
+                    Vector3 testDirection = (testWorldPosition - unit.GetWorldPosition()).normalized;
+                    distance = Vector3.Distance(unit.GetWorldPosition(), testWorldPosition);
+                    RaycastHit[] hits = Physics.RaycastAll(unit.GetWorldPosition(), testDirection, distance, obstaclesLayerMask);
+                    foreach (var hit in hits)
+                    {
+                        GridPosition testGrid = HexLevelGrid.Instance.GetGridPosition(hit.collider.transform.position);
+                        //Debug.Log("When " + validGrid + " and distance " + distance + " Hit Grit " + testGrid);
+
+                        if (testGrid != testGridPosition && !blockGridList.Contains(testGridPosition))
+                        {
+                            //Debug.Log("Remove blocked Grid " + validGrid);
+                            blockGridList.Add(testGridPosition);
+                        }
+                    }
+                    validGridPositionList.Add(testGridPosition);
                 }
             }
             foreach (GridPosition gridPosition in blockGridList)

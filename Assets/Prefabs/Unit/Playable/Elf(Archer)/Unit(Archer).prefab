@@ -1294,7 +1294,7 @@ Transform:
   - {fileID: 2230857306021195818}
   - {fileID: 2346872313499810733}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8767484688067269200
 BoxCollider:
@@ -1362,10 +1362,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstaclesLayerMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 3200
   unitLayerMask:
     serializedVersion: 2
-    m_Bits: 1152
+    m_Bits: 0
   maxShootDistance: 10
   aimSpeed: 10
 --- !u!114 &5653764760686836150

@@ -148,12 +148,17 @@ namespace TurnBase
         [SerializeField] private EnemyState state;
         [SerializeField] private float healthThreshold = .3f;
         private Unit enemy;
-        private Unit target;
+        [SerializeField] private Unit target;
+
+        private bool isAggro;
+        private bool isFlee;
 
         private List<Unit> targetList;
 
         private void Awake()
         {
+            isAggro = false;
+            isFlee = false;
             state = EnemyState.Idle;
             enemy = this.GetComponent<Unit>();
         }
@@ -168,7 +173,15 @@ namespace TurnBase
             {
                 targetList = UnitManager.Instance.GetFriendlyUnitList();
                 //If onDamaged, change current state to aggro
-                CheckAggro();
+                if (!isAggro)
+                {
+                    CheckAggro();
+                }
+                if (!isFlee)
+                {
+                    //Health Below 30% => Flee
+                    CheckHealthBelowThreshold();
+                }
                 return;
             }
 
@@ -182,11 +195,11 @@ namespace TurnBase
                 case EnemyState.Chase:
                     //If onAttackRange, change current state to attack
                     //If outOfAttackRange, continue state chase
-
+                    EnemyChaseState();
                     break;
                 case EnemyState.Attack:
-
                     //If target die, change current state to Idle
+                    EnemyAttackState();
                     break;
                 case EnemyState.Flee:
                     //If notOnDamaged , change current state to aggro
@@ -207,6 +220,7 @@ namespace TurnBase
                     return;
                 }
                 state = EnemyState.Idle;
+                isAggro = false;
             }
         }
 
@@ -215,6 +229,7 @@ namespace TurnBase
             if (enemy.GetHealthNormalized() <= healthThreshold)
             {
                 state = EnemyState.Flee;
+                isFlee = true;
             }
         }
 
@@ -246,13 +261,22 @@ namespace TurnBase
         {
             MoveAction moveAction = enemy.GetAction<MoveAction>();
             target = FindClosestUnit(targetList, enemy.GetWorldPosition());
-            if (!IsValidActionGridPosition(moveAction.GetValidEnemyActionGridPositionList(enemy.GetGridPosition()),target.GetGridPosition()))
+            if (!IsValidActionGridPosition(moveAction.GetValidEnemyActionGridPositionList(enemy.GetGridPosition()), target.GetGridPosition()))
             {
+                IdleAction idleAction = enemy.GetAction<IdleAction>();
+                if (idleAction.IsValidActionGridPosition(target.GetGridPosition()))
+                {
+                    return;
+                }
+                if (!enemy.TrySpendActionPointsToTakeAction(idleAction))
+                {
+                    // Enemy cannot afford this action
+                    return;
+                }
                 return;
             }
             else
             {
-                Debug.Log(enemy.ToString());
                 state = EnemyState.Chase;
             }
         }
@@ -263,30 +287,95 @@ namespace TurnBase
             {
                 ShootAction shootAction = targetUnit.GetAction<ShootAction>();
                 shootAction.OnShoot += ShootAction_OnShoot;
+                shootAction.OnShoot -= ShootAction_OnShoot;
             }
         }
 
         private void ShootAction_OnShoot(object sender, ShootAction.OnShootEventArgs e)
         {
-            //Debug.Log("Shoot");
             if (e.targetUnit == enemy)
             {
-                e.shootingUnit = target;
+                target = e.shootingUnit;
                 state = EnemyState.Aggro;
+                isAggro = true;
             }
         }
 
         private void EnemyIdleState()
         {
-            //Health Below 30% => Flee
-            CheckHealthBelowThreshold();
             //onChasingRange, change current state to chase
-            if (target == null)
+            CheckChasing();
+        }
+
+        private void OnMoveActionComplete()
+        {
+            state = EnemyState.Chase;
+        }
+
+        private T GetRandomValue<T>(List<T> list)
+        {
+            if (list.Count == 0)
             {
-                CheckChasing();
+                Debug.LogWarning("The list is empty!");
+                return default(T);
+            }
+
+            int randomIndex = UnityEngine.Random.Range(0, list.Count);
+            T randomValue = list[randomIndex];
+            return randomValue;
+        }
+
+        private void EnemyTakeMoveAction()
+        {
+            MoveAction moveAction = enemy.GetAction<MoveAction>();
+            List<GridPosition> validGridList = moveAction.GetValidActionGridPositionList();
+            GridPosition nextGridPosition = GetRandomValue(validGridList);
+            if (!moveAction.IsValidActionGridPosition(nextGridPosition))
+            {
+                return;
+            }
+            if (!enemy.TrySpendActionPointsToTakeAction(moveAction))
+            {
+                // Enemy cannot afford this action
+                return;
+            }
+            moveAction.TakeAction(nextGridPosition, OnMoveActionComplete);
+        }
+        private void EnemyChaseState()
+        {
+            //If onAttackRange, change current state to attack
+            //If outOfAttackRange, continue state chase
+            ShootAction shootAction = enemy.GetAction<ShootAction>();
+            target = FindClosestUnit(targetList, enemy.GetWorldPosition());
+            if (shootAction.IsValidActionGridPosition(target.GetGridPosition()))
+            {
+                state = EnemyState.Attack;
+            }
+            else
+            {
+                EnemyTakeMoveAction();
             }
         }
 
-
+        private void OnShootComplete()
+        {
+            state = EnemyState.Chase;
+        }
+        private void EnemyAttackState()
+        {
+            ShootAction shootAction = enemy.GetAction<ShootAction>();
+            List<GridPosition> validGridList = shootAction.GetValidActionGridPositionList();
+            GridPosition nextGridPosition = GetRandomValue(validGridList);
+            if (!shootAction.IsValidActionGridPosition(target.GetGridPosition()))
+            {
+                return;
+            }
+            if (!enemy.TrySpendActionPointsToTakeAction(shootAction))
+            {
+                // Enemy cannot afford this action
+                return;
+            }
+            shootAction.TakeAction(target.GetGridPosition(), OnShootComplete);
+        }
     }
 }

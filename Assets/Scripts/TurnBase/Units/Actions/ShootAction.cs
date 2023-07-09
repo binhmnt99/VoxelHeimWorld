@@ -25,7 +25,6 @@ namespace TurnBase
         }
 
         [SerializeField] private LayerMask obstaclesLayerMask;
-        [SerializeField] private LayerMask unitLayerMask;
         [SerializeField] private int maxShootDistance = 7;
         [SerializeField] private float aimSpeed = 15f;
         private float stateTimer;
@@ -161,31 +160,16 @@ namespace TurnBase
                     }
 
                     Vector3 unitWorldPosition = HexLevelGrid.Instance.GetWorldPosition(unitGridPosition);
-                    Vector3 shootDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
-                    float unitShoulderHeight = 1.1f;
-                    if (Physics.Raycast(
-                        unitWorldPosition + Vector3.up * unitShoulderHeight,
-                        shootDirection,
-                        Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
-                        obstaclesLayerMask
-                    ))
-                    {
-                        //Block by Obstacles
-                        continue;
-                    }
-
-                    //Vector3 unitWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(unitGridPosition);
                     Vector3 testWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
                     float distance = Vector3.Distance(unitWorldPosition, testWorldPosition);
-                    if (distance >= maxShootDistance)
+                    if (distance > maxShootDistance)
                     {
                         continue;
                     }
 
-                    //Vector3 testWorldPosition = HexLevelGrid.Instance.GetWorldPosition(testGridPosition);
                     Vector3 testDirection = (testWorldPosition - unit.GetWorldPosition()).normalized;
                     distance = Vector3.Distance(unit.GetWorldPosition(), testWorldPosition);
-                    RaycastHit[] hits = Physics.RaycastAll(unit.GetWorldPosition(), testDirection, distance, unitLayerMask);
+                    RaycastHit[] hits = Physics.RaycastAll(unit.GetWorldPosition(), testDirection, distance, obstaclesLayerMask);
                     foreach (var hit in hits)
                     {
                         GridPosition testGrid = HexLevelGrid.Instance.GetGridPosition(hit.collider.transform.position);

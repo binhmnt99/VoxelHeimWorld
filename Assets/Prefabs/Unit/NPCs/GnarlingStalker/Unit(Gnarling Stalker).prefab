@@ -1059,7 +1059,7 @@ Transform:
   - {fileID: 1270586074339374658}
   - {fileID: 1282897599040752031}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &3449407389994821813
 BoxCollider:
@@ -1140,7 +1140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstaclesLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 3200
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -1202,6 +1202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   healthThreshold: 0.3
+  target: {fileID: 0}
 --- !u!1 &2687080893504477270
 GameObject:
   m_ObjectHideFlags: 0
