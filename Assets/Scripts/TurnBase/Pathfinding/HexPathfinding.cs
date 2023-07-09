@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace TurnBase
 {
@@ -58,11 +59,12 @@ namespace TurnBase
             }
         }
 
-        List<PathNode> openList = new List<PathNode>();
-        List<PathNode> closedList = new List<PathNode>();
+        readonly List<PathNode> openList = new();
+        readonly List<PathNode> closedList = new();
 
         public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition, out int pathLength)
         {
+            Profiler.BeginSample("Find Path");
             openList.Clear();
             closedList.Clear();
 
@@ -74,7 +76,7 @@ namespace TurnBase
             {
                 for (int z = 0; z < gridSystem.GetHeight(); z++)
                 {
-                    GridPosition gridPosition = new GridPosition(x, z);
+                    GridPosition gridPosition = new(x, z);
                     PathNode pathNode = gridSystem.GetGridObject(gridPosition);
 
                     pathNode.SetGCost(int.MaxValue);
@@ -90,18 +92,22 @@ namespace TurnBase
 
             while (openList.Count > 0)
             {
+                Profiler.BeginSample("GetLowestFCostPathNode");
                 PathNode currentNode = GetLowestFCostPathNode(openList);
+                Profiler.EndSample();
 
                 if (currentNode == endNode)
                 {
                     pathLength = endNode.GetFCost();
                     // Reached final node
+                    Profiler.EndSample();
                     return CalculatePath(endNode);
                 }
 
                 openList.Remove(currentNode);
                 closedList.Add(currentNode);
 
+                Profiler.BeginSample("Process NeighborList");
                 foreach (PathNode neighborNode in GetNeighborList(currentNode))
                 {
                     if (closedList.Contains(neighborNode))
@@ -130,8 +136,11 @@ namespace TurnBase
                         }
                     }
                 }
+                Profiler.EndSample();
             }
+
             pathLength = 0;
+            Profiler.EndSample();
 
             // No path found
             return null;
@@ -145,7 +154,16 @@ namespace TurnBase
 
         private PathNode GetLowestFCostPathNode(List<PathNode> pathNodeList)
         {
-            return pathNodeList.MinBy(node => node.GetFCost());
+            int minCost = int.MaxValue;
+            int minIdx = 0;
+            for (int i = 0; i < pathNodeList.Count; i++)
+            {
+                if (pathNodeList[i].GetFCost() < minCost)
+                {
+                    minCost = pathNodeList[i].GetFCost();
+                }    
+            }
+            return pathNodeList[minIdx];
         }
 
         private PathNode GetNode(int x, int z)
@@ -206,6 +224,7 @@ namespace TurnBase
 
         private List<GridPosition> CalculatePath(PathNode endNode)
         {
+            Profiler.BeginSample("CalculatePath");
             pathNodeList.Clear();
             pathNodeList.Add(endNode);
             PathNode currentNode = endNode;
@@ -222,6 +241,7 @@ namespace TurnBase
             {
                 gridPositionList.Add(pathNode.GetGridPosition());
             }
+            Profiler.EndSample();
             return gridPositionList;
         }
 

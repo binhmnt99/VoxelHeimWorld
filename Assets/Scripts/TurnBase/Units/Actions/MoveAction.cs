@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace TurnBase
 {
@@ -71,6 +72,7 @@ namespace TurnBase
         List<GridPosition> validGridPositionList = new List<GridPosition>();
         public override List<GridPosition> GetValidActionGridPositionList()
         {
+            Profiler.BeginSample("GetValidActionGridPositionList");
             validGridPositionList.Clear();
             GridPosition unitGridPosition = unit.GetGridPosition();
 
@@ -98,12 +100,14 @@ namespace TurnBase
                     {
                         continue;
                     }
-                    if (!HexPathfinding.Instance.HasPath(unitGridPosition, testGridPosition))
+                    List<GridPosition> path =
+                        HexPathfinding.Instance.FindPath(unitGridPosition, testGridPosition, out int pathLength);
+                    if (path == null)
                     {
                         continue;
                     }
                     int pathfindingDistanceMultiplier = 10;
-                    if (HexPathfinding.Instance.GetPathLength(unitGridPosition, testGridPosition) > maxMoveDistance * pathfindingDistanceMultiplier)
+                    if (pathLength > maxMoveDistance * pathfindingDistanceMultiplier)
                     {
                         // Path length is too long
                         continue;
@@ -111,7 +115,7 @@ namespace TurnBase
                     validGridPositionList.Add(testGridPosition);
                 }
             }
-
+            Profiler.EndSample();
             return validGridPositionList;
         }
 
