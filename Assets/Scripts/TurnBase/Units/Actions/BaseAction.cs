@@ -26,6 +26,7 @@ namespace TurnBase
 
         public virtual bool IsValidActionGridPosition(GridPosition gridPosition)
         {
+            Debug.Log("IsValidActionGridPosition");
             List<GridPosition> validGridPositionList = GetValidActionGridPositionList();
             return validGridPositionList.Contains(gridPosition);
         }
@@ -41,7 +42,8 @@ namespace TurnBase
         {
             isActive = true;
             this.onActionComplete = onActionComplete;
-
+            Debug.Log("Action Start");
+            GridSystemVisual.Instance.HideAllGridPosition();
             OnAnyActionStarted?.Invoke(this, EventArgs.Empty);
         }
 
@@ -49,7 +51,7 @@ namespace TurnBase
         {
             isActive = false;
             onActionComplete();
-
+            Debug.Log("Action End");
             OnAnyActionCompleted?.Invoke(this, EventArgs.Empty);
         }
 

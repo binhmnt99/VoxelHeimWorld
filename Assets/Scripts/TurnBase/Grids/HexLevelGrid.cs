@@ -22,6 +22,8 @@ namespace TurnBase
         [SerializeField] private int width;
         [SerializeField] private int height;
         [SerializeField] private float cellSize;
+        [SerializeField] private int offsetX;
+        [SerializeField] private int offsetZ;
 
         private HexGridSystem<HexGridObject> gridSystem;
 
@@ -38,7 +40,7 @@ namespace TurnBase
 
             gridSystem = new HexGridSystem<HexGridObject>(width, height, cellSize,
                     (HexGridSystem<HexGridObject> g, GridPosition gridPosition) => new HexGridObject(g, gridPosition));
-            //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+            gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
         }
 
         private void Start()
@@ -48,9 +50,14 @@ namespace TurnBase
 
         public void AddUnitAtGridPosition(GridPosition gridPosition, Unit unit)
         {
+            Debug.Log("Add unit");
             HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
             gridObject.AddUnit(unit);
-            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition,false);
+            if (gridObject.GetUnit())
+            {
+                Debug.Log(gridObject.GetUnit());
+            }
+            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition, false);
         }
 
         public List<Unit> GetUnitListAtGridPosition(GridPosition gridPosition)
@@ -61,13 +68,19 @@ namespace TurnBase
 
         public void RemoveUnitAtGridPosition(GridPosition gridPosition, Unit unit)
         {
-            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition,true);
+            Debug.Log("Remove unit");
+            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition, true);
             HexGridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            if (gridObject.GetUnit())
+            {
+                Debug.Log(gridObject.GetUnit());
+            }
             gridObject.RemoveUnit(unit);
         }
 
         public void UnitMovedGridPosition(Unit unit, GridPosition fromGridPosition, GridPosition toGridPosition)
         {
+            Debug.Log("UnitMovedGridPosition");
             RemoveUnitAtGridPosition(fromGridPosition, unit);
 
             AddUnitAtGridPosition(toGridPosition, unit);

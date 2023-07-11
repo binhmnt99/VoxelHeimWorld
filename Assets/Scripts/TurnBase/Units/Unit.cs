@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,14 +45,21 @@ namespace TurnBase
 
         private void Update()
         {
+            if (GetAction<MoveAction>().GetPositionList().Count == 0)
+            {
+                return;
+            }
             GridPosition newGridPosition = HexLevelGrid.Instance.GetGridPosition(transform.position);
-            if (newGridPosition != gridPosition)
+            int index = GetAction<MoveAction>().GetPositionList().Count - 1;
+            
+            if (transform.position == GetAction<MoveAction>().GetPositionList()[index] && newGridPosition != gridPosition)
             {
                 // Unit changed Grid Position
                 GridPosition oldGridPosition = gridPosition;
                 gridPosition = newGridPosition;
 
                 HexLevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
+                
             }
         }
 
@@ -87,6 +95,7 @@ namespace TurnBase
             if (CanSpendActionPointsToTakeAction(baseAction))
             {
                 SpendActionPoints(baseAction.GetActionPointsCost());
+                Debug.Log("CanSpendActionPoint");
                 return true;
             }
             else

@@ -193,6 +193,7 @@ namespace TurnBase
 
         private void UpdateGridVisual()
         {
+            Debug.Log("UpdateGridVisual");
             HideAllGridPosition();
 
             Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
@@ -238,6 +239,7 @@ namespace TurnBase
 
         private void HexLevelGrid_OnAnyUnitMovedGridPosition(object sender, EventArgs e)
         {
+            Debug.Log("Update Grid");
             UpdateGridVisual();
         }
 

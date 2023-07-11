@@ -79,13 +79,14 @@ namespace TurnBase
 
         public void CreateDebugObjects(Transform debugPrefab)
         {
+            GameObject debugLevelGrid = new GameObject("DebugLevelGrid");
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)
                 {
                     GridPosition gridPosition = new GridPosition(x, z);
 
-                    Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
+                    Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity,debugLevelGrid.transform);
                     GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
                     gridDebugObject.SetGridObject(GetGridObject(gridPosition));
                 }

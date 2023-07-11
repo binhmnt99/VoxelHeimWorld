@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -15,11 +14,16 @@ namespace TurnBase
 
 
         [SerializeField] private int maxMoveDistance = 4;
+        [SerializeField] private float rotateSpeed = 10f;
+        [SerializeField] private float moveSpeed = 5f;
         [Header("Only LayerMask enemy")]
         [SerializeField] private LayerMask obstaclesLayerMask;
 
         [SerializeField] private List<Vector3> positionList;
-        private int currentPositionIndex;
+        public List<Vector3> GetPositionList()
+        {
+            return positionList;
+        }
 
         private void Update()
         {
@@ -28,36 +32,82 @@ namespace TurnBase
                 return;
             }
 
-            Vector3 targetPosition = positionList[currentPositionIndex];
-            Vector3 moveDirection = (targetPosition - transform.position).normalized;
+            // Vector3 targetPosition = positionList[currentPositionIndex];
+            // Vector3 moveDirection = (targetPosition - transform.position).normalized;
 
-            float rotateSpeed = 10f;
+            // transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
+
+            // float stoppingDistance = .1f;
+            // if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance)
+            // {
+            //     Debug.Log("Move");
+
+            //     transform.position += moveDirection * moveSpeed * Time.deltaTime;
+            // }
+            // else
+            // {
+            //     currentPositionIndex++;
+            //     if (currentPositionIndex >= positionList.Count)
+            //     {
+            //         Debug.Log("EndMove");
+            //         OnStopMoving?.Invoke(this, EventArgs.Empty);
+            //         transform.position = positionList[positionList.Count - 1];
+            //         ActionComplete();
+            //     }
+            // }
+        }
+
+
+        IEnumerator MoveAlongPath()
+        {
+            const float MIN_DISTANCE = 0.05f;
+
+            int currentStep = 0;
+            Vector3 currentPosition = positionList[0];
+            float animationTime = 0f;
+
+            while (currentStep < positionList.Count)
+            {
+                yield return null;
+
+                //Move towards the next step in the path until we are closer than MIN_DIST
+                Vector3 nextPosition = positionList[currentStep];
+                Vector3 moveDirection = (nextPosition - transform.position).normalized;
+
+                float movementTime = animationTime * moveSpeed;
+                MoveAndRotate(currentPosition, nextPosition, moveDirection, movementTime);
+                animationTime += Time.deltaTime;
+
+                if (Vector3.Distance(transform.position, nextPosition) > MIN_DISTANCE)
+                    continue;
+
+                //Min dist has been reached, look to next step in path
+                currentPosition = positionList[currentStep];
+                currentStep++;
+                animationTime = 0f;
+            }
+            if (currentStep >= positionList.Count)
+            {
+                Debug.Log("EndMove");
+                OnStopMoving?.Invoke(this, EventArgs.Empty);
+                transform.position = positionList[positionList.Count - 1];
+                ActionComplete();
+            }
+        }
+
+        void MoveAndRotate(Vector3 origin, Vector3 destination, Vector3 moveDirection, float duration)
+        {
+            transform.position = Vector3.Lerp(origin, destination, duration);
             transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
-
-            float stoppingDistance = .1f;
-            if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance)
-            {
-                float moveSpeed = 4f;
-                transform.position += moveDirection * moveSpeed * Time.deltaTime;
-            }
-            else
-            {
-                currentPositionIndex++;
-                if (currentPositionIndex >= positionList.Count)
-                {
-                    OnStopMoving?.Invoke(this, EventArgs.Empty);
-                    transform.position = positionList[positionList.Count - 1];
-                    ActionComplete();
-                }
-            }
+            Debug.Log("Move");
         }
 
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
+            Debug.Log("TakeAction");
             List<GridPosition> pathGridPositionList = HexPathfinding.Instance.FindPath(unit.GetGridPosition(), gridPosition, out int pathLength);
 
-            currentPositionIndex = 0;
             positionList = new List<Vector3>();
 
             foreach (GridPosition pathGridPosition in pathGridPositionList)
@@ -68,11 +118,14 @@ namespace TurnBase
             OnStartMoving?.Invoke(this, EventArgs.Empty);
 
             ActionStart(onActionComplete);
+
+            StartCoroutine(MoveAlongPath());
         }
         List<GridPosition> validGridPositionList = new List<GridPosition>();
         public override List<GridPosition> GetValidActionGridPositionList()
         {
             Profiler.BeginSample("GetValidActionGridPositionList");
+            Debug.Log("GetValidActionGridPositionList");
             validGridPositionList.Clear();
             GridPosition unitGridPosition = unit.GetGridPosition();
 

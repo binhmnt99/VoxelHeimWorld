@@ -21,6 +21,7 @@ namespace TurnBase
         private int height;
         private float cellSize;
         private HexGridSystem<PathNode> gridSystem;
+        private List<PathfindingLink> pathfindingLinkList;
 
         private void Awake()
         {
@@ -57,6 +58,8 @@ namespace TurnBase
                     }
                 }
             }
+            pathfindingLinkList = new List<PathfindingLink>();
+            //pathfindingLinkList.Add(new PathfindingLink{});
         }
 
         readonly List<PathNode> openList = new();
@@ -65,6 +68,7 @@ namespace TurnBase
         public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition, out int pathLength)
         {
             Profiler.BeginSample("Find Path");
+            //Debug.Log("FindPath");
             openList.Clear();
             closedList.Clear();
 
@@ -257,11 +261,13 @@ namespace TurnBase
 
         public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)
         {
+            Debug.Log("Has Path");
             return FindPath(startGridPosition, endGridPosition, out int pathLength) != null;
         }
 
         public int GetPathLength(GridPosition startGridPosition, GridPosition endGridPosition)
         {
+            Debug.Log("Get Path");
             FindPath(startGridPosition, endGridPosition, out int pathLength);
             return pathLength;
         }

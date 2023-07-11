@@ -1,134 +1,5 @@
-// using System;
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
-
-// namespace TurnBase
-// {
-//     public class EnemyAI : MonoBehaviour
-//     {
-//         private enum State
-//         {
-//             WaitingForEnemyTurn,
-//             TakingTurn,
-//             Busy,
-//         }
-
-//         [SerializeField]private State state;
-//         private float timer;
-
-//         private void Awake()
-//         {
-//             state = State.WaitingForEnemyTurn;
-//         }
-
-//         private void Start()
-//         {
-//             TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
-//         }
-
-//         private void Update()
-//         {
-//             if (TurnSystem.Instance.IsPlayerTurn())
-//             {
-//                 return;
-//             }
-
-//             switch (state)
-//             {
-//                 case State.WaitingForEnemyTurn:
-//                     break;
-//                 case State.TakingTurn:
-//                     timer -= Time.deltaTime;
-//                     if (timer <= 0f)
-//                     {
-//                         if (TryTakeEnemyAIAction(SetStateTakingTurn))
-//                         {
-//                             state = State.Busy;
-//                         }
-//                         else
-//                         {
-//                             // No more enemies have actions they can take, end enemy turn
-//                             TurnSystem.Instance.NextTurn();
-//                         }
-//                     }
-//                     break;
-//                 case State.Busy:
-//                     break;
-//             }
-//         }
-
-//         private void SetStateTakingTurn()
-//         {
-//             timer = 0.5f;
-//             state = State.TakingTurn;
-//         }
-
-//         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
-//         {
-//             if (!TurnSystem.Instance.IsPlayerTurn())
-//             {
-//                 state = State.TakingTurn;
-//                 timer = 2f;
-//             }
-//         }
-
-//         private bool TryTakeEnemyAIAction(Action onEnemyAIActionComplete)
-//         {
-//             foreach (Unit enemyUnit in UnitManager.Instance.GetEnemyUnitList())
-//             {
-//                 if (TryTakeEnemyAIAction(enemyUnit, onEnemyAIActionComplete))
-//                 {
-//                     return true;
-//                 }
-//             }
-
-//             return false;
-//         }
-
-//         private bool TryTakeEnemyAIAction(Unit enemyUnit, Action onEnemyAIActionComplete)
-//         {
-//             EnemyAIAction bestEnemyAIAction = null;
-//             BaseAction bestBaseAction = null;
-
-//             foreach (BaseAction baseAction in enemyUnit.GetBaseActionArray())
-//             {
-//                 if (!enemyUnit.CanSpendActionPointsToTakeAction(baseAction))
-//                 {
-//                     // Enemy cannot afford this action
-//                     continue;
-//                 }
-
-//                 if (bestEnemyAIAction == null)
-//                 {
-//                     bestEnemyAIAction = baseAction.GetBestEnemyAIAction();
-//                     bestBaseAction = baseAction;
-//                 }
-//                 else
-//                 {
-//                     EnemyAIAction testEnemyAIAction = baseAction.GetBestEnemyAIAction();
-//                     if (testEnemyAIAction != null && testEnemyAIAction.actionValue > bestEnemyAIAction.actionValue)
-//                     {
-//                         bestEnemyAIAction = testEnemyAIAction;
-//                         bestBaseAction = baseAction;
-//                     }
-//                 }
-
-//             }
-
-//             if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
-//             {
-//                 bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
-//                 return true;
-//             }
-//             else
-//             {
-//                 return false;
-//             }
-//         }
-//     }
-// }
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -257,28 +128,15 @@ namespace TurnBase
             return validGridPositionList.Contains(gridPosition);
         }
 
-        private void CheckChasing()
+        private IEnumerator IdleActionHandle()
         {
-            MoveAction moveAction = enemy.GetAction<MoveAction>();
-            target = FindClosestUnit(targetList, enemy.GetWorldPosition());
-            if (!IsValidActionGridPosition(moveAction.GetValidEnemyActionGridPositionList(enemy.GetGridPosition()), target.GetGridPosition()))
+            IdleAction idleAction = enemy.GetAction<IdleAction>();
+            if (!enemy.TrySpendActionPointsToTakeAction(idleAction))
             {
-                IdleAction idleAction = enemy.GetAction<IdleAction>();
-                if (idleAction.IsValidActionGridPosition(target.GetGridPosition()))
-                {
-                    return;
-                }
-                if (!enemy.TrySpendActionPointsToTakeAction(idleAction))
-                {
-                    // Enemy cannot afford this action
-                    return;
-                }
-                return;
+                // Enemy cannot afford this action
+                yield break;
             }
-            else
-            {
-                state = EnemyState.Chase;
-            }
+            yield return null;
         }
 
         private void CheckAggro()
@@ -304,7 +162,16 @@ namespace TurnBase
         private void EnemyIdleState()
         {
             //onChasingRange, change current state to chase
-            CheckChasing();
+            MoveAction moveAction = enemy.GetAction<MoveAction>();
+            target = FindClosestUnit(targetList, enemy.GetWorldPosition());
+            if (!IsValidActionGridPosition(moveAction.GetValidEnemyActionGridPositionList(enemy.GetGridPosition()), target.GetGridPosition()))
+            {
+                StartCoroutine(IdleActionHandle());
+            }
+            else
+            {
+                state = EnemyState.Chase;
+            }
         }
 
         private void OnMoveActionComplete()
@@ -325,22 +192,6 @@ namespace TurnBase
             return randomValue;
         }
 
-        private void EnemyTakeMoveAction()
-        {
-            MoveAction moveAction = enemy.GetAction<MoveAction>();
-            List<GridPosition> validGridList = moveAction.GetValidActionGridPositionList();
-            GridPosition nextGridPosition = GetRandomValue(validGridList);
-            if (!moveAction.IsValidActionGridPosition(nextGridPosition))
-            {
-                return;
-            }
-            if (!enemy.TrySpendActionPointsToTakeAction(moveAction))
-            {
-                // Enemy cannot afford this action
-                return;
-            }
-            moveAction.TakeAction(nextGridPosition, OnMoveActionComplete);
-        }
         private void EnemyChaseState()
         {
             //If onAttackRange, change current state to attack
@@ -353,8 +204,26 @@ namespace TurnBase
             }
             else
             {
-                EnemyTakeMoveAction();
+                StartCoroutine(MoveActionHandle());
             }
+        }
+
+        private IEnumerator MoveActionHandle()
+        {
+            MoveAction moveAction = enemy.GetAction<MoveAction>();
+            List<GridPosition> validGridList = moveAction.GetValidActionGridPositionList();
+            GridPosition nextGridPosition = GetRandomValue(validGridList);
+            if (!moveAction.IsValidActionGridPosition(nextGridPosition))
+            {
+                yield break;
+            }
+            if (!enemy.TrySpendActionPointsToTakeAction(moveAction))
+            {
+                // Enemy cannot afford this action
+                yield break;
+            }
+            moveAction.TakeAction(nextGridPosition, OnMoveActionComplete);
+            yield return null;
         }
 
         private void OnShootComplete()
@@ -363,19 +232,25 @@ namespace TurnBase
         }
         private void EnemyAttackState()
         {
+            StartCoroutine(AttackActionHandle());
+        }
+
+        private IEnumerator AttackActionHandle()
+        {
             ShootAction shootAction = enemy.GetAction<ShootAction>();
             List<GridPosition> validGridList = shootAction.GetValidActionGridPositionList();
             GridPosition nextGridPosition = GetRandomValue(validGridList);
             if (!shootAction.IsValidActionGridPosition(target.GetGridPosition()))
             {
-                return;
+                yield break;
             }
             if (!enemy.TrySpendActionPointsToTakeAction(shootAction))
             {
                 // Enemy cannot afford this action
-                return;
+                yield break;
             }
             shootAction.TakeAction(target.GetGridPosition(), OnShootComplete);
+            yield return null;
         }
     }
 }
