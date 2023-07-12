@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 5e803f4327e1b594d992834c24e7b751
   - enabled: 1
-    path: Assets/Scenes/VoxelHeim_GrassLand.unity
+    path: Assets/Scenes/VoxelHeim_GreenPlains.unity
     guid: 72a661169ff0845479190bcf2829690f
   - enabled: 1
     path: Assets/Scenes/WinScene.unity
