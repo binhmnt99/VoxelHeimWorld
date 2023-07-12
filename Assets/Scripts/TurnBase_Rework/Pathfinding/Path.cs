@@ -1,5 +1,9 @@
-[System.Serializable]
-public class Path
+namespace TurnBaseGrid
 {
-    public Tile[] tiles;
+    [System.Serializable]
+    public class Path
+    {
+        public Tile[] tiles;
+    }
+
 }
