@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerWeapon
   - Wall
+  - DebugGrid
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Unit
   - Obstacles
   - Land
-  - 
+  - Tile
   - 
   - 
   - 
