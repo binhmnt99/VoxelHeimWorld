@@ -34,11 +34,11 @@ namespace TurnBase
                 {
                     GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
-                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
                         continue;
                     }
-                    IInteractable interactable = HexLevelGrid.Instance.GetInteractableAtGridPosition(testGridPosition);
+                    IInteractable interactable = LevelGrid.Instance.GetInteractableAtGridPosition(testGridPosition);
                     if (interactable == null)
                     {
                         continue;
@@ -51,7 +51,7 @@ namespace TurnBase
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
-            IInteractable interactable = HexLevelGrid.Instance.GetInteractableAtGridPosition(gridPosition);
+            IInteractable interactable = LevelGrid.Instance.GetInteractableAtGridPosition(gridPosition);
             interactable.Interact(OnInteractComplete);
             ActionStart(onActionComplete);
         }

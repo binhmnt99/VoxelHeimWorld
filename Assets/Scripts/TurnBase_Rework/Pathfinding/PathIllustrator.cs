@@ -1,27 +1,29 @@
-namespace TurnBaseGrid
+using UnityEngine;
+
+[RequireComponent(typeof(LineRenderer))]
+public class PathIllustrator : MonoBehaviour
 {
-    using UnityEngine;
+    private const float LineHeightOffset = .55f;
+    LineRenderer line;
 
-    [RequireComponent(typeof(LineRenderer))]
-    public class PathIllustrator : MonoBehaviour
+    private void Start()
     {
-        private const float LineHeightOffset = 0.33f;
-        LineRenderer line;
+        line = GetComponent<LineRenderer>();
+    }
 
-        private void Start()
+    public void IllustratePath(Path path)
+    {
+        line.positionCount = path.tiles.Length;
+
+        for (int i = 0; i < path.tiles.Length; i++)
         {
-            line = GetComponent<LineRenderer>();
+            Transform tileTransform = path.tiles[i].transform;
+            line.SetPosition(i, tileTransform.position.With(y: tileTransform.position.y + LineHeightOffset));
         }
+    }
 
-        public void IllustratePath(Path path)
-        {
-            line.positionCount = path.tiles.Length;
-
-            for (int i = 0; i < path.tiles.Length; i++)
-            {
-                Transform tileTransform = path.tiles[i].transform;
-                line.SetPosition(i, tileTransform.position.With(y: tileTransform.position.y + LineHeightOffset));
-            }
-        }
+    public void Clear()
+    {
+        line.positionCount = 0;
     }
 }

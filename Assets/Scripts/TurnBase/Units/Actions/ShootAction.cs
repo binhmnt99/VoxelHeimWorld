@@ -143,24 +143,24 @@ namespace TurnBase
                     GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
 
-                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
                         continue;
                     }
 
-                    if (!HexLevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
+                    if (!LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
                     {
                         continue;
                     }
 
-                    Unit targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
+                    Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
                     if (unit.GetGridPosition() == testGridPosition)
                     {
                         continue;
                     }
 
-                    Vector3 unitWorldPosition = HexLevelGrid.Instance.GetWorldPosition(unitGridPosition);
-                    Vector3 testWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
+                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                    Vector3 testWorldPosition = LevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
                     float distance = Vector3.Distance(unitWorldPosition, testWorldPosition);
                     if (distance > maxShootDistance)
                     {
@@ -172,7 +172,7 @@ namespace TurnBase
                     RaycastHit[] hits = Physics.RaycastAll(unit.GetWorldPosition(), testDirection, distance, obstaclesLayerMask);
                     foreach (var hit in hits)
                     {
-                        GridPosition testGrid = HexLevelGrid.Instance.GetGridPosition(hit.collider.transform.position);
+                        GridPosition testGrid = LevelGrid.Instance.GetGridPosition(hit.collider.transform.position);
                         //Debug.Log("When " + validGrid + " and distance " + distance + " Hit Grit " + testGrid);
 
                         if (testGrid != testGridPosition && !blockGridList.Contains(testGridPosition))
@@ -195,7 +195,7 @@ namespace TurnBase
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
-            targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+            targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
             //Debug.Log(gridPosition);
 
             state = State.Aiming;
@@ -218,7 +218,7 @@ namespace TurnBase
 
         public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
         {
-            Unit targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+            Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
             return new EnemyAIAction
             {
                 gridPosition = gridPosition,

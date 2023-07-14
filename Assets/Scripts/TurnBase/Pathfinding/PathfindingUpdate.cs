@@ -16,7 +16,7 @@ namespace TurnBase
         private void DestructibleCrate_OnAnyDestroyed(object sender, EventArgs e)
         {
             DestructibleCrate destructibleCrate = sender as DestructibleCrate;
-            HexPathfinding.Instance.SetIsWalkableGridPosition(destructibleCrate.GetGridPosition(),true);
+            Pathfinding.Instance.SetIsWalkableGridPosition(destructibleCrate.GetGridPosition(),true);
         }
 
         // Update is called once per frame

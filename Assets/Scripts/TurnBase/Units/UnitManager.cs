@@ -6,21 +6,15 @@ using UnityEngine.SceneManagement;
 
 namespace TurnBase
 {
-    public class UnitManager : MonoBehaviour
+    public class UnitManager : Singleton<UnitManager>
     {
-        public static UnitManager Instance { get; private set; }
         private List<Unit> unitList;
         private List<Unit> friendlyUnitList;
         private List<Unit> enemyUnitList;
 
-        void Awake()
+        protected override void Awake()
         {
-            if (Instance != null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
+            base.Awake();
             unitList = new List<Unit>();
             friendlyUnitList = new List<Unit>();
             enemyUnitList = new List<Unit>();
@@ -34,7 +28,7 @@ namespace TurnBase
         private void Unit_OnAnyUnitDead(object sender, EventArgs e)
         {
             Unit unit = sender as Unit;
-            HexPathfinding.Instance.SetIsWalkableGridPosition(unit.GetGridPosition(),true);
+            Pathfinding.Instance.SetIsWalkableGridPosition(unit.GetGridPosition(),true);
             unitList.Remove(unit);
             if (unit.IsEnemy())
             {
@@ -57,7 +51,7 @@ namespace TurnBase
         private void Unit_OnAnyUnitSpawned(object sender, EventArgs e)
         {
             Unit unit = sender as Unit;
-            HexPathfinding.Instance.SetIsWalkableGridPosition(unit.GetGridPosition(),false);
+            Pathfinding.Instance.SetIsWalkableGridPosition(unit.GetGridPosition(),false);
             unitList.Add(unit);
             if (unit.IsEnemy())
             {

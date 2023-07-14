@@ -5,11 +5,8 @@ using UnityEngine;
 
 namespace TurnBase
 {
-    public class GridSystemVisual : MonoBehaviour
+    public class GridSystemVisual : Singleton<GridSystemVisual>
     {
-        public static GridSystemVisual Instance { get; private set; }
-
-
         [Serializable]
         public struct GridVisualTypeMaterial
         {
@@ -36,40 +33,29 @@ namespace TurnBase
 
         private GridSystemVisualSingle lastSelectedGridSystemVisualSingle;
 
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                Debug.LogError("There's more than one GridSystemVisual! " + transform + " - " + Instance);
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-        }
-
         private void Start()
         {
             gridSquadVisual = new GameObject("GridHexVisual");
             gridSystemVisualSingleArray = new GridSystemVisualSingle[
-                HexLevelGrid.Instance.GetWidth(),
-                HexLevelGrid.Instance.GetHeight()
+                LevelGrid.Instance.GetWidth(),
+                LevelGrid.Instance.GetHeight()
             ];
 
-            for (int x = 0; x < HexLevelGrid.Instance.GetWidth(); x++)
+            for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++)
             {
-                for (int z = 0; z < HexLevelGrid.Instance.GetHeight(); z++)
+                for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
                     GridPosition gridPosition = new GridPosition(x, z);
 
                     Transform gridSystemVisualSingleTransform =
-                        Instantiate(gridSystemVisualSinglePrefab, HexLevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, gridSquadVisual.transform);
+                        Instantiate(gridSystemVisualSinglePrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, gridSquadVisual.transform);
 
                     gridSystemVisualSingleArray[x, z] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
                 }
             }
 
             UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
-            HexLevelGrid.Instance.OnAnyUnitMovedGridPosition += HexLevelGrid_OnAnyUnitMovedGridPosition;
+            LevelGrid.Instance.OnAnyUnitMovedGridPosition += HexLevelGrid_OnAnyUnitMovedGridPosition;
 
             UpdateGridVisual();
         }
@@ -93,9 +79,9 @@ namespace TurnBase
             {
                 lastSelectedGridSystemVisualSingle.HideSelected();
             }
-            mouseWorldPosition = MouseWorld.GetPosition();
-            gridPosition = HexLevelGrid.Instance.GetGridPosition(mouseWorldPosition);
-            if (HexLevelGrid.Instance.IsValidGridPosition(gridPosition))
+            mouseWorldPosition = MousePosition.Instance.GetPosition();
+            gridPosition = LevelGrid.Instance.GetGridPosition(mouseWorldPosition);
+            if (LevelGrid.Instance.IsValidGridPosition(gridPosition))
             {
                 lastSelectedGridSystemVisualSingle = gridSystemVisualSingleArray[gridPosition.x, gridPosition.z];
             }
@@ -113,9 +99,9 @@ namespace TurnBase
 
         public void HideAllGridPosition()
         {
-            for (int x = 0; x < HexLevelGrid.Instance.GetWidth(); x++)
+            for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++)
             {
-                for (int z = 0; z < HexLevelGrid.Instance.GetHeight(); z++)
+                for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
                     gridSystemVisualSingleArray[x, z].Hide();
                 }
@@ -132,22 +118,22 @@ namespace TurnBase
                 {
                     GridPosition testGridPosition = gridPosition + new GridPosition(x, z);
 
-                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
                         continue;
                     }
 
-                    if (!HexPathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                    if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
                     {
                         continue;
                     }
-                    if (!HexPathfinding.Instance.HasPath(gridPosition, testGridPosition))
+                    if (!Pathfinding.Instance.HasPath(gridPosition, testGridPosition))
                     {
                         continue;
                     }
 
-                    Vector3 unitWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(gridPosition);
-                    Vector3 testWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
+                    Vector3 unitWorldPosition = LevelGrid.Instance.GetHexGridSystem().GetWorldPosition(gridPosition);
+                    Vector3 testWorldPosition = LevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
                     float distance = Vector3.Distance(unitWorldPosition,testWorldPosition);
                     if (distance > range)
                     {
@@ -170,7 +156,7 @@ namespace TurnBase
                 {
                     GridPosition testGridPosition = gridPosition + new GridPosition(x, z);
 
-                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
                         continue;
                     }

@@ -106,13 +106,13 @@ namespace TurnBase
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
             Debug.Log("TakeAction");
-            List<GridPosition> pathGridPositionList = HexPathfinding.Instance.FindPath(unit.GetGridPosition(), gridPosition, out int pathLength);
+            List<GridPosition> pathGridPositionList = Pathfinding.Instance.FindPath(unit.GetGridPosition(), gridPosition, out int pathLength);
 
             positionList = new List<Vector3>();
 
             foreach (GridPosition pathGridPosition in pathGridPositionList)
             {
-                positionList.Add(HexLevelGrid.Instance.GetWorldPosition(pathGridPosition));
+                positionList.Add(LevelGrid.Instance.GetWorldPosition(pathGridPosition));
             }
 
             OnStartMoving?.Invoke(this, EventArgs.Empty);
@@ -135,7 +135,7 @@ namespace TurnBase
                 {
                     GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
-                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
                         continue;
                     }
@@ -144,17 +144,17 @@ namespace TurnBase
                         // Same Grid Position where the unit is already at
                         continue;
                     }
-                    if (HexLevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
+                    if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
                     {
                         // Grid Position already occupied with another Unit
                         continue;
                     }
-                    if (!HexPathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                    if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
                     {
                         continue;
                     }
                     List<GridPosition> path =
-                        HexPathfinding.Instance.FindPath(unitGridPosition, testGridPosition, out int pathLength);
+                        Pathfinding.Instance.FindPath(unitGridPosition, testGridPosition, out int pathLength);
                     if (path == null)
                     {
                         continue;
@@ -183,24 +183,24 @@ namespace TurnBase
                     GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
 
-                    if (!HexLevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
                         continue;
                     }
 
-                    if (!HexLevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
+                    if (!LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
                     {
                         continue;
                     }
 
-                    Unit targetUnit = HexLevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
+                    Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
                     if (unit.GetGridPosition() == testGridPosition)
                     {
                         continue;
                     }
 
-                    Vector3 unitWorldPosition = HexLevelGrid.Instance.GetWorldPosition(unitGridPosition);
-                    Vector3 testWorldPosition = HexLevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
+                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                    Vector3 testWorldPosition = LevelGrid.Instance.GetHexGridSystem().GetWorldPosition(testGridPosition);
                     float distance = Vector3.Distance(unitWorldPosition, testWorldPosition);
                     if (distance > maxMoveDistance)
                     {
@@ -212,7 +212,7 @@ namespace TurnBase
                     RaycastHit[] hits = Physics.RaycastAll(unit.GetWorldPosition(), testDirection, distance, obstaclesLayerMask);
                     foreach (var hit in hits)
                     {
-                        GridPosition testGrid = HexLevelGrid.Instance.GetGridPosition(hit.collider.transform.position);
+                        GridPosition testGrid = LevelGrid.Instance.GetGridPosition(hit.collider.transform.position);
                         //Debug.Log("When " + validGrid + " and distance " + distance + " Hit Grit " + testGrid);
 
                         if (testGrid != testGridPosition && !blockGridList.Contains(testGridPosition))

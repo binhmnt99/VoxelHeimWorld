@@ -17,8 +17,8 @@ namespace TurnBase
         private float timer;
         void Start()
         {
-            gridPosition = HexLevelGrid.Instance.GetGridPosition(transform.position);
-            HexLevelGrid.Instance.SetInteractableAtGridPosition(gridPosition, this);
+            gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+            LevelGrid.Instance.SetInteractableAtGridPosition(gridPosition, this);
 
             SetColorGreen();
         }

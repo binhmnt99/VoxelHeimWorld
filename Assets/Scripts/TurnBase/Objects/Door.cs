@@ -20,8 +20,8 @@ namespace TurnBase
         }
         void Start()
         {
-            gridPosition = HexLevelGrid.Instance.GetGridPosition(transform.position);
-            HexLevelGrid.Instance.SetInteractableAtGridPosition(gridPosition, this);
+            gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+            LevelGrid.Instance.SetInteractableAtGridPosition(gridPosition, this);
             // if (isOpen)
             // {
             //     OpenDoor();
@@ -63,7 +63,7 @@ namespace TurnBase
         {
             isOpen = true;
             animator.SetBool("isOpen", isOpen);
-            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition, true);
+            Pathfinding.Instance.SetIsWalkableGridPosition(gridPosition, true);
 
             OnDoorOpened?.Invoke(this,EventArgs.Empty);
             OnAnyDoorOpened?.Invoke(this,EventArgs.Empty);
@@ -72,7 +72,7 @@ namespace TurnBase
         {
             isOpen = false;
             animator.SetBool("isOpen", isOpen);
-            HexPathfinding.Instance.SetIsWalkableGridPosition(gridPosition, false);
+            Pathfinding.Instance.SetIsWalkableGridPosition(gridPosition, false);
         }
     }
 

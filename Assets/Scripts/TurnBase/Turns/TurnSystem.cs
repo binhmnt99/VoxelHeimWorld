@@ -5,24 +5,12 @@ using UnityEngine;
 
 namespace TurnBase
 {
-    public class TurnSystem : MonoBehaviour
+    public class TurnSystem : Singleton<TurnSystem>
     {
-        public static TurnSystem Instance { get; private set; }
-
         public event EventHandler OnTurnChanged;
         private int turnNumber = 1;
         public bool isPlayerTurn = true;
 
-        void Awake()
-        {
-            if (Instance != null)
-            {
-
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-        }
         public void NextTurn()
         {
             turnNumber++;

@@ -33,8 +33,8 @@ namespace TurnBase
 
         private void Start()
         {
-            gridPosition = HexLevelGrid.Instance.GetGridPosition(transform.position);
-            HexLevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
+            gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+            LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
 
             TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
 
@@ -49,7 +49,7 @@ namespace TurnBase
             {
                 return;
             }
-            GridPosition newGridPosition = HexLevelGrid.Instance.GetGridPosition(transform.position);
+            GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
             int index = GetAction<MoveAction>().GetPositionList().Count - 1;
             
             if (transform.position == GetAction<MoveAction>().GetPositionList()[index] && newGridPosition != gridPosition)
@@ -58,7 +58,7 @@ namespace TurnBase
                 GridPosition oldGridPosition = gridPosition;
                 gridPosition = newGridPosition;
 
-                HexLevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
+                LevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
                 
             }
         }
@@ -95,7 +95,6 @@ namespace TurnBase
             if (CanSpendActionPointsToTakeAction(baseAction))
             {
                 SpendActionPoints(baseAction.GetActionPointsCost());
-                Debug.Log("CanSpendActionPoint");
                 return true;
             }
             else
@@ -149,7 +148,7 @@ namespace TurnBase
 
         private void HealthSystem_OnDead(object sender, EventArgs e)
         {
-            HexLevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
+            LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
 
             Destroy(gameObject);
 

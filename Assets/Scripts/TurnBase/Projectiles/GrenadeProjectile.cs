@@ -58,7 +58,7 @@ namespace TurnBase
         public void Setup(GridPosition targetGridPosition, Action onGrenadeBehaviourComplete, bool isEnemyAction)
         {
             this.onGrenadeBehaviourComplete = onGrenadeBehaviourComplete;
-            targetPosition = HexLevelGrid.Instance.GetWorldPosition(targetGridPosition);
+            targetPosition = LevelGrid.Instance.GetWorldPosition(targetGridPosition);
             this.isEntityAction = isEnemyAction;
             positionXZ = transform.position;
             positionXZ.y = 0;

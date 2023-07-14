@@ -6,11 +6,8 @@ using UnityEngine.EventSystems;
 
 namespace TurnBase
 {
-    public class UnitActionSystem : MonoBehaviour
+    public class UnitActionSystem : Singleton<UnitActionSystem>
     {
-        public static UnitActionSystem Instance { get; private set; }
-
-
         public event EventHandler OnSelectedUnitChanged;
         public event EventHandler OnSelectedActionChanged;
         public event EventHandler<bool> OnBusyChanged;
@@ -22,18 +19,6 @@ namespace TurnBase
 
         private BaseAction selectedAction;
         private bool isBusy;
-
-
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                Debug.LogError("There's more than one UnitActionSystem! " + transform + " - " + Instance);
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-        }
 
         private void Start()
         {
@@ -69,7 +54,7 @@ namespace TurnBase
         {
             if (InputManager.Instance.GetLeftMouseButtonDown())
             {
-                GridPosition mouseGridPosition = HexLevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
+                GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MousePosition.Instance.GetPosition());
 
                 if (!selectedAction.IsValidActionGridPosition(GridSystemVisual.Instance.GetGridPositionSelected()))
                 {

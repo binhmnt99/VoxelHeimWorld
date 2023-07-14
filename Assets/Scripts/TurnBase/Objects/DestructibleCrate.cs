@@ -11,7 +11,7 @@ namespace TurnBase
         private GridPosition gridPosition;
         void Start()
         {
-            gridPosition = HexLevelGrid.Instance.GetGridPosition(transform.position);
+            gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         }
 
         public GridPosition GetGridPosition()
