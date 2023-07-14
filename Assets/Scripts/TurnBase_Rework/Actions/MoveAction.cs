@@ -12,18 +12,16 @@ public class MoveAction : BaseAction
     [SerializeField] private float moveSpeed;
     [SerializeField] private float rotateSpeed;
 
-
-    private List<Tile> allRangeTile;
-    private List<Tile> validTile;
+    private List<Tile> validTiles;
 
     protected override void Awake()
     {
         base.Awake();
-        moveDistance = (int)unit.unitData.GetAbility(0).GetStat(0).value;
-        moveSpeed = unit.unitData.GetAbility(0).GetStat(1).value;
-        rotateSpeed = unit.unitData.GetAbility(0).GetStat(2).value;
-        allRangeTile = new();
-        validTile = new();
+        var abilityStats = unit.unitData.GetAbility(0);
+        moveDistance = (int)abilityStats.GetStat(0).value;
+        moveSpeed =  abilityStats.GetStat(1).value;
+        rotateSpeed = abilityStats.GetStat(2).value;
+        validTiles = new List<Tile>();
     }
 
     public override string GetActionName()
@@ -42,7 +40,7 @@ public class MoveAction : BaseAction
 
     IEnumerator MoveAlongPath(Path path)
     {
-        const float MIN_DISTANCE = 0.05f;
+        const float MinDistance = 0.05f;
 
         int currentStep = 0;
         Tile currentTile = path.tiles[0];
@@ -52,7 +50,7 @@ public class MoveAction : BaseAction
         {
             yield return null;
 
-            //Move towards the next step in the path until we are closer than MIN_DIST
+            // Move towards the next step in the path until we are closer than MinDistance
             Vector3 nextPosition = path.tiles[currentStep].transform.position;
             Vector3 moveDirection = (nextPosition - transform.position).normalized;
 
@@ -60,14 +58,15 @@ public class MoveAction : BaseAction
             MoveAndRotate(currentTile.transform.position, nextPosition, moveDirection, movementTime);
             animationTime += Time.deltaTime;
 
-            if (Vector3.Distance(transform.position, nextPosition) > MIN_DISTANCE)
+            if (Vector3.Distance(transform.position, nextPosition) > MinDistance)
                 continue;
 
-            //Min dist has been reached, look to next step in path
+            // Min distance has been reached, look to next step in path
             currentTile = path.tiles[currentStep];
             currentStep++;
             animationTime = 0f;
         }
+
         if (currentStep >= path.tiles.Length)
         {
             OnStopMoving?.Invoke(this, EventArgs.Empty);
@@ -86,34 +85,30 @@ public class MoveAction : BaseAction
 
     public override List<Tile> GetValidActionTilePositionList()
     {
-        return validTile;
+        return validTiles;
     }
 
     public override void ShowValidTile()
     {
-        validTile.Clear();
-        allRangeTile = Rangefinder.Instance.GetTilesInRange(unit.unitTile, moveDistance);
+        validTiles.Clear();
+        List<Tile> allRangeTiles = Rangefinder.Instance.GetTilesInRange(unit.unitTile, moveDistance);
 
-        foreach (Tile tile in allRangeTile)
+        foreach (Tile tile in allRangeTiles)
         {
             if (!tile.Occupied)
             {
                 tile.SetMaterial(Tile.TileVisualType.Green);
-                validTile.Add(tile);
+                validTiles.Add(tile);
             }
         }
-        allRangeTile.Clear();
     }
 
     public override void HideValidTile()
     {
-        if (validTile.Count != 0)
+        foreach (Tile tile in validTiles)
         {
-            foreach (Tile tile in validTile)
-            {
-                tile.SetMaterial(Tile.TileVisualType.Default);
-            }
+            tile.SetMaterial(Tile.TileVisualType.Default);
         }
-        validTile.Clear();
+        validTiles.Clear();
     }
 }

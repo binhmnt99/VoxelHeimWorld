@@ -37,6 +37,8 @@ public class Tile : MonoBehaviour
         Green
     }
 
+    public TileVisualType selectTileVisualType;
+
     [SerializeField] private List<TileVisualTypeMaterial> tileVisualTypeMaterialList;
     #endregion
 
@@ -77,6 +79,7 @@ public class Tile : MonoBehaviour
     public void SetMaterial(TileVisualType tileVisualType)
     {
         GetComponent<MeshRenderer>().sharedMaterial = GetTileVisualTypeMaterial(tileVisualType);
+        this.selectTileVisualType = tileVisualType;
     }
 
     public void DebugCostText()
