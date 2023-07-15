@@ -28,6 +28,7 @@ public class Unit : MonoBehaviour
     {
         healthComponent.Setup(unitData.GetStat(0).value);
         actionPointComponent.Setup((int)unitData.GetStat(1).value);
+        OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     public bool IsEnemy()
@@ -46,7 +47,7 @@ public class Unit : MonoBehaviour
         }
         return null;
     }
-
+    Vector3 offSet = new(0,0.1f,0);
     private void FindTileAtStart()
     {
         if (unitTile != null)
@@ -55,7 +56,7 @@ public class Unit : MonoBehaviour
             return;
         }
 
-        if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, 50f, GroundLayerMask))
+        if (Physics.Raycast(transform.position + offSet, -transform.up, out RaycastHit hit, 50f, GroundLayerMask))
         {
             FinalizePosition(hit.transform.GetComponent<Tile>());
             return;
