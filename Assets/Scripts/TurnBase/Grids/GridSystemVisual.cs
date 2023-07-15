@@ -108,7 +108,7 @@ namespace TurnBase
             }
         }
 
-        private void ShowGridPositionRange(GridPosition gridPosition, int range, GridVisualType gridVisualType)
+        public void ShowGridPositionRange(GridPosition gridPosition, int range, GridVisualType gridVisualType)
         {
             List<GridPosition> gridPositionList = new List<GridPosition>();
 
@@ -179,7 +179,6 @@ namespace TurnBase
 
         private void UpdateGridVisual()
         {
-            Debug.Log("UpdateGridVisual");
             HideAllGridPosition();
 
             Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
@@ -225,7 +224,6 @@ namespace TurnBase
 
         private void HexLevelGrid_OnAnyUnitMovedGridPosition(object sender, EventArgs e)
         {
-            Debug.Log("Update Grid");
             UpdateGridVisual();
         }
 

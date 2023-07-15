@@ -12,16 +12,14 @@ public class MoveAction : BaseAction
     [SerializeField] private float moveSpeed;
     [SerializeField] private float rotateSpeed;
 
-    private List<Tile> validTiles;
 
     protected override void Awake()
     {
         base.Awake();
         var abilityStats = unit.unitData.GetAbility(0);
         moveDistance = (int)abilityStats.GetStat(0).value;
-        moveSpeed =  abilityStats.GetStat(1).value;
+        moveSpeed = abilityStats.GetStat(1).value;
         rotateSpeed = abilityStats.GetStat(2).value;
-        validTiles = new List<Tile>();
     }
 
     public override string GetActionName()
@@ -110,5 +108,10 @@ public class MoveAction : BaseAction
             tile.SetMaterial(Tile.TileVisualType.Default);
         }
         validTiles.Clear();
+    }
+
+    public override int GetActionPointsCost()
+    {
+        return 1;
     }
 }

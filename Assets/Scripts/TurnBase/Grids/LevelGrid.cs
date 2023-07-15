@@ -38,13 +38,8 @@ namespace TurnBase
 
         public void AddUnitAtGridPosition(GridPosition gridPosition, Unit unit)
         {
-            Debug.Log("Add unit");
             GridObject gridObject = gridSystem.GetGridObject(gridPosition);
             gridObject.AddUnit(unit);
-            if (gridObject.GetUnit())
-            {
-                Debug.Log(gridObject.GetUnit());
-            }
             Pathfinding.Instance.SetIsWalkableGridPosition(gridPosition, false);
         }
 
@@ -56,19 +51,15 @@ namespace TurnBase
 
         public void RemoveUnitAtGridPosition(GridPosition gridPosition, Unit unit)
         {
-            Debug.Log("Remove unit");
+
             Pathfinding.Instance.SetIsWalkableGridPosition(gridPosition, true);
             GridObject gridObject = gridSystem.GetGridObject(gridPosition);
-            if (gridObject.GetUnit())
-            {
-                Debug.Log(gridObject.GetUnit());
-            }
             gridObject.RemoveUnit(unit);
         }
 
         public void UnitMovedGridPosition(Unit unit, GridPosition fromGridPosition, GridPosition toGridPosition)
         {
-            Debug.Log("UnitMovedGridPosition");
+
             RemoveUnitAtGridPosition(fromGridPosition, unit);
 
             AddUnitAtGridPosition(toGridPosition, unit);

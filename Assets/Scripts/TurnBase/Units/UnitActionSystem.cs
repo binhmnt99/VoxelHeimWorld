@@ -68,7 +68,7 @@ namespace TurnBase
 
                 SetBusy();
                 selectedAction.TakeAction(GridSystemVisual.Instance.GetGridPositionSelected(), ClearBusy);
-                Debug.Log("HandleAction");
+
                 OnActionStarted?.Invoke(this, EventArgs.Empty);
             }
         }

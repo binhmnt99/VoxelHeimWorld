@@ -70,7 +70,7 @@ namespace TurnBase
 
     private void UnitActionSystem_OnActionStarted(object sender, EventArgs e)
     {
-        Debug.Log("UpdateActionPoint");
+
         UpdateActionPoints();
     }
 

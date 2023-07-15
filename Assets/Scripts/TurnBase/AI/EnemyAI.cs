@@ -21,14 +21,13 @@ namespace TurnBase
         private Unit enemy;
         [SerializeField] private Unit target;
 
-        private bool isAggro;
+        //private bool isAggro;
         private bool isFlee;
 
         private List<Unit> targetList;
 
         private void Awake()
         {
-            isAggro = false;
             isFlee = false;
             state = EnemyState.Idle;
             enemy = this.GetComponent<Unit>();
@@ -44,10 +43,10 @@ namespace TurnBase
             {
                 targetList = UnitManager.Instance.GetFriendlyUnitList();
                 //If onDamaged, change current state to aggro
-                if (!isAggro)
-                {
-                    CheckAggro();
-                }
+                // if (!isAggro)
+                // {
+                //     CheckAggro();
+                // }
                 if (!isFlee)
                 {
                     //Health Below 30% => Flee
@@ -74,24 +73,57 @@ namespace TurnBase
                     break;
                 case EnemyState.Flee:
                     //If notOnDamaged , change current state to aggro
+                    EnemyFleeState();
                     break;
-                case EnemyState.Aggro:
-                    //If onAttackRange, change current state to attack
-                    //If outOfAttackRange, change current state to chase
-                    break;
+                    // case EnemyState.Aggro:
+                    //     //If onAttackRange, change current state to attack
+                    //     //If outOfAttackRange, change current state to chase
+
+                    //    break;
             }
+        }
+        ShootAction shootAction;
+        //List<GridPosition> inRangeShoot;
+        private void EnemyFleeState()
+        {
+            foreach (Unit target in targetList)
+            {
+                shootAction = target.GetAction<ShootAction>();
+                if (shootAction.IsValidActionGridPosition(enemy.GetGridPosition()))
+                {
+                    StartCoroutine(FleeActionHandle(target));
+                }
+            }
+        }
+
+        private IEnumerator FleeActionHandle(Unit target)
+        {
+            MoveAction moveAction = enemy.GetAction<MoveAction>();
+            List<GridPosition> validGridList = moveAction.GetValidActionGridPositionList();
+            GridPosition nextGridPosition = GetRandomValue(validGridList);
+
+            if (!moveAction.IsValidActionGridPosition(nextGridPosition))
+            {
+                yield break;
+            }
+            if (!enemy.TrySpendActionPointsToTakeAction(moveAction))
+            {
+                // Enemy cannot afford this action
+                yield break;
+            }
+            moveAction.TakeAction(nextGridPosition, OnMoveActionComplete);
+            yield return null;
         }
 
         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
         {
             if (!TurnSystem.Instance.IsPlayerTurn())
             {
-                if (state == EnemyState.Aggro)
+                if (state == EnemyState.Aggro || state == EnemyState.Flee)
                 {
                     return;
                 }
                 state = EnemyState.Idle;
-                isAggro = false;
             }
         }
 
@@ -139,23 +171,26 @@ namespace TurnBase
             yield return null;
         }
 
-        private void CheckAggro()
-        {
-            foreach (Unit targetUnit in targetList)
-            {
-                ShootAction shootAction = targetUnit.GetAction<ShootAction>();
-                shootAction.OnShoot += ShootAction_OnShoot;
-                shootAction.OnShoot -= ShootAction_OnShoot;
-            }
-        }
+        // private void CheckAggro()
+        // {
+
+        //     foreach (Unit targetUnit in targetList)
+        //     {
+        //         shootAction = targetUnit.GetAction<ShootAction>();
+        //     }
+        //     shootAction.OnShoot += ShootAction_OnShoot;
+        //     isAggro = true;
+
+        // }
 
         private void ShootAction_OnShoot(object sender, ShootAction.OnShootEventArgs e)
         {
             if (e.targetUnit == enemy)
             {
+                Debug.Log("Shoot");
                 target = e.shootingUnit;
                 state = EnemyState.Aggro;
-                isAggro = true;
+                shootAction.OnShoot -= ShootAction_OnShoot;
             }
         }
 

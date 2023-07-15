@@ -249,13 +249,13 @@ namespace TurnBase
 
         public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)
         {
-            Debug.Log("Has Path");
+
             return FindPath(startGridPosition, endGridPosition, out int pathLength) != null;
         }
 
         public int GetPathLength(GridPosition startGridPosition, GridPosition endGridPosition)
         {
-            Debug.Log("Get Path");
+
             FindPath(startGridPosition, endGridPosition, out int pathLength);
             return pathLength;
         }

@@ -12,9 +12,12 @@ public abstract class BaseAction : MonoBehaviour
     protected bool isActive;
     protected Action onActionComplete;
 
+    protected List<Tile> validTiles;
+
     protected virtual void Awake()
     {
         unit = GetComponent<Unit>();
+        validTiles = new List<Tile>();
     }
 
     public abstract string GetActionName();

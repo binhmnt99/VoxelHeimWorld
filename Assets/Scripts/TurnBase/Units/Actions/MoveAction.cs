@@ -88,7 +88,7 @@ namespace TurnBase
             }
             if (currentStep >= positionList.Count)
             {
-                Debug.Log("EndMove");
+
                 OnStopMoving?.Invoke(this, EventArgs.Empty);
                 transform.position = positionList[positionList.Count - 1];
                 ActionComplete();
@@ -99,13 +99,13 @@ namespace TurnBase
         {
             transform.position = Vector3.Lerp(origin, destination, duration);
             transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
-            Debug.Log("Move");
+
         }
 
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
-            Debug.Log("TakeAction");
+
             List<GridPosition> pathGridPositionList = Pathfinding.Instance.FindPath(unit.GetGridPosition(), gridPosition, out int pathLength);
 
             positionList = new List<Vector3>();
@@ -125,7 +125,6 @@ namespace TurnBase
         public override List<GridPosition> GetValidActionGridPositionList()
         {
             Profiler.BeginSample("GetValidActionGridPositionList");
-            Debug.Log("GetValidActionGridPositionList");
             validGridPositionList.Clear();
             GridPosition unitGridPosition = unit.GetGridPosition();
 

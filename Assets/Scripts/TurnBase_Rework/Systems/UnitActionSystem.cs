@@ -98,7 +98,7 @@ public class UnitActionSystem : Singleton<UnitActionSystem>
 
             SetBusy();
             Pathfinder.Instance.ResetPathfinder();
-            selectedAction.TakeAction(path, null, ClearBusy);
+            selectedAction.TakeAction(path, currentTile, ClearBusy);
 
             OnActionStarted?.Invoke(this, EventArgs.Empty);
         }
