@@ -5,6 +5,6 @@ Finite state machine EnemyAI.cs,
 Decision Tree EnemyAI.cs, 
 
 Members
-Mai Nguyen Thanh Binh Code A* pathfinding, FSM, 
-Tran Nguyen Hoang Huy Support FSM, 
-Tran Khanh Nam Support FSM, 
+Mai Nguyen Thanh Binh code A* pathfinding and FSM, 
+Tran Nguyen Hoang Huy support FSM, 
+Tran Khanh Nam support FSM, 
