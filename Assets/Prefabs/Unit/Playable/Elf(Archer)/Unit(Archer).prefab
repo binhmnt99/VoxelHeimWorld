@@ -72,7 +72,7 @@ Transform:
   - {fileID: 2230857306021195818}
   - {fileID: 2346872313499810733}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8767484688067269200
 BoxCollider:
@@ -839,6 +839,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2898207744987992055}
     m_Modifications:
+    - target: {fileID: 430752852785721485, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3760427445388320907, guid: 3506e4ae0d3e19e408924cf185ac06ec, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25

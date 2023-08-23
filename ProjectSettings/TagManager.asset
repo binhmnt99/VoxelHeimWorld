@@ -14,14 +14,10 @@ TagManager:
   - Post
   - Water
   - UI
-  - Ground
-  - Enemy
-  - Player
-  - MousePlane
-  - Unit
-  - Obstacles
-  - Land
-  - Tile
+  - ValidFloor
+  - ObstaclesFloor
+  - FriendlyUnit
+  - EnemyUnit
   - 
   - 
   - 
@@ -39,7 +35,11 @@ TagManager:
   - 
   - 
   - 
-  - HLOD
+  - 
+  - 
+  - 
+  - 
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0

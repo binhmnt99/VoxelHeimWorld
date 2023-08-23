@@ -429,7 +429,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &4548607233091185192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,7 +460,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionPointsText: {fileID: 7332705413417822087}
-  unit: {fileID: 0}
   healthBarImage: {fileID: 1267444446600191325}
   healthSystem: {fileID: 0}
 --- !u!114 &2453241500772636467
