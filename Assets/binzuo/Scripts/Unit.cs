@@ -8,6 +8,12 @@ namespace binzuo
         [SerializeField] private float moveSpeed = 4f;
         [SerializeField] private float rotateSpeed = 10f;
         [SerializeField] private float stopDistance = .1f;
+        private GridPosition gridPosition;
+
+        private void Start() {
+            gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+            LevelGrid.Instance.SetUnitAtGridPosition(gridPosition, this);
+        }
         private void Update()
         {
             if (Vector3.Distance(transform.position, targetPosition) > stopDistance)
@@ -21,6 +27,13 @@ namespace binzuo
             if (Input.GetMouseButtonDown(0))
             {
                 Move(MousePosition.GetPoint());
+            }
+
+            GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+            if (newGridPosition != gridPosition)
+            {
+                LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
+                gridPosition = newGridPosition;
             }
         }
         private void Move(Vector3 _targetPosition)

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace binzuo
@@ -29,9 +27,9 @@ namespace binzuo
             }
         }
 
-        public Vector3 GetWorldPosition(int x, int z)
+        public Vector3 GetWorldPosition(GridPosition gridPosition)
         {
-            return new Vector3(x, 0, z) * cellSize;
+            return new Vector3(gridPosition.x, 0, gridPosition.z) * cellSize;
         }
 
         public GridPosition GetGridPosition(Vector3 worldPosition)
@@ -44,14 +42,24 @@ namespace binzuo
 
         public void CreateDebugObjects(Transform debugPrefab)
         {
-            GameObject debugObject = new("DebugObject");
+            GameObject debugObjects = new("DebugObject");
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)
                 {
-                    GameObject.Instantiate(debugPrefab, GetWorldPosition(x,z), Quaternion.identity, debugObject.transform);
+                    GridPosition gridPosition = new GridPosition(x,z);
+                    Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity, debugObjects.transform);
+                    GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
+                    gridDebugObject.SetGridObject(GetGridObject(gridPosition));
+                    debugTransform.gameObject.isStatic = true;
                 }
             }
+            debugObjects.isStatic = true;
+        }
+
+        public GridObject GetGridObject(GridPosition gridPosition)
+        {
+            return gridObjectArray[gridPosition.x, gridPosition.z];
         }
     }
 }
