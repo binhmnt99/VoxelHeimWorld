@@ -6,10 +6,10 @@ namespace binzuo
         public int x;
         public int z;
 
-        public GridPosition(int x, int z)
+        public GridPosition(int _x, int _z)
         {
-            this.x = x;
-            this.z = z;
+            this.x = _x;
+            this.z = _z;
         }
 
         public override string ToString()
