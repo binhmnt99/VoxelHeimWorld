@@ -58,7 +58,10 @@ namespace binzuo
         {
             GridSystemVisual.Instance.HideAllGridVisual();
             Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-            GridSystemVisual.Instance.ShowAllGridVisual(selectedUnit.GetMoveAction().GetValidActionGridPositionList());
+            if (selectedUnit)
+            {
+                GridSystemVisual.Instance.ShowAllGridVisual(selectedUnit.GetMoveAction().GetValidActionGridPositionList());
+            }
         }
     }
 
