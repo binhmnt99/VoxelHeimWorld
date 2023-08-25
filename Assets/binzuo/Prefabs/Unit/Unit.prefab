@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6979220147246968276}
   - component: {fileID: 921865603801681423}
   - component: {fileID: 6701153711854377101}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 3914401156047943967}
   - component: {fileID: 3359252605899691269}
   - component: {fileID: 5655727183875481721}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8486358657717342500}
   - component: {fileID: 5840751251515034569}
-  m_Layer: 0
+  - component: {fileID: 5597363587643413289}
+  m_Layer: 8
   m_Name: Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,6 +257,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f08c4230a5587214a8e640e00f511860, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5597363587643413289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5837126736373878036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6225c9b9498ce734fa8ced3bc7d020db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   targetPosition: {x: 0, y: 0, z: 0}

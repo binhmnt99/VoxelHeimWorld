@@ -6,18 +6,17 @@ namespace binzuo
 {
     public class Testing : MonoBehaviour
     {
-        [SerializeField] private Transform gridDebugObjectPrefab;
-
-        private GridSystem gridSystem;
+        [SerializeField] private Unit unit;
 
         private void Start() {
-            gridSystem = new GridSystem(10,10,2.5f);
-            gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
-            print(new GridPosition(5,7));
+
         }
 
         private void Update() {
-            print(gridSystem.GetGridPosition(MousePosition.GetPoint()));
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                unit.GetMoveAction().GetValidActionGridPositionList();
+            }
         }
     }
 

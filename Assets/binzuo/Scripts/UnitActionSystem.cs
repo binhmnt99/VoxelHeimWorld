@@ -1,0 +1,46 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace binzuo
+{
+    public class UnitActionSystem : Singleton<UnitActionSystem>
+    {
+        [SerializeField] private LayerMask unitLayerMask;
+        [SerializeField] private Unit selectedUnit;
+
+        public event EventHandler OnSelectedUnitChanged;
+
+        private void Update() {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (TryHandleUnitSelection()) return;
+
+                selectedUnit.GetMoveAction().Move(MousePosition.GetPoint());
+            }
+
+        }
+
+        private bool TryHandleUnitSelection()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
+            {
+                if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
+                {
+                    SetSelectedUnit(unit);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void SetSelectedUnit(Unit unit)
+        {
+            selectedUnit = unit;
+
+            OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+}
