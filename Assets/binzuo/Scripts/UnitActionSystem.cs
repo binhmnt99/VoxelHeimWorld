@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace binzuo
@@ -31,7 +29,7 @@ namespace binzuo
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
             {
-                if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
+                if (raycastHit.transform.TryGetComponent(out Unit unit))
                 {
                     SetSelectedUnit(unit);
                     return true;
@@ -46,5 +44,8 @@ namespace binzuo
 
             OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        public Unit GetSelectedUnit() => selectedUnit;
+        
     }
 }

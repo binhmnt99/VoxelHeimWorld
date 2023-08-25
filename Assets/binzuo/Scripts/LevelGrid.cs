@@ -5,12 +5,15 @@ namespace binzuo
     public class LevelGrid : Singleton<LevelGrid>
     {
         [SerializeField] private Transform gridDebugObjectPrefab;
+        [SerializeField] private int width = 10;
+        [SerializeField] private int height = 10;
+        [SerializeField] private float cellSize = 2.5f;
 
         private GridSystem gridSystem;
         protected override void Awake()
         {
             base.Awake();
-            gridSystem = new GridSystem(10, 10, 2.5f);
+            gridSystem = new GridSystem(width, height, cellSize);
             gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
         }
 
@@ -43,6 +46,10 @@ namespace binzuo
         public Vector3 GetWorldPosition(GridPosition gridPosition) => gridSystem.GetWorldPosition(gridPosition);
 
         public bool IsValidGridPosition(GridPosition gridPosition) => gridSystem.IsValidGridPosition(gridPosition);
+
+        public int GetWidth() => gridSystem.GetWidth();
+
+        public int GetHeight() => gridSystem.GetHeight();
 
         public bool HasAnyUnitOnGridPosition(GridPosition gridPosition)
         {

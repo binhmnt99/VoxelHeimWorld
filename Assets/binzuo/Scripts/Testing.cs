@@ -15,7 +15,8 @@ namespace binzuo
         private void Update() {
             if (Input.GetKeyDown(KeyCode.T))
             {
-                unit.GetMoveAction().GetValidActionGridPositionList();
+                GridSystemVisual.Instance.HideAllGridVisual();
+                GridSystemVisual.Instance.ShowAllGridVisual(unit.GetMoveAction().GetValidActionGridPositionList());
             }
         }
     }
