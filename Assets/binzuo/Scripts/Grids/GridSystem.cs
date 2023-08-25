@@ -27,18 +27,13 @@ namespace binzuo
             }
         }
 
-        public Vector3 GetWorldPosition(GridPosition gridPosition)
-        {
-            return new Vector3(gridPosition.x, 0, gridPosition.z) * cellSize;
-        }
+        public Vector3 GetWorldPosition(GridPosition gridPosition) => new Vector3(gridPosition.x, 0, gridPosition.z) * cellSize;
 
-        public GridPosition GetGridPosition(Vector3 worldPosition)
-        {
-            return new GridPosition(
+        public GridPosition GetGridPosition(Vector3 worldPosition) => new GridPosition(
                 Mathf.RoundToInt(worldPosition.x/ cellSize),
                 Mathf.RoundToInt(worldPosition.z/cellSize)
             );
-        }
+        
 
         public void CreateDebugObjects(Transform debugPrefab)
         {
@@ -57,9 +52,10 @@ namespace binzuo
             debugObjects.isStatic = true;
         }
 
-        public GridObject GetGridObject(GridPosition gridPosition)
-        {
-            return gridObjectArray[gridPosition.x, gridPosition.z];
-        }
+        public GridObject GetGridObject(GridPosition gridPosition) => gridObjectArray[gridPosition.x, gridPosition.z];
+        
+
+        public bool IsValidGridPosition(GridPosition gridPosition) => gridPosition.x >= 0 &&  gridPosition.z >= 0 && gridPosition.x < width && gridPosition.z < height;
+
     }
 }

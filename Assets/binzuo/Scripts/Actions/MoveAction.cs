@@ -29,20 +29,19 @@ namespace binzuo
 
             }
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                Move(MousePosition.GetPoint());
-            }
         }
 
-        public void Move(Vector3 _targetPosition)
+        public void Move(GridPosition gridPosition)
         {
-            this.targetPosition = _targetPosition;
+            this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
         }
 
+        public bool IsValidAvtionGridPosition(GridPosition gridPosition) => GetValidActionGridPositionList().Contains(gridPosition);
+
+        List<GridPosition> validGridPositionList = new();
         public List<GridPosition> GetValidActionGridPositionList()
         {
-            List<GridPosition> validGridPositionList = new List<GridPosition>();
+            validGridPositionList.Clear();
             GridPosition unitGridPosition = unit.GetGridPosition();
             for (int x = -maxMoveDistance; x <= maxMoveDistance; x++)
             {
@@ -50,7 +49,14 @@ namespace binzuo
                 {
                     GridPosition offsetGridPosition = new GridPosition(x,z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
-                    print(testGridPosition);
+
+                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition)) continue; // inside grid position range
+
+                    if(unitGridPosition == testGridPosition) continue; // same grid position where unit is already at
+
+                    if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition)) continue; // grid position already occupied with another unit;
+                    
+                    validGridPositionList.Add(testGridPosition);
                 }
             }
             return validGridPositionList;

@@ -17,7 +17,11 @@ namespace binzuo
             {
                 if (TryHandleUnitSelection()) return;
 
-                selectedUnit.GetMoveAction().Move(MousePosition.GetPoint());
+                GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MousePosition.GetPoint());
+                if (selectedUnit.GetMoveAction().IsValidAvtionGridPosition(mouseGridPosition))
+                {
+                    selectedUnit.GetMoveAction().Move(mouseGridPosition);
+                }
             }
 
         }
