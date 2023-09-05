@@ -1,30 +1,39 @@
+using System.Collections.Generic;
+
 namespace binzuo
 {
     public class GridObject
     {
         private GridSystem gridSystem;
         private GridPosition gridPosition;
-        private Unit unit;
-        private bool isOccupied;
+        private List<Unit> unitList;
 
-        public GridObject(GridSystem _gridSystem, GridPosition _gridPosition)
+        public GridObject(GridSystem gridSystem, GridPosition gridPosition)
         {
-            this.gridSystem = _gridSystem;
-            this.gridPosition = _gridPosition;
+            this.gridSystem = gridSystem;
+            this.gridPosition = gridPosition;
+            unitList = new List<Unit>();
         }
 
-        public override string ToString() => (isOccupied) ? unit.ToString() : gridPosition.ToString();
+        public override string ToString()
+        {
+            string unitString = "";
+            foreach (Unit unit in unitList)
+            {
+                unitString += unit + "\n";
+            }
+
+            return gridPosition.ToString() + "\n" + unitString;
+        }
+
+        public void AddUnit(Unit unit) => unitList.Add(unit);
+
+        public void RemoveUnit(Unit unit) => unitList.Remove(unit);
         
+        public List<Unit> GetUnitList() => unitList;
 
-        public void SetUnit(Unit _unit)
-        {
-            this.unit = _unit;
-            isOccupied = (unit != null) ? true : false;
-        }
+        public bool IsOccupied() => unitList.Count > 0;
 
-        public Unit GetUnit() => unit;
-
-        public bool IsOccupiedObject() => isOccupied;
     }
 }
 

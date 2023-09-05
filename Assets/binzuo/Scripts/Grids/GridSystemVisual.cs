@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,25 +6,27 @@ namespace binzuo
     public class GridSystemVisual : Singleton<GridSystemVisual>
     {
         [SerializeField] private Transform gridSystemVisualSinglePrefab;
-        private int width;
-        private int height;
+
 
         private GridSystemVisualSingle[,] gridSystemVisualSingleArray;
 
         private void Start()
         {
-            width = LevelGrid.Instance.GetWidth();
-            height = LevelGrid.Instance.GetHeight();
-            gridSystemVisualSingleArray = new GridSystemVisualSingle[width, height];
-            for (int x = 0; x < width; x++)
+            gridSystemVisualSingleArray = new GridSystemVisualSingle[
+                LevelGrid.Instance.GetWidth(),
+                LevelGrid.Instance.GetHeight()
+            ];
+
+            for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++)
             {
-                for (int z = 0; z < height; z++)
+                for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
                     GridPosition gridPosition = new GridPosition(x, z);
-                    Vector3 worldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
-                    Transform gridSystemVisualTransform = Instantiate(gridSystemVisualSinglePrefab, worldPosition, Quaternion.identity, transform);
 
-                    gridSystemVisualSingleArray[x, z] = gridSystemVisualTransform.GetComponent<GridSystemVisualSingle>();
+                    Transform gridSystemVisualSingleTransform =
+                        Instantiate(gridSystemVisualSinglePrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, transform);
+
+                    gridSystemVisualSingleArray[x, z] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
                 }
             }
         }
@@ -35,18 +36,18 @@ namespace binzuo
             UpdateGridVisual();
         }
 
-        public void HideAllGridVisual()
+        public void HideAllGridPosition()
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++)
             {
-                for (int z = 0; z < height; z++)
+                for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
                     gridSystemVisualSingleArray[x, z].Hide();
                 }
             }
         }
 
-        public void ShowAllGridVisual(List<GridPosition> gridPositionList)
+        public void ShowGridPositionList(List<GridPosition> gridPositionList)
         {
             foreach (GridPosition gridPosition in gridPositionList)
             {
@@ -54,15 +55,16 @@ namespace binzuo
             }
         }
 
-        public void UpdateGridVisual()
+        private void UpdateGridVisual()
         {
-            GridSystemVisual.Instance.HideAllGridVisual();
-            Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-            if (selectedUnit)
-            {
-                GridSystemVisual.Instance.ShowAllGridVisual(selectedUnit.GetMoveAction().GetValidActionGridPositionList());
-            }
+            HideAllGridPosition();
+
+            BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
+
+            ShowGridPositionList(
+                selectedAction.GetValidActionGridPositionList());
         }
+
     }
 
 }

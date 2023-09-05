@@ -9,11 +9,11 @@ namespace binzuo
         private float cellSize;
         private GridObject[,] gridObjectArray;
 
-        public GridSystem(int _width, int _height, float _cellSize)
+        public GridSystem(int width, int height, float cellSize)
         {
-            this.width = _width;
-            this.height = _height;
-            this.cellSize = _cellSize;
+            this.width = width;
+            this.height = height;
+            this.cellSize = cellSize;
 
             gridObjectArray = new GridObject[width, height];
 
@@ -29,11 +29,7 @@ namespace binzuo
 
         public Vector3 GetWorldPosition(GridPosition gridPosition) => new Vector3(gridPosition.x, 0, gridPosition.z) * cellSize;
 
-        public GridPosition GetGridPosition(Vector3 worldPosition) => new GridPosition(
-                Mathf.RoundToInt(worldPosition.x / cellSize),
-                Mathf.RoundToInt(worldPosition.z / cellSize)
-            );
-
+        public GridPosition GetGridPosition(Vector3 worldPosition) => new GridPosition(Mathf.RoundToInt(worldPosition.x / cellSize), Mathf.RoundToInt(worldPosition.z / cellSize));
 
         public void CreateDebugObjects(Transform debugPrefab)
         {
@@ -42,10 +38,10 @@ namespace binzuo
                 for (int z = 0; z < height; z++)
                 {
                     GridPosition gridPosition = new GridPosition(x, z);
+
                     Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity, LevelGrid.Instance.transform);
                     GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
                     gridDebugObject.SetGridObject(GetGridObject(gridPosition));
-                    debugTransform.gameObject.isStatic = true;
                 }
             }
         }
@@ -54,8 +50,9 @@ namespace binzuo
 
         public bool IsValidGridPosition(GridPosition gridPosition) => gridPosition.x >= 0 && gridPosition.z >= 0 && gridPosition.x < width && gridPosition.z < height;
 
-        public int GetWidth() => this.width;
+        public int GetWidth() => width;
 
-        public int GetHeight() => this.height;
+        public int GetHeight() => height;
+
     }
 }
