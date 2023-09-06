@@ -9,6 +9,7 @@ namespace binzuo
     {
         [SerializeField] private Transform actionButtonPrefab;
         [SerializeField] private Transform actionButtonContainerTransform;
+        [SerializeField] private Transform statsContainerTransform;
         [SerializeField] private TextMeshProUGUI actionPointsText;
         private List<ActionButtonUI> actionButtonUIList;
 
@@ -22,10 +23,30 @@ namespace binzuo
             UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
             UnitActionSystem.Instance.OnActingChanged += UnitActionSystem_OnActingChanged;
             UnitActionSystem.Instance.OnActionStarted += UnitActionSystem_OnActionStarted;
+            TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
+            Unit.OnAnyActionPointChanged += Unit_OnAnyActionPointChanged;
 
             UpdateActionPoints();
             CreateUnitActionButtons();
             UpdateSelectedVisual();
+        }
+
+        private void Unit_OnAnyActionPointChanged(object sender, EventArgs e)
+        {
+            UpdateActionPoints();
+        }
+
+        private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
+        {
+            UpdateActionPoints();
+            if (TurnSystem.Instance.IsPlayerTurn())
+            {
+                ShowStats();
+            }
+            else
+            {
+                HideStats();
+            }
         }
 
         private void UnitActionSystem_OnActionStarted(object sender, EventArgs e)
@@ -37,22 +58,32 @@ namespace binzuo
         {
             if (acting)
             {
-                Hide();
+                HideActionButton();
             }
             else
             {
-                Show();
+                ShowActionButton();
             }
         }
 
-        private void Show()
+        private void ShowActionButton()
         {
             actionButtonContainerTransform.gameObject.SetActive(true);
         }
 
-        private void Hide()
+        private void HideActionButton()
         {
             actionButtonContainerTransform.gameObject.SetActive(false);
+        }
+
+        private void ShowStats()
+        {
+            statsContainerTransform.gameObject.SetActive(true);
+        }
+
+        private void HideStats()
+        {
+            statsContainerTransform.gameObject.SetActive(false);
         }
 
         private void UnitActionSystem_OnSelectedActionChanged(object sender, EventArgs e)

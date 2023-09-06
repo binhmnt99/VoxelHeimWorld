@@ -1,16 +1,14 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace binzuo
 {
-    public class ActionPoint : MonoBehaviour
+    public class Speed : MonoBehaviour
     {
         [SerializeField] private int defaultValue;
         [SerializeField] private Stats maxValue;
         [SerializeField] private int currentValue;
-
 
         private void Awake()
         {
@@ -22,8 +20,6 @@ namespace binzuo
 
         public int GetCurrentValue() => currentValue;
 
-        public void ResetCurrentValue() => currentValue = (int)maxValue.baseValue;
-
         public void CurrentValue(int amount)
         {
             currentValue -= amount;
@@ -33,4 +29,5 @@ namespace binzuo
             }
         }
     }
+
 }

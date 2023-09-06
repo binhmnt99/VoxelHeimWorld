@@ -28,6 +28,11 @@ namespace binzuo
         {
             if (acting) return;
 
+            if (!TurnSystem.Instance.IsPlayerTurn())
+            {
+                return;
+            }
+
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
             if (TryHandleUnitSelection()) return;
@@ -56,6 +61,10 @@ namespace binzuo
                 {
                     if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
                     {
+                        if (unit.IsEnemy())
+                        {
+                            return false;
+                        }
                         if (unit == selectedUnit)
                         {
                             return false;

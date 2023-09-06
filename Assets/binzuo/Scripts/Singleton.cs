@@ -42,9 +42,6 @@ namespace binzuo
             {
                 Destroy(this);
             }
-        }
-
-
-        
+        }   
     }
 }
