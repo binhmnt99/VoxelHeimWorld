@@ -1247,6 +1247,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4844316182991342303, guid: 2da3dcc22749e7f4280737786d898334, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4844785881582304729, guid: 2da3dcc22749e7f4280737786d898334, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1397,7 +1401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4845276930943762971, guid: 2da3dcc22749e7f4280737786d898334, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000030517578
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4845637959249703711, guid: 2da3dcc22749e7f4280737786d898334, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3174,8 +3178,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c79877e0e3a9e69478c4088d363cfe94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLevelPoint: 5
-  currentLevel: 1
+  defaultValue: 0
+  value: 0
   unitLevels:
   - levelPoint: 1
     experiencePoint: 10
@@ -3650,6 +3654,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3218172943527734534, guid: 39215465b1f4d3741b8cd24470b66915, type: 3}
+      propertyPath: defaultValue
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5837126736373878036, guid: 39215465b1f4d3741b8cd24470b66915, type: 3}
       propertyPath: m_Name
       value: Unit
