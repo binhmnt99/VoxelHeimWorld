@@ -5,32 +5,28 @@ using UnityEngine;
 
 namespace binzuo
 {
-    public class ActionPoint : MonoBehaviour
+    public class ActionPoint : BaseStats
     {
-        [SerializeField] private int defaultValue;
-        [SerializeField] private Stats maxValue;
-        [SerializeField] private int currentValue;
 
-
-        private void Awake()
+        protected override void Awake()
         {
-            maxValue = new Stats(defaultValue);
-            currentValue = (int)maxValue.baseValue;
+            base.Awake();
+            StatsModifier flat = new StatsModifier(defaultValue, StatsModifierType.Flat, this);
+            maxValue.AddModifier(flat);
+            value = maxValue.value;
+        }
+        public override void CalculateValue(float _value)
+        {
+            value -= _value;
+            if (value <= 0)
+            {
+                value = 0;
+            }
         }
 
-        public int GetMaxValue() => (int)maxValue.baseValue;
-
-        public int GetCurrentValue() => currentValue;
-
-        public void ResetCurrentValue() => currentValue = (int)maxValue.baseValue;
-
-        public void CurrentValue(int amount)
+        public override void ResetValue()
         {
-            currentValue -= amount;
-            if (currentValue <= 0)
-            {
-                currentValue = 0;
-            }
+            value = maxValue.value;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace binzuo
     [Serializable]
     public class Stats
     {
-        public float baseValue;
+        private float baseValue;
 
         public virtual float value
         {

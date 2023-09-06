@@ -32,6 +32,15 @@ namespace binzuo
         
         public List<Unit> GetUnitList() => unitList;
 
+        public Unit GetUnit()
+        {
+            if (IsOccupied())
+            {
+                return unitList[0];
+            }
+            return null;
+        }
+
         public bool IsOccupied() => unitList.Count > 0;
 
     }

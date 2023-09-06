@@ -1,3 +1,4 @@
+using System.Globalization;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,18 @@ namespace binzuo
         public virtual int GetActionPointCost()
         {
             return 1;
+        }
+
+        public void ActionStart(Action onActionComplete)
+        {
+            isActive = true;
+            this.onActionComplete = onActionComplete;
+        }
+
+        public void ActionComplete()
+        {
+            isActive = false;
+            onActionComplete();
         }
     }
 }

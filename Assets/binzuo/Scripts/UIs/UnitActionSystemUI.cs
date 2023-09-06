@@ -126,7 +126,7 @@ namespace binzuo
         private void UpdateActionPoints()
         {
             Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-            actionPointsText.text = selectedUnit.GetActionPoints().ToString();
+            actionPointsText.text = selectedUnit.GetStats<ActionPoint>().GetValue().ToString();
         }
     }
 

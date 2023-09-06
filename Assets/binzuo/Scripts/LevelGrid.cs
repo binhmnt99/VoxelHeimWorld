@@ -24,10 +24,10 @@ namespace binzuo
             gridObject.AddUnit(unit);
         }
 
-        public List<Unit> GetUnitAtGridPosition(GridPosition gridPosition)
+        public Unit GetUnitAtGridPosition(GridPosition gridPosition)
         {
             GridObject gridObject = gridSystem.GetGridObject(gridPosition);
-            return gridObject.GetUnitList();
+            return gridObject.GetUnit();
         }
 
         public void RemoveUnitAtGridPosition(GridPosition gridPosition, Unit unit)

@@ -11,15 +11,14 @@ namespace binzuo
         private MoveAction moveAction;
         private BaseAction[] baseActionArray;
 
-        private ActionPoint actionPoint;
+        private BaseStats[] baseStatsArray;
         public static event EventHandler OnAnyActionPointChanged;
 
         private void Awake()
         {
             moveAction = GetComponent<MoveAction>();
+            baseStatsArray = GetComponents<BaseStats>();
             baseActionArray = GetComponents<BaseAction>();
-
-            actionPoint = GetComponent<ActionPoint>();
         }
 
         private void Start()
@@ -27,6 +26,19 @@ namespace binzuo
             gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
             LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
             TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
+            GetStats<HitPoint>().OnDead += HitPoint_OnDead;
+            GetStats<ExperiencePoint>().OnLevelUp += ExperiencePoint_OnLevelUp;
+        }
+
+        private void ExperiencePoint_OnLevelUp(object sender, EventArgs e)
+        {
+            GetStats<LevelPoint>().LevelUp();
+        }
+
+        private void HitPoint_OnDead(object sender, EventArgs e)
+        {
+            LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
+            Destroy(gameObject);
         }
 
         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
@@ -34,7 +46,7 @@ namespace binzuo
             if (IsEnemy() && !TurnSystem.Instance.IsPlayerTurn() ||
                 !IsEnemy() && TurnSystem.Instance.IsPlayerTurn())
             {
-                actionPoint.ResetCurrentValue();
+                GetStats<ActionPoint>().ResetValue();
                 OnAnyActionPointChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -60,6 +72,8 @@ namespace binzuo
 
         public GridPosition GetGridPosition() => gridPosition;
 
+        public Vector3 GetWorldPosition() => transform.position;
+
         public BaseAction[] GetBaseActions() => baseActionArray;
 
         public bool TrySpendActionPointToTakeAction(BaseAction baseAction)
@@ -74,7 +88,7 @@ namespace binzuo
 
         public bool CanSpendActionPointToTakeAction(BaseAction baseAction)
         {
-            if (actionPoint.GetCurrentValue() >= baseAction.GetActionPointCost())
+            if (GetStats<ActionPoint>().GetValue() >= baseAction.GetActionPointCost())
             {
                 return true;
             }
@@ -83,13 +97,25 @@ namespace binzuo
 
         private void SpendActionPoint(int amount)
         {
-            actionPoint.CurrentValue(amount);
+            GetStats<ActionPoint>().CalculateValue(amount);
             OnAnyActionPointChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public int GetActionPoints()
+        public void TakeDamage(float amount)
         {
-            return actionPoint.GetCurrentValue();
+            GetStats<HitPoint>().CalculateValue(amount);
+        }
+
+        public T GetStats<T>() where T : BaseStats
+        {
+            foreach (BaseStats baseStat in baseStatsArray)
+            {
+                if (baseStat is T)
+                {
+                    return (T)baseStat;
+                }
+            }
+            return null;
         }
     }
 }

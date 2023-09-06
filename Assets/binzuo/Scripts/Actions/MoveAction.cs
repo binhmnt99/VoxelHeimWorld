@@ -21,7 +21,7 @@ namespace binzuo
 
         private void Update()
         {
-            if(!isActive) return;
+            if (!isActive) return;
             Vector3 moveDirection = (targetPosition - transform.position).normalized;
             if (Vector3.Distance(transform.position, targetPosition) > stopDistance)
             {
@@ -32,17 +32,15 @@ namespace binzuo
             else
             {
                 transform.position = targetPosition;
-                isActive = false;
-                this.onActionComplete();
+                ActionComplete();
             }
 
         }
 
         public override void TakeAction(GridPosition gridPosition, Action action)
         {
-            this.onActionComplete = action;
             this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
-            isActive = true;
+            ActionStart(action);
         }
 
         List<GridPosition> validGridPositionList = new();
@@ -62,6 +60,12 @@ namespace binzuo
                     if (unitGridPosition == testGridPosition) continue; // same grid position where unit is already at
 
                     if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition)) continue; // grid position already occupied with another unit;
+
+                    int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
+                    if (testDistance > maxMoveDistance)
+                    {
+                        continue;
+                    }
 
                     validGridPositionList.Add(testGridPosition);
                 }
