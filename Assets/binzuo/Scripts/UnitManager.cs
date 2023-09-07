@@ -10,8 +10,8 @@ namespace binzuo
     public class UnitManager : Singleton<UnitManager>
     {
         private List<Unit> unitList;
-        private List<Unit> friendlyUnitList;
-        private List<Unit> enemyUnitList;
+        [SerializeField] private List<Unit> friendlyUnitList;
+        [SerializeField] private List<Unit> enemyUnitList;
 
         protected override void Awake()
         {
@@ -23,8 +23,8 @@ namespace binzuo
 
         private void Start()
         {
-            //Unit.OnAnyUnitSpawned += Unit_OnAnyUnitSpawned;
-            //Unit.OnAnyUnitDead += Unit_OnAnyUnitDead;
+            Unit.OnAnyUnitSpawned += Unit_OnAnyUnitSpawned;
+            Unit.OnAnyUnitDead += Unit_OnAnyUnitDead;
         }
 
         private void Unit_OnAnyUnitDead(object sender, EventArgs e)

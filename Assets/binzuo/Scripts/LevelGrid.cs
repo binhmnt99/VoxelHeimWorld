@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ namespace binzuo
 {
     public class LevelGrid : Singleton<LevelGrid>
     {
+        public event EventHandler OnAnyUnitMoveGridPosition;
         [SerializeField] private Transform gridDebugObjectPrefab;
         [SerializeField] private int width = 10;
         [SerializeField] private int height = 10;
@@ -41,6 +43,8 @@ namespace binzuo
             RemoveUnitAtGridPosition(fromGridPosition, unit);
 
             AddUnitAtGridPosition(toGridPosition, unit);
+
+            OnAnyUnitMoveGridPosition?.Invoke(this, EventArgs.Empty);
         }
 
         public GridPosition GetGridPosition(Vector3 worldPosition) => gridSystem.GetGridPosition(worldPosition);

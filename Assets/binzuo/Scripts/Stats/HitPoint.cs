@@ -7,6 +7,7 @@ namespace binzuo
 {
     public class HitPoint : BaseStats
     {
+        public event EventHandler OnDamage;
         public event EventHandler OnDead;
 
         protected override void Awake()
@@ -24,6 +25,7 @@ namespace binzuo
             {
                 value = 0;
             }
+            OnDamage?.Invoke(this,EventArgs.Empty);
             if (value == 0)
             {
                 Die();
@@ -38,6 +40,11 @@ namespace binzuo
         public override void ResetValue()
         {
             value = maxValue.value;
+        }
+
+        public float GetHitPointNormalized()
+        {
+            return value/maxValue.value;
         }
     }
 

@@ -13,6 +13,8 @@ namespace binzuo
 
         private BaseStats[] baseStatsArray;
         public static event EventHandler OnAnyActionPointChanged;
+        public static event EventHandler OnAnyUnitSpawned;
+        public static event EventHandler OnAnyUnitDead;
 
         private void Awake()
         {
@@ -28,6 +30,8 @@ namespace binzuo
             TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
             GetStats<HitPoint>().OnDead += HitPoint_OnDead;
             GetStats<ExperiencePoint>().OnLevelUp += ExperiencePoint_OnLevelUp;
+
+            OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
         }
 
         private void ExperiencePoint_OnLevelUp(object sender, EventArgs e)
@@ -39,6 +43,7 @@ namespace binzuo
         {
             LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
             Destroy(gameObject);
+            OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
         }
 
         private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
@@ -56,8 +61,9 @@ namespace binzuo
             GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
             if (newGridPosition != gridPosition)
             {
-                LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
+                GridPosition oldGridPosition = gridPosition;
                 gridPosition = newGridPosition;
+                LevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
             }
         }
 
@@ -113,6 +119,18 @@ namespace binzuo
                 if (baseStat is T)
                 {
                     return (T)baseStat;
+                }
+            }
+            return null;
+        }
+
+        public T GetAction<T>() where T : BaseAction
+        {
+            foreach (BaseAction baseAction in baseActionArray)
+            {
+                if (baseAction is T)
+                {
+                    return (T)baseAction;
                 }
             }
             return null;
