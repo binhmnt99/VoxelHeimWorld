@@ -58,7 +58,11 @@ namespace binzuo
 
         private void Update()
         {
-            GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+
+        }
+
+        public void FinalizePosition(GridPosition newGridPosition)
+        {
             if (newGridPosition != gridPosition)
             {
                 GridPosition oldGridPosition = gridPosition;
@@ -86,7 +90,7 @@ namespace binzuo
         {
             if (CanSpendActionPointToTakeAction(baseAction))
             {
-                SpendActionPoint(baseAction.GetActionPointCost());
+                SpendActionPoint(baseAction.GetActionPointsCost());
                 return true;
             }
             return false;
@@ -94,7 +98,7 @@ namespace binzuo
 
         public bool CanSpendActionPointToTakeAction(BaseAction baseAction)
         {
-            if (GetStats<ActionPoint>().GetValue() >= baseAction.GetActionPointCost())
+            if (GetStats<ActionPoint>().GetValue() >= baseAction.GetActionPointsCost())
             {
                 return true;
             }

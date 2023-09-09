@@ -554,7 +554,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6225c9b9498ce734fa8ced3bc7d020db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetPosition: {x: 0, y: 0, z: 0}
   moveSpeed: 4
   rotateSpeed: 10
   stopDistance: 0.1
@@ -571,6 +570,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2955389fb74d18348b415369ef9fee18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxShootDistance: 7
+  obstaclesLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!65 &1520898836437461412
 BoxCollider:
   m_ObjectHideFlags: 0

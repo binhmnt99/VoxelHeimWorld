@@ -13,7 +13,7 @@ namespace binzuo
                 GridPosition mouseGrid = LevelGrid.Instance.GetGridPosition(MousePosition.GetPoint());
                 GridPosition startGrid = new GridPosition(0,0);
 
-                List<GridPosition> gridPositionList = Pathfinding.Instance.FindPath(startGrid,mouseGrid);
+                List<GridPosition> gridPositionList = Pathfinding.Instance.FindPath(startGrid,mouseGrid, out int pathLength);
 
                 for (int i = 0; i < gridPositionList.Count - 1; i++)
                 {

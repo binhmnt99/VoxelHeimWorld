@@ -17,7 +17,7 @@ namespace binzuo
         {
             base.Awake();
             gridSystem = new GridSystem<GridObject>(width, height, cellSize, (GridSystem<GridObject> gridSystem, GridPosition gridPosition) => new(gridSystem, gridPosition));
-            //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+            gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
         }
 
         private void Start() {

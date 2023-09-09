@@ -30,7 +30,7 @@ namespace binzuo
         private void Unit_OnAnyUnitDead(object sender, EventArgs e)
         {
             Unit unit = sender as Unit;
-            //Pathfinding.Instance.SetWalkableGridPosition(unit.GetGridPosition(), true);
+            Pathfinding.Instance.SetWalkableGridPosition(unit.GetGridPosition(), true);
             unitList.Remove(unit);
             if (unit.IsEnemy())
             {
@@ -49,7 +49,7 @@ namespace binzuo
         private void Unit_OnAnyUnitSpawned(object sender, EventArgs e)
         {
             Unit unit = sender as Unit;
-            //Pathfinding.Instance.SetWalkableGridPosition(unit.GetGridPosition(), false);
+            Pathfinding.Instance.SetWalkableGridPosition(unit.GetGridPosition(), false);
             unitList.Add(unit);
             if (unit.IsEnemy())
             {

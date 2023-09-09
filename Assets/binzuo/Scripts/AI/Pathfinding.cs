@@ -11,6 +11,7 @@ namespace binzuo
         private const int MOVE_DIAGONAL_COST = 14;
 
         [SerializeField] private Transform gridDebugObjectPrefab;
+        [SerializeField] private LayerMask obstaclesLayerMask;
 
 
         private int width;
@@ -32,15 +33,26 @@ namespace binzuo
             gridSystem = new GridSystem<PathNode>(width, height, cellSize,
                 (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
 
-            gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+            //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
-            GetNode(1,0).SetIsWalkable(false);
-            GetNode(1,1).SetIsWalkable(false);
+            for (int x = 0; x < width; x++)
+            {
+                for (int z = 0; z < height; z++)
+                {
+                    GridPosition gridPosition = new GridPosition(x, z);
+                    Vector3 worldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+                    float raycastOffsetDistance = 5f;
+                    if (Physics.Raycast(worldPosition + Vector3.down * raycastOffsetDistance, Vector3.up, raycastOffsetDistance * 2, obstaclesLayerMask))
+                    {
+                        GetNode(x, z).SetIsWalkable(false);
+                    }
+                }
+            }
         }
 
         List<PathNode> openList = new List<PathNode>();
         List<PathNode> closedList = new List<PathNode>();
-        public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
+        public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition, out int pathLength)
         {
             openList.Clear();
             closedList.Clear();
@@ -74,6 +86,7 @@ namespace binzuo
                 if (currentNode == endNode)
                 {
                     // Reached final node
+                    pathLength = endNode.GetFCost();
                     return CalculatePath(endNode);
                 }
 
@@ -112,6 +125,7 @@ namespace binzuo
             }
 
             // No path found
+            pathLength = 0;
             return null;
         }
 
@@ -197,6 +211,28 @@ namespace binzuo
 
             return gridPositionList;
         }
+
+        public void SetWalkableGridPosition(GridPosition gridPosition, bool isWalkable)
+        {
+            gridSystem.GetGridObject(gridPosition).SetIsWalkable(isWalkable);
+        }
+
+        public bool IsWalkableGridPosition(GridPosition gridPosition)
+        {
+            return gridSystem.GetGridObject(gridPosition).IsWalkable();
+        }
+
+        public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)
+        {
+            return FindPath(startGridPosition, endGridPosition, out int pathLength) != null;
+        }
+
+        public int GetPathLength(GridPosition startGridPosition, GridPosition endGridPosition)
+        {
+            FindPath(startGridPosition, endGridPosition, out int pathLength);
+            return pathLength;
+        }
+
 
     }
 

@@ -85,6 +85,7 @@ namespace binzuo
 
                 if (!selectedAction.IsValidActionGridPosition(mouseGridPosition)) return;
 
+
                 if (!selectedUnit.TrySpendActionPointToTakeAction(selectedAction)) return;
 
                 SetActing();

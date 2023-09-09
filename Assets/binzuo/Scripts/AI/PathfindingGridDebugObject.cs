@@ -10,6 +10,7 @@ namespace binzuo
         [SerializeField] private TextMeshPro gCost;
         [SerializeField] private TextMeshPro hCost;
         [SerializeField] private TextMeshPro fCost;
+        [SerializeField] private SpriteRenderer isWalkableSpriteRenderer;
 
         private PathNode pathNode;
 
@@ -24,6 +25,7 @@ namespace binzuo
             gCost.text = pathNode.GetGCost().ToString();
             hCost.text = pathNode.GetHCost().ToString();
             fCost.text = pathNode.GetFCost().ToString();
+            isWalkableSpriteRenderer.color = pathNode.IsWalkable() ? Color.green : Color.red;
         }
     }
 

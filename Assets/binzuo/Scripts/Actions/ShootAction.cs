@@ -16,6 +16,7 @@ namespace binzuo
 
         private State state;
         [SerializeField] private int maxShootDistance = 7;
+        [SerializeField] private LayerMask obstaclesLayerMask;
         private float stateTimer;
         private Unit targetUnit;
         private bool canShootBullet;
@@ -140,6 +141,16 @@ namespace binzuo
                     if (targetUnit.IsEnemy() == unit.IsEnemy())
                     {
                         // Both Units on same 'team'
+                        continue;
+                    }
+
+                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(testGridPosition);
+                    Vector3 shootDir = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
+                    float unitShoulderHeight = 1.5f;
+                    float distance = Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition());
+
+                    if (Physics.Raycast(unitWorldPosition + Vector3.up * unitShoulderHeight, shootDir, distance, obstaclesLayerMask))
+                    {
                         continue;
                     }
 
