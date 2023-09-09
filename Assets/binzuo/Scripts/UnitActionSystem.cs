@@ -93,7 +93,7 @@ namespace binzuo
             }
         }
 
-        private void SetSelectedUnit(Unit unit)
+        public void SetSelectedUnit(Unit unit)
         {
             selectedUnit = unit;
             SetSelectedAction(unit.GetMoveAction());

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace binzuo
 {
@@ -42,10 +43,12 @@ namespace binzuo
             if (TurnSystem.Instance.IsPlayerTurn())
             {
                 ShowStats();
+                ShowActionButton();
             }
             else
             {
                 HideStats();
+                HideActionButton();
             }
         }
 
@@ -55,6 +58,11 @@ namespace binzuo
         }
 
         private void UnitActionSystem_OnActingChanged(object sender, bool acting)
+        {
+            UpdateActionButtonContainerVisual(acting);
+        }
+
+        private void UpdateActionButtonContainerVisual(bool acting)
         {
             if (acting)
             {

@@ -39,6 +39,10 @@ namespace binzuo
             else
             {
                 friendlyUnitList.Remove(unit);
+                if (friendlyUnitList.Count > 0)
+                {
+                    UnitActionSystem.Instance.SetSelectedUnit(friendlyUnitList[0]);
+                }
             }
         }
 

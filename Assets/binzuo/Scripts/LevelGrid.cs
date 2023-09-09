@@ -12,12 +12,12 @@ namespace binzuo
         [SerializeField] private int height = 10;
         [SerializeField] private float cellSize = 2.5f;
 
-        private GridSystem gridSystem;
+        private GridSystem<GridObject> gridSystem;
         protected override void Awake()
         {
             base.Awake();
-            gridSystem = new GridSystem(width, height, cellSize);
-            gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+            gridSystem = new GridSystem<GridObject>(width, height, cellSize, (GridSystem<GridObject> gridSystem, GridPosition gridPosition) => new(gridSystem, gridPosition));
+            //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
         }
 
         public void AddUnitAtGridPosition(GridPosition gridPosition, Unit unit)

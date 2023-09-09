@@ -111,6 +111,10 @@ namespace binzuo
             HideAllGridPosition();
             Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
             BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
+            if (selectedUnit == null && selectedAction == null)
+            {
+                return;
+            }
             GridVisualType gridVisualType;
             switch (selectedAction)
             {
