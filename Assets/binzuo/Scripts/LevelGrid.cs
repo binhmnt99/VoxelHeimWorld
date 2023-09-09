@@ -20,8 +20,9 @@ namespace binzuo
             gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
         }
 
-        private void Start() {
-            Pathfinding.Instance.Setup(width,height,cellSize);
+        private void Start()
+        {
+            Pathfinding.Instance.Setup(width, height, cellSize);
         }
 
         public void AddUnitAtGridPosition(GridPosition gridPosition, Unit unit)
@@ -67,5 +68,16 @@ namespace binzuo
             return gridObject.IsOccupied();
         }
 
+        public IInteractable GetInteractableAtGridPosition(GridPosition gridPosition)
+        {
+            GridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            return gridObject.GetInteractable();
+        }
+
+        public void SetInteractableAtGridPosition(GridPosition gridPosition, IInteractable interactable)
+        {
+            GridObject gridObject = gridSystem.GetGridObject(gridPosition);
+            gridObject.SetInteractable(interactable);
+        }
     }
 }

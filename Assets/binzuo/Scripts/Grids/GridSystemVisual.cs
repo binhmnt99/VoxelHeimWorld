@@ -126,6 +126,9 @@ namespace binzuo
                     gridVisualType = GridVisualType.Red;
                     ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetMaxShootDistance(), GridVisualType.RedSoft);
                     break;
+                case InteractAction interactAction:
+                    gridVisualType = GridVisualType.Yellow;
+                    break;
             }
             ShowGridPositionList(
                 selectedAction.GetValidActionGridPositionList(), gridVisualType);
