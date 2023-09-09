@@ -6,11 +6,6 @@ namespace binzuo
 {
     public class Testing : MonoBehaviour
     {
-        [SerializeField] private Unit unit;
-
-        // private void Start() {
-
-        // }
 
         private void Update() {
             if (Input.GetKeyDown(KeyCode.T))
@@ -19,7 +14,6 @@ namespace binzuo
                 GridPosition startGrid = new GridPosition(0,0);
 
                 List<GridPosition> gridPositionList = Pathfinding.Instance.FindPath(startGrid,mouseGrid);
-                print(gridPositionList.Count);
 
                 for (int i = 0; i < gridPositionList.Count - 1; i++)
                 {

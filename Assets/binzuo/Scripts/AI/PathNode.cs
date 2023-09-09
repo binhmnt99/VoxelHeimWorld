@@ -1,3 +1,4 @@
+using System.Globalization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace binzuo
         private int hCost;
         private int fCost;
         private PathNode cameFromPathNode;
+
+        private bool isWalkable = true;
 
         public PathNode(GridPosition gridPosition)
         {
@@ -53,17 +56,17 @@ namespace binzuo
             fCost = gCost + hCost;
         }
 
-        public void ResetCameFormPathNode()
+        public void ResetCameFromPathNode()
         {
             cameFromPathNode = null;
         }
 
-        public void SetCameFormPathNode(PathNode pathNode)
+        public void SetCameFromPathNode(PathNode pathNode)
         {
             cameFromPathNode = pathNode;
         }
 
-        public PathNode GetCameFormPathNode()
+        public PathNode GetCameFromPathNode()
         {
             return cameFromPathNode;
         }
@@ -71,6 +74,16 @@ namespace binzuo
         public GridPosition GetGridPosition()
         {
             return gridPosition;
+        }
+
+        public bool IsWalkable()
+        {
+            return isWalkable;
+        }
+
+        public void SetIsWalkable(bool isWalkable)
+        {
+            this.isWalkable = isWalkable;
         }
     }
 }
