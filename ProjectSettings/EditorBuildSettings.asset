@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/binzuo/Scenes/Testing.unity
+    path: Assets/binzuo/Scene/Testing.unity
     guid: 4f5d355acc08c1f469581ca7a9174376
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 4afb73328705dfa47bbc650507c20793, type: 2}
