@@ -54,7 +54,7 @@ namespace binzuo
 
         private bool TryHandleUnitSelection()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (InputManager.Instance.IsMouseButtonDown())
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
@@ -79,7 +79,7 @@ namespace binzuo
 
         private void HandleSelectedAction()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (InputManager.Instance.IsMouseButtonDown())
             {
                 GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MousePosition.GetPoint());
 

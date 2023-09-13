@@ -8,6 +8,7 @@ namespace binzuo
     public class Door : MonoBehaviour, IInteractable
     {
         [SerializeField] private bool isOpen;
+        [SerializeField] private BoxCollider doorCollider;
         private GridPosition gridPosition;
         private Animator animator;
         private Action onInteractionComplete;
@@ -71,6 +72,7 @@ namespace binzuo
             isOpen = true;
             animator.SetBool("IsOpen", isOpen);
             Pathfinding.Instance.SetWalkableGridPosition(gridPosition, true);
+            doorCollider.enabled = false;
         }
 
         private void CloseDoor()
@@ -78,6 +80,7 @@ namespace binzuo
             isOpen = false;
             animator.SetBool("IsOpen", isOpen);
             Pathfinding.Instance.SetWalkableGridPosition(gridPosition, false);
+            doorCollider.enabled = true;
         }
 
     }

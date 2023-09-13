@@ -144,15 +144,21 @@ namespace binzuo
                         continue;
                     }
 
-                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(testGridPosition);
+                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
                     Vector3 shootDir = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
-                    float unitShoulderHeight = 1.5f;
-                    float distance = Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition());
 
-                    if (Physics.Raycast(unitWorldPosition + Vector3.up * unitShoulderHeight, shootDir, distance, obstaclesLayerMask))
+                    float unitShoulderHeight = 1.5f;
+                    if (Physics.Raycast(
+                            unitWorldPosition + Vector3.up * unitShoulderHeight,
+                            shootDir,
+                            Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
+                            obstaclesLayerMask))
                     {
+                        // Blocked by an Obstacle
+                        Debug.DrawRay(unitWorldPosition + Vector3.up * unitShoulderHeight, shootDir, Color.red, 10f);
                         continue;
                     }
+
 
                     validGridPositionList.Add(testGridPosition);
                 }

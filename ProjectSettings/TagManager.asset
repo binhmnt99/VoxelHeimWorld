@@ -19,8 +19,8 @@ TagManager:
   - FriendlyUnit
   - EnemyUnit
   - GridVisual
-  - 
-  - 
+  - Door
+  - Wall
   - 
   - 
   - 

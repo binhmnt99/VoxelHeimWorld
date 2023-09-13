@@ -30,25 +30,9 @@ namespace binzuo
 
         private void HandleMovement()
         {
-            Vector3 inputMoveDirection = new Vector3(0, 0, 0);
-            if (Input.GetKey(KeyCode.W))
-            {
-                inputMoveDirection.z = +1f;
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                inputMoveDirection.z = -1f;
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                inputMoveDirection.x = -1f;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                inputMoveDirection.x = +1f;
-            }
+            Vector2 inputMoveDirection = InputManager.Instance.GetCameraMoveVector();
 
-            Vector3 moveVector = transform.forward * inputMoveDirection.z + transform.right * inputMoveDirection.x;
+            Vector3 moveVector = transform.forward * inputMoveDirection.y + transform.right * inputMoveDirection.x;
             transform.position += moveVector * cameraMoveSpeed * Time.deltaTime;
         }
 
@@ -56,14 +40,7 @@ namespace binzuo
         {
             Vector3 rotationVector = new Vector3(0, 0, 0);
 
-            if (Input.GetKey(KeyCode.Q))
-            {
-                rotationVector.y = +1f;
-            }
-            if (Input.GetKey(KeyCode.E))
-            {
-                rotationVector.y = -1f;
-            }
+            rotationVector.y = InputManager.Instance.GetCameraRotateAmount();
 
             transform.eulerAngles += rotationVector * cameraRotateSpeed * Time.deltaTime;
         }
@@ -71,14 +48,7 @@ namespace binzuo
         private void HandleZoom()
         {
             float zoomAmount = 1f;
-            if (Input.mouseScrollDelta.y > 0)
-            {
-                targetFollowOffset.y -= zoomAmount;
-            }
-            if (Input.mouseScrollDelta.y < 0)
-            {
-                targetFollowOffset.y += zoomAmount;
-            }
+            targetFollowOffset.y += InputManager.Instance.GetCameraZoomAmount() * zoomAmount;
             targetFollowOffset.y = Mathf.Clamp(targetFollowOffset.y, MIN_FOLLOW_OFFSET_Y, MAX_FOLLOW_OFFSET_Y);
             cinemachineTransposer.m_FollowOffset = Vector3.Lerp(cinemachineTransposer.m_FollowOffset, targetFollowOffset, Time.deltaTime * cameraZoomSpeed);
         }
