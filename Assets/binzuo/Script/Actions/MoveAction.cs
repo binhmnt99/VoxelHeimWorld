@@ -87,35 +87,38 @@ namespace binzuo
             {
                 for (int z = -maxMoveDistance; z <= maxMoveDistance; z++)
                 {
-                    GridPosition offsetGridPosition = new GridPosition(x, z);
-                    GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
-
-                    if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition)) continue;
-
-                    if (unitGridPosition == testGridPosition) continue;
-
-                    if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition)) continue;
-
-                    if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition)) continue;
-
-                    int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
-                    if (testDistance > maxMoveDistance)
+                    for (int floor = -maxMoveDistance; floor <= maxMoveDistance; floor++)
                     {
-                        continue;
+                        GridPosition offsetGridPosition = new GridPosition(x, z, floor);
+                        GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
+    
+                        if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition)) continue;
+    
+                        if (unitGridPosition == testGridPosition) continue;
+    
+                        if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition)) continue;
+    
+                        if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition)) continue;
+    
+                        int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
+                        if (testDistance > maxMoveDistance)
+                        {
+                            continue;
+                        }
+    
+                        if (!Pathfinding.Instance.HasPath(unitGridPosition, testGridPosition))
+                        {
+                            continue;
+                        }
+    
+                        int pathDistanceMultiplier = 10;
+                        if (Pathfinding.Instance.GetPathLength(unitGridPosition, testGridPosition) > maxMoveDistance * pathDistanceMultiplier)
+                        {
+                            continue;
+                        }
+    
+                        validGridPositionList.Add(testGridPosition);
                     }
-
-                    if (!Pathfinding.Instance.HasPath(unitGridPosition, testGridPosition))
-                    {
-                        continue;
-                    }
-
-                    int pathDistanceMultiplier = 10;
-                    if (Pathfinding.Instance.GetPathLength(unitGridPosition, testGridPosition) > maxMoveDistance * pathDistanceMultiplier)
-                    {
-                        continue;
-                    }
-
-                    validGridPositionList.Add(testGridPosition);
                 }
             }
             return validGridPositionList;

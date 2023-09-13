@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,26 +10,37 @@ namespace binzuo
 
         [SerializeField] private Transform gridDebugObjectPrefab;
         [SerializeField] private LayerMask obstaclesLayerMask;
+        [SerializeField] private LayerMask floorLayerMask;
+        [SerializeField] private Transform pathfindingLinksContainer;
 
 
         private int width;
         private int height;
         private float cellSize;
-        private GridSystem<PathNode> gridSystem;
+        private int floorAmount;
+        private List<GridSystem<PathNode>> gridSystemList;
+        private List<PathfindingLinks> pathfindingLinkList;
 
         protected override void Awake()
         {
             base.Awake();
         }
 
-        public void Setup(int width, int height, float cellSize)
+        public void Setup(int width, int height, float cellSize, int floorAmount)
         {
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
+            this.floorAmount = floorAmount;
 
-            gridSystem = new GridSystem<PathNode>(width, height, cellSize,
-                (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
+            gridSystemList = new();
+
+            for (int floor = 0; floor < floorAmount; floor++)
+            {
+                var gridSystem = new GridSystem<PathNode>(width, height, cellSize, floor, LevelGrid.FLOOR_HEIGHT,
+                    (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
+                gridSystemList.Add(gridSystem);
+            }
 
             //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
@@ -39,13 +48,32 @@ namespace binzuo
             {
                 for (int z = 0; z < height; z++)
                 {
-                    GridPosition gridPosition = new GridPosition(x, z);
-                    Vector3 worldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
-                    float raycastOffsetDistance = 5f;
-                    if (Physics.Raycast(worldPosition + Vector3.down * raycastOffsetDistance, Vector3.up, raycastOffsetDistance * 2, obstaclesLayerMask))
+                    for (int floor = 0; floor < floorAmount; floor++)
                     {
-                        GetNode(x, z).SetIsWalkable(false);
+                        GetNode(x, z, floor).SetIsWalkable(false);
+
+                        GridPosition gridPosition = new GridPosition(x, z, floor);
+                        Vector3 worldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+                        float raycastOffsetDistance = 1f;
+                        if (Physics.Raycast(worldPosition + Vector3.up * raycastOffsetDistance, Vector3.down, raycastOffsetDistance * 2, floorLayerMask))
+                        {
+                            GetNode(x, z, floor).SetIsWalkable(true);
+                        }
+
+                        if (Physics.Raycast(worldPosition + Vector3.down * raycastOffsetDistance, Vector3.up, raycastOffsetDistance * 2, obstaclesLayerMask))
+                        {
+                            GetNode(x, z, floor).SetIsWalkable(false);
+                        }
                     }
+                }
+            }
+
+            pathfindingLinkList = new();
+            foreach (Transform pathfindingLinksTransform in pathfindingLinksContainer)
+            {
+                if (pathfindingLinksTransform.TryGetComponent(out PathfindingLinksMono pathfindingLinksMono))
+                {
+                    pathfindingLinkList.Add(pathfindingLinksMono.GetPathfindingLinks());
                 }
             }
         }
@@ -57,21 +85,24 @@ namespace binzuo
             openList.Clear();
             closedList.Clear();
 
-            PathNode startNode = gridSystem.GetGridObject(startGridPosition);
-            PathNode endNode = gridSystem.GetGridObject(endGridPosition);
+            PathNode startNode = GetGridSystem(startGridPosition.floor).GetGridObject(startGridPosition);
+            PathNode endNode = GetGridSystem(endGridPosition.floor).GetGridObject(endGridPosition);
             openList.Add(startNode);
 
-            for (int x = 0; x < gridSystem.GetWidth(); x++)
+            for (int x = 0; x < width; x++)
             {
-                for (int z = 0; z < gridSystem.GetHeight(); z++)
+                for (int z = 0; z < height; z++)
                 {
-                    GridPosition gridPosition = new GridPosition(x, z);
-                    PathNode pathNode = gridSystem.GetGridObject(gridPosition);
+                    for (int floor = 0; floor < floorAmount; floor++)
+                    {
+                        GridPosition gridPosition = new GridPosition(x, z, floor);
+                        PathNode pathNode = GetGridSystem(floor).GetGridObject(gridPosition);
 
-                    pathNode.SetGCost(int.MaxValue);
-                    pathNode.SetHCost(0);
-                    pathNode.CalculateFCost();
-                    pathNode.ResetCameFromPathNode();
+                        pathNode.SetGCost(int.MaxValue);
+                        pathNode.SetHCost(0);
+                        pathNode.CalculateFCost();
+                        pathNode.ResetCameFromPathNode();
+                    }
                 }
             }
 
@@ -151,43 +182,80 @@ namespace binzuo
             return lowestFCostPathNode;
         }
 
-        private PathNode GetNode(int x, int z)
+        private GridSystem<PathNode> GetGridSystem(int floor) => gridSystemList[floor];
+
+        private PathNode GetNode(int x, int z, int floor)
         {
-            return gridSystem.GetGridObject(new GridPosition(x, z));
+            return GetGridSystem(floor).GetGridObject(new GridPosition(x, z, floor));
         }
 
-        List<PathNode> neighbourList = new List<PathNode>();
+        List<PathNode> neighborList = new();
+        List<PathNode> totalNeighborList = new();
+        List<GridPosition> pathfindingLinksGridPositionList = new();
         private List<PathNode> GetNeighborList(PathNode currentNode)
         {
-            neighbourList.Clear();
+            neighborList.Clear();
+            totalNeighborList.Clear();
+            pathfindingLinksGridPositionList.Clear();
 
             GridPosition gridPosition = currentNode.GetGridPosition();
 
             if (gridPosition.x - 1 >= 0)
             {
                 // Left
-                neighbourList.Add(GetNode(gridPosition.x - 1, gridPosition.z + 0));
+                neighborList.Add(GetNode(gridPosition.x - 1, gridPosition.z + 0, gridPosition.floor));
             }
 
-            if (gridPosition.x + 1 < gridSystem.GetWidth())
+            if (gridPosition.x + 1 < width)
             {
                 // Right
-                neighbourList.Add(GetNode(gridPosition.x + 1, gridPosition.z + 0));
+                neighborList.Add(GetNode(gridPosition.x + 1, gridPosition.z + 0, gridPosition.floor));
             }
 
             if (gridPosition.z - 1 >= 0)
             {
                 // Down
-                neighbourList.Add(GetNode(gridPosition.x + 0, gridPosition.z - 1));
+                neighborList.Add(GetNode(gridPosition.x + 0, gridPosition.z - 1, gridPosition.floor));
             }
-            if (gridPosition.z + 1 < gridSystem.GetHeight())
+            if (gridPosition.z + 1 < height)
             {
                 // Up
-                neighbourList.Add(GetNode(gridPosition.x + 0, gridPosition.z + 1));
+                neighborList.Add(GetNode(gridPosition.x + 0, gridPosition.z + 1, gridPosition.floor));
             }
 
-            return neighbourList;
+            totalNeighborList.AddRange(neighborList);
+
+            pathfindingLinksGridPositionList = GetPathfindingLinkConnectedGridPositionList(gridPosition);
+
+            foreach (GridPosition pathfindingLinkGridPosition in pathfindingLinksGridPositionList)
+            {
+                totalNeighborList.Add(GetNode(pathfindingLinkGridPosition.x, pathfindingLinkGridPosition.z, pathfindingLinkGridPosition.floor));
+            }
+
+            return totalNeighborList;
+
         }
+
+        List<GridPosition> gridPositionConnectedList = new();
+private List<GridPosition> GetPathfindingLinkConnectedGridPositionList(GridPosition gridPosition)
+    {
+        gridPositionConnectedList.Clear();
+
+        foreach (PathfindingLinks pathfindingLink in pathfindingLinkList)
+        {
+            if (pathfindingLink.gridPositionA == gridPosition)
+            {
+                gridPositionConnectedList.Add(pathfindingLink.gridPositionB);
+            }
+            if (pathfindingLink.gridPositionB == gridPosition)
+            {
+                gridPositionConnectedList.Add(pathfindingLink.gridPositionA);
+            }
+        }
+
+        return gridPositionConnectedList;
+    }
+
 
         List<PathNode> pathNodeList = new List<PathNode>();
         private List<GridPosition> CalculatePath(PathNode endNode)
@@ -214,12 +282,12 @@ namespace binzuo
 
         public void SetWalkableGridPosition(GridPosition gridPosition, bool isWalkable)
         {
-            gridSystem.GetGridObject(gridPosition).SetIsWalkable(isWalkable);
+            GetGridSystem(gridPosition.floor).GetGridObject(gridPosition).SetIsWalkable(isWalkable);
         }
 
         public bool IsWalkableGridPosition(GridPosition gridPosition)
         {
-            return gridSystem.GetGridObject(gridPosition).IsWalkable();
+            return GetGridSystem(gridPosition.floor).GetGridObject(gridPosition).IsWalkable();
         }
 
         public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)

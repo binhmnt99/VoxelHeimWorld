@@ -116,7 +116,7 @@ namespace binzuo
             {
                 for (int z = -maxShootDistance; z <= maxShootDistance; z++)
                 {
-                    GridPosition offsetGridPosition = new GridPosition(x, z);
+                    GridPosition offsetGridPosition = new GridPosition(x, z, 0);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
 
                     if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
@@ -155,7 +155,6 @@ namespace binzuo
                             obstaclesLayerMask))
                     {
                         // Blocked by an Obstacle
-                        Debug.DrawRay(unitWorldPosition + Vector3.up * unitShoulderHeight, shootDir, Color.red, 10f);
                         continue;
                     }
 

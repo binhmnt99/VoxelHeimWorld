@@ -22,25 +22,29 @@ namespace binzuo
         [SerializeField] private Transform gridSystemVisualSinglePrefab;
         [SerializeField] private List<GridVisualTypeMaterial> gridSystemVisualTypeMaterialList;
 
-        private GridSystemVisualSingle[,] gridSystemVisualSingleArray;
+        private GridSystemVisualSingle[,,] gridSystemVisualSingleArray;
 
         private void Start()
         {
             gridSystemVisualSingleArray = new GridSystemVisualSingle[
                 LevelGrid.Instance.GetWidth(),
-                LevelGrid.Instance.GetHeight()
+                LevelGrid.Instance.GetHeight(),
+                LevelGrid.Instance.GetFloorAmount()
             ];
 
             for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++)
             {
                 for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
-                    GridPosition gridPosition = new GridPosition(x, z);
+                    for (int floor = 0; floor < LevelGrid.Instance.GetFloorAmount(); floor++)
+                    {
+                        GridPosition gridPosition = new GridPosition(x, z, floor);
 
-                    Transform gridSystemVisualSingleTransform =
-                        Instantiate(gridSystemVisualSinglePrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, transform);
+                        Transform gridSystemVisualSingleTransform =
+                            Instantiate(gridSystemVisualSinglePrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity, transform);
 
-                    gridSystemVisualSingleArray[x, z] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
+                        gridSystemVisualSingleArray[x, z, floor] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
+                    }
                 }
             }
             UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
@@ -64,7 +68,10 @@ namespace binzuo
             {
                 for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
                 {
-                    gridSystemVisualSingleArray[x, z].Hide();
+                    for (int floor = 0; floor < LevelGrid.Instance.GetFloorAmount(); floor++)
+                    {
+                        gridSystemVisualSingleArray[x, z, floor].Hide();
+                    }
                 }
             }
         }
@@ -77,7 +84,7 @@ namespace binzuo
             {
                 for (int z = -range; z <= range; z++)
                 {
-                    GridPosition testGridPosition = gridPosition + new GridPosition(x, z);
+                    GridPosition testGridPosition = gridPosition + new GridPosition(x, z, 0);
 
                     if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                     {
@@ -102,7 +109,8 @@ namespace binzuo
         {
             foreach (GridPosition gridPosition in gridPositionList)
             {
-                gridSystemVisualSingleArray[gridPosition.x, gridPosition.z].Show(GetGridVisualTypeMaterial(gridVisualType));
+
+                gridSystemVisualSingleArray[gridPosition.x, gridPosition.z, gridPosition.floor].Show(GetGridVisualTypeMaterial(gridVisualType));
             }
         }
 
