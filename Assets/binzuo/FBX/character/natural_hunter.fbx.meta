@@ -3,7 +3,102 @@ guid: daf7c097c9603c8488132ebffce14b45
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-0-head_Material
+    second: {fileID: 2100000, guid: 3aabd712c22fefe4caa96860ae840df0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-1-chest_Material
+    second: {fileID: 2100000, guid: 93d3663a02192e54da09e98b61f30a3d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-10-thigh.R_Material
+    second: {fileID: 2100000, guid: dfefb26b5bd6a8f4b83e5c58a556614a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-11-shin.R_Material
+    second: {fileID: 2100000, guid: 3232f8a1b9153f048bc1fe708fb6229d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-12-foot.R_Material
+    second: {fileID: 2100000, guid: ada9b77b73ad1d348b2c555c17a68378, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-13-cape.1.L_Material
+    second: {fileID: 2100000, guid: bffdbe8cdba18eb4da7ad43eea644604, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-14-cape.2.L_Material
+    second: {fileID: 2100000, guid: 02a61b53c2ea71f4d808497be4198b65, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-15-cape.3.L_Material
+    second: {fileID: 2100000, guid: c242bd4afb0265f478c750244651d542, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-16-cape.1.R_Material
+    second: {fileID: 2100000, guid: 36532089c0fd3594fb147c68d4490eea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-17-cape.2.R_Material
+    second: {fileID: 2100000, guid: fe8e243bf6bdcaa47908d442e031a45e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-18-cape.3.R_Material
+    second: {fileID: 2100000, guid: 84d840f567ebf0d438feac2aa0e97386, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-2-hip_Material
+    second: {fileID: 2100000, guid: f96ff220089568944bb9194f7057556e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-3-shoulder.L_Material
+    second: {fileID: 2100000, guid: e2d05261d0aa2c4499ae4b969f418b3e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-4-hand.L_Material
+    second: {fileID: 2100000, guid: 0a5d4a6da2fda3a488e5b644449c9596, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-5-shoulder.R_Material
+    second: {fileID: 2100000, guid: 47f88d373cbe5b347b2e0a1936bf7553, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-6-hand.R_Material
+    second: {fileID: 2100000, guid: f5a1727659b3ce746a761119a04c7d28, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-7-thigh.L_Material
+    second: {fileID: 2100000, guid: 3995cd481fe726f43bb30c74432d1402, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-8-shin.L_Material
+    second: {fileID: 2100000, guid: ebf8b5834124dc94fa11955c5923f600, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natural_hunter-9-foot.L_Material
+    second: {fileID: 2100000, guid: 310e9c8ec764f5748adb01f2931903b2, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -31,7 +126,123 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: b_hunter_default
+      takeName: b_hunter_default
+      internalID: -6191960126809535741
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: b_hunter_idle
+      takeName: b_hunter_idle
+      internalID: -951107109411893460
+      firstFrame: 0
+      lastFrame: 64
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: b_hunter_move
+      takeName: b_hunter_move
+      internalID: 1736173895401484917
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: b_hunter_attack
+      takeName: b_hunter_attack
+      internalID: 3872304252997217168
+      firstFrame: 0
+      lastFrame: 10
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -70,7 +281,7 @@ ModelImporter:
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
-    normalSmoothAngle: 60
+    normalSmoothAngle: 0
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
@@ -99,7 +310,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
