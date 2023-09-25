@@ -15,30 +15,31 @@ namespace binzuo
         public Block(Vector3 offset, MeshUtils.BlockType blockType, Chunk chunk)
         {
             parentChunk = chunk;
+            Vector3 blockLocalPos = offset - chunk.GetLocation();
             if (blockType != MeshUtils.BlockType.AIR)
             {
                 quadList = new();
-                if (!HasSolidNeightbour((int)offset.x, (int)offset.y - 1, (int)offset.z))
+                if (!HasSolidNeightbour((int)blockLocalPos.x, (int)blockLocalPos.y - 1, (int)blockLocalPos.z))
                 {
                     quadList.Add(new(MeshUtils.BlockSide.BOTTOM, offset, blockType));
                 }
-                if (!HasSolidNeightbour((int)offset.x, (int)offset.y + 1, (int)offset.z))
+                if (!HasSolidNeightbour((int)blockLocalPos.x, (int)blockLocalPos.y + 1, (int)blockLocalPos.z))
                 {
                     quadList.Add(new(MeshUtils.BlockSide.TOP, offset, blockType));
                 }
-                if (!HasSolidNeightbour((int)offset.x - 1, (int)offset.y, (int)offset.z))
+                if (!HasSolidNeightbour((int)blockLocalPos.x - 1, (int)blockLocalPos.y, (int)blockLocalPos.z))
                 {
                     quadList.Add(new(MeshUtils.BlockSide.LEFT, offset, blockType));
                 }
-                if (!HasSolidNeightbour((int)offset.x + 1, (int)offset.y, (int)offset.z))
+                if (!HasSolidNeightbour((int)blockLocalPos.x + 1, (int)blockLocalPos.y, (int)blockLocalPos.z))
                 {
                     quadList.Add(new(MeshUtils.BlockSide.RIGHT, offset, blockType));
                 }
-                if (!HasSolidNeightbour((int)offset.x, (int)offset.y, (int)offset.z + 1))
+                if (!HasSolidNeightbour((int)blockLocalPos.x, (int)blockLocalPos.y, (int)blockLocalPos.z + 1))
                 {
                     quadList.Add(new(MeshUtils.BlockSide.FRONT, offset, blockType));
                 }
-                if (!HasSolidNeightbour((int)offset.x, (int)offset.y, (int)offset.z - 1))
+                if (!HasSolidNeightbour((int)blockLocalPos.x, (int)blockLocalPos.y, (int)blockLocalPos.z - 1))
                 {
                     quadList.Add(new(MeshUtils.BlockSide.BACK, offset, blockType));
                 }
@@ -53,7 +54,7 @@ namespace binzuo
                 int m = 0;
                 foreach (Quad quad in quadList)
                 {
-                    sideMeshes[m] = quad.mesh;
+                    sideMeshes[m] = quad.GetMesh();
                     m++;
                 }
 
@@ -65,14 +66,14 @@ namespace binzuo
 
         public bool HasSolidNeightbour(int x, int y, int z)
         {
-            if (x < 0 || x >= parentChunk.width ||
-                y < 0 || y >= parentChunk.height ||
-                z < 0 || z >= parentChunk.depth)
+            if (x < 0 || x >= parentChunk.GetWidth() ||
+                y < 0 || y >= parentChunk.GetHeight() ||
+                z < 0 || z >= parentChunk.GetDepth())
             {
                 return false;
             }
-            if (parentChunk.chunkData[x + parentChunk.width * (y + parentChunk.depth * z)] == MeshUtils.BlockType.AIR ||
-                parentChunk.chunkData[x + parentChunk.width * (y + parentChunk.depth * z)] == MeshUtils.BlockType.WATER)
+            if (parentChunk.GetChunkData()[x + parentChunk.GetWidth() * (y + parentChunk.GetDepth() * z)] == MeshUtils.BlockType.AIR ||
+                parentChunk.GetChunkData()[x + parentChunk.GetWidth() * (y + parentChunk.GetDepth() * z)] == MeshUtils.BlockType.WATER)
             {
                 return false;
             }

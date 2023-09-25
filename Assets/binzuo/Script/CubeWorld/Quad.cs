@@ -4,7 +4,10 @@ namespace binzuo
 {
     public class Quad
     {
-        public Mesh mesh;
+        private Mesh mesh;
+
+        public Mesh GetMesh() => mesh;
+
         public Quad(MeshUtils.BlockSide side, Vector3 offset, MeshUtils.BlockType blockType)
         {
 

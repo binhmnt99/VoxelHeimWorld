@@ -10,24 +10,58 @@ namespace binzuo
 {
     public class Chunk : MonoBehaviour
     {
-
-        private MeshFilter meshFilter;
-        private MeshRenderer meshRenderer;
-        private List<Mesh> inputMeshes;
         private int vertexStart;
         private int triStart;
         private int meshCount;
         private int m;
+        private MeshFilter meshFilter;
+        private MeshRenderer meshRenderer;
+        private List<Mesh> inputMeshes;
         private ProcessMeshDataJob jobs;
-        public MeshUtils.BlockType[] chunkData;
+        private Block[,,] blocks;
+
+        private Vector3 location;
+
+
         [SerializeField] private Material atlasMaterial;
-        public int width = 2;
-        public int height = 2;
-        public int depth = 2;
-        [SerializeField] private Block[,,] blocks;
+        private int width;
+        private int height;
+        private int depth;
+
+        [Header("Perlin Settings")]
+        [SerializeField] private float heightOffset = -33f;
+        [SerializeField] private float heightScale = 10f;
+        [SerializeField] private float scale = 0.001f;
+        [SerializeField] private int octaves = 8;
+        [SerializeField] private MeshUtils.BlockType[] chunkData;
+
+        public MeshUtils.BlockType[] GetChunkData() => chunkData;
+        public int GetWidth() => width;
+        public int GetHeight() => height;
+        public int GetDepth() => depth;
+        public Vector3 GetLocation() => location;
+
+        public float GetHeightOffset() => heightOffset;
+        public float GetHeightScale() => heightScale;
+        public float GetScale() => scale;
+        public int GetOctaves() => octaves;
 
         private void Awake()
         {
+        }
+        // Start is called before the first frame update
+        void Start()
+        {
+            //CreateChunk();
+        }
+
+        public void CreateChunk(Vector3 dimensions, Vector3 position)
+        {
+            location = position;
+            width = (int)dimensions.x;
+            height = (int)dimensions.y;
+            depth = (int)dimensions.z;
+
             meshFilter = gameObject.AddComponent<MeshFilter>();
             meshRenderer = gameObject.AddComponent<MeshRenderer>();
             meshRenderer.material = atlasMaterial;
@@ -38,13 +72,11 @@ namespace binzuo
             triStart = 0;
             meshCount = width * height * depth;
             m = 0;
+
             jobs = new ProcessMeshDataJob();
             jobs.vertexStart = new NativeArray<int>(meshCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
             jobs.triStart = new NativeArray<int>(meshCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
-        }
-        // Start is called before the first frame update
-        void Start()
-        {
+
             BuildChunk();
             for (int z = 0; z < depth; z++)
             {
@@ -52,16 +84,16 @@ namespace binzuo
                 {
                     for (int x = 0; x < width; x++)
                     {
-                        blocks[x, y, z] = new Block(new Vector3(x, y, z), chunkData[x + width * (y + depth * z)], this);
+                        blocks[x, y, z] = new Block(new Vector3(x, y, z) + location, chunkData[x + width * (y + depth * z)], this);
                         if (blocks[x, y, z].mesh != null)
                         {
                             inputMeshes.Add(blocks[x, y, z].mesh);
-                            var vcount = blocks[x, y, z].mesh.vertexCount;
-                            var icount = (int)blocks[x, y, z].mesh.GetIndexCount(0);
+                            var vCount = blocks[x, y, z].mesh.vertexCount;
+                            var iCount = (int)blocks[x, y, z].mesh.GetIndexCount(0);
                             jobs.vertexStart[m] = vertexStart;
                             jobs.triStart[m] = triStart;
-                            vertexStart += vcount;
-                            triStart += icount;
+                            vertexStart += vCount;
+                            triStart += iCount;
                             m++;
                         }
                     }
@@ -79,7 +111,7 @@ namespace binzuo
 
             var handle = jobs.Schedule(inputMeshes.Count, 4);
             var newMesh = new Mesh();
-            newMesh.name = "Chunk";
+            newMesh.name = "Chunk_" + location.x + "_" + location.y + "_" + location.z;
             var sm = new SubMeshDescriptor(0, triStart, MeshTopology.Triangles);
             sm.firstVertex = 0;
             sm.vertexCount = vertexStart;
@@ -103,7 +135,10 @@ namespace binzuo
             chunkData = new MeshUtils.BlockType[blockCount];
             for (int i = 0; i < blockCount; i++)
             {
-                if (UnityEngine.Random.Range(0, 100) < 50)
+                int x = i % width + (int)location.x;
+                int y = (i / width) % height + (int)location.y;
+                int z = i / (width * height) + (int)location.z;
+                if (MeshUtils.FractalBrownianMotion(x, z, octaves, scale, heightScale, heightOffset) > y)
                 {
                     chunkData[i] = MeshUtils.BlockType.DIRT;
                 }
